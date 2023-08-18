@@ -1,0 +1,2 @@
+library animated_collection;
+
