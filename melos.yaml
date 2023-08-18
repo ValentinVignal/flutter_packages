@@ -1,0 +1,11 @@
+name: flutter_packages
+repository: https://github.com/ValentinVignal/flutter_packages
+
+
+packages:
+  - packages/*
+
+ide:
+  intellij:
+    enabled: false
+
