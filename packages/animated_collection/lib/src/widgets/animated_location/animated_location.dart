@@ -1,4 +1,4 @@
-import 'package:animated_collection/src/animated_location/render.dart';
+import 'package:animated_collection/src/widgets/animated_location/render.dart';
 import 'package:flutter/widgets.dart';
 
 import 'animated_location_scope.dart';

@@ -1,5 +1,5 @@
 import 'package:animated_collection/animated_collection.dart';
-import 'package:animated_collection/src/animated_location/render.dart';
+import 'package:animated_collection/src/widgets/animated_location/render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

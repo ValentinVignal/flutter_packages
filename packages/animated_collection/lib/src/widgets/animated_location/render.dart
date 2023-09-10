@@ -1,4 +1,4 @@
-import 'package:animated_collection/src/animated_location/layer.dart';
+import 'package:animated_collection/src/widgets/animated_location/layer.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
