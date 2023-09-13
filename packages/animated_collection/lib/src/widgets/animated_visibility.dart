@@ -13,6 +13,7 @@ class AnimatedVisibility extends StatelessWidget {
     this.axis = Axis.vertical,
     this.axisAlignment = 0,
     this.curve = Curves.easeInOut,
+    this.duration = defaultDuration,
     Key? key,
   }) : super(key: key);
 
@@ -31,9 +32,12 @@ class AnimatedVisibility extends StatelessWidget {
   /// The curve given to the [AnimatedSwitcher].
   final Curve curve;
 
+  /// The duration of the animation.
+  final Duration duration;
+
   /// The duration of the transition.
   @visibleForTesting
-  static const duration = Duration(milliseconds: 250);
+  static const defaultDuration = Duration(milliseconds: 250);
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +45,7 @@ class AnimatedVisibility extends StatelessWidget {
       axis: axis,
       axisAlignment: axisAlignment,
       curve: curve,
+      crossAxisSizeFactor: 1,
       child: visible ? child : const SizedBox.shrink(),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:animated_collection/src/widgets/tight_size_transition.dart';
 import 'package:flutter/material.dart';
 
 /// A widget that by default does a size transition between a new widget and the
@@ -10,6 +11,8 @@ class AnimatedSizeTransition extends StatelessWidget {
     this.axis = Axis.vertical,
     this.axisAlignment = 0,
     this.curve = Curves.easeInOut,
+    this.duration = defaultDuration,
+    this.crossAxisSizeFactor,
     super.key,
   });
 
@@ -25,19 +28,26 @@ class AnimatedSizeTransition extends StatelessWidget {
   /// The curve given to the [AnimatedSwitcher].
   final Curve curve;
 
+  /// The duration of the animation.
+  final Duration duration;
+
+  /// The size factor on the cross axis.
+  final double? crossAxisSizeFactor;
+
   /// The duration of the transition.
   @visibleForTesting
-  static const duration = Duration(milliseconds: 250);
+  static const defaultDuration = Duration(milliseconds: 250);
 
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: duration,
       transitionBuilder: (child, animation) {
-        return SizeTransition(
+        return TightSizeTransition(
           sizeFactor: animation,
           axis: axis,
           axisAlignment: axisAlignment,
+          crossAxisSizeFactor: crossAxisSizeFactor,
           child: child,
         );
       },
