@@ -17,7 +17,8 @@ class AnimatedBooleanState extends ImplicitlyAnimatedWidget {
     required this.value,
     required this.builder,
     this.child,
-    super.duration = const Duration(milliseconds: 200),
+    super.duration = defaultDuration,
+    super.curve,
     super.key,
   });
 
@@ -30,6 +31,10 @@ class AnimatedBooleanState extends ImplicitlyAnimatedWidget {
 
   /// The child of the builder.
   final Widget? child;
+
+  /// Default duration of the animation.
+  @visibleForTesting
+  static const defaultDuration = Duration(milliseconds: 200);
 
   @override
   AnimatedWidgetBaseState<AnimatedBooleanState> createState() =>
