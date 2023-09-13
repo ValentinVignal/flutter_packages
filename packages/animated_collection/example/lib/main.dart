@@ -26,6 +26,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // Animated visibility
+  var _visible = true;
+
   // Animated location.
   static const _alignments = [
     Alignment.topLeft,
@@ -41,8 +44,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   var _alignment = Alignment.center;
 
-  // Animated visibility
-  var _visible = true;
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -52,8 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
           title: const Text('animated_collection'),
           bottom: const TabBar(
             tabs: [
-              Tab(text: 'AnimatedLocation'),
               Tab(text: 'AnimatedVisibility'),
+              Tab(text: 'AnimatedLocation'),
             ],
           ),
         ),
@@ -63,16 +64,17 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 switch (DefaultTabController.of(context).index) {
                   case 0:
+                    setState(() {
+                      _visible = !_visible;
+                    });
+                    break;
+                  case 1:
                     final currentIndex = _alignments.indexOf(_alignment);
                     final newIndex = (currentIndex + 1) % _alignments.length;
                     setState(() {
                       _alignment = _alignments[newIndex];
                     });
                     break;
-                  case 1:
-                    setState(() {
-                      _visible = !_visible;
-                    });
                 }
               },
               child: const Icon(Icons.loop),
@@ -81,21 +83,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: TabBarView(
           children: [
-            AnimatedLocationScope(
-              child: Align(
-                alignment: _alignment,
-                child: AnimatedLocation(
-                  tag: 'tag',
-                  child: ColoredBox(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    child: SizedBox.square(
-                      dimension:
-                          30 + 5 * _alignments.indexOf(_alignment).toDouble(),
-                    ),
-                  ),
-                ),
-              ),
-            ),
             Center(
               child: Container(
                 color: Colors.red,
@@ -109,6 +96,21 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Center(
                         child: Text('Hide me'),
                       ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            AnimatedLocationScope(
+              child: Align(
+                alignment: _alignment,
+                child: AnimatedLocation(
+                  tag: 'tag',
+                  child: ColoredBox(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    child: SizedBox.square(
+                      dimension:
+                          30 + 5 * _alignments.indexOf(_alignment).toDouble(),
                     ),
                   ),
                 ),
