@@ -9,3 +9,25 @@ ide:
   intellij:
     enabled: false
 
+scripts:
+  analyze:
+    run: dart analyze 
+
+  test:flutter:
+    exec: flutter test 
+    packageFilters:
+      flutter: true
+      dirExists: test
+
+  test:
+    run: melos run test:flutter
+
+  test-coverage:flutter:
+    exec: flutter test --coverage
+    packageFilters:
+      flutter: true
+      dirExists: test
+
+  test-coverage:
+    run: melos run test-coverage:flutter
+  
