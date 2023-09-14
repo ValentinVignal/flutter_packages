@@ -1,3 +1,7 @@
 ## animated_collection
 
-A library of animated widgets for Flutter.
+A collection of animated widgets.
+
+- `AnimatedVisibility`.
+- `AnimatedLocation`.
+- `TightSizeTransition`.
