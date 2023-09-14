@@ -1,11 +1,14 @@
 # cspell:ignore carryforward
 
+comment:
+  layout: "reach, diff, flags, files"
+
 flags:
   animated_collection:
     paths:
       - packages/animated_collection/
-    carryforward: false
+    carryforward: true
   animated_location:
     paths: 
       - packages/animated_collection/lib/src/widgets/animated_location
-    carryforward: false
+    carryforward: true
