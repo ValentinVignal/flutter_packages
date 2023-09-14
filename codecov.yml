@@ -6,9 +6,19 @@ comment:
 flags:
   animated_collection:
     paths:
-      - packages/animated_collection/
+      - packages/animated_collection/**
     carryforward: true
   animated_location:
     paths: 
-      - packages/animated_collection/lib/src/widgets/animated_location
+      - packages/animated_collection/lib/src/widgets/animated_location/**
     carryforward: true
+
+coverage:
+  status:
+    project:
+      animated_collection: 
+        flags:
+          - animated_collection
+      animated_location: 
+        flags:
+          - animated_location
