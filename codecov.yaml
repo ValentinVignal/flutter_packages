@@ -1,0 +1,11 @@
+# cspell:ignore carryforward
+
+flags:
+  animated_collection:
+    paths:
+      - packages/animated_collection/
+    carryforward: false
+  animated_location:
+    paths: 
+      - packages/animated_collection/lib/src/widgets/animated_location
+    carryforward: false
