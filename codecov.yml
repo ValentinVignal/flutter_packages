@@ -5,7 +5,6 @@ flags:
   animated_collection:
     paths:
       - packages/animated_collection/
-    carryforward: true
 
 coverage:
   status:
