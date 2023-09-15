@@ -1,3 +1,5 @@
+# cspell:ignore carryforward
+
 comment:
   layout: "reach, diff, flags, files"
 
@@ -5,6 +7,7 @@ flags:
   animated_collection:
     paths:
       - packages/animated_collection/
+    carryforward: true
 
 coverage:
   status:
