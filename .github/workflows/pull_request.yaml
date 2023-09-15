@@ -39,6 +39,8 @@ jobs:
       - run: melos run test-coverage
       - name: Upload to Codecov
         uses: codecov/codecov-action@v3
+        with:
+          flags: animated_collection
   spelling:
     # Verifies there is no spelling errors in the code.
     runs-on: ubuntu-latest
