@@ -1,3 +1,9 @@
 ## 0.0.0
 
-- Initial release
+- Initial release:
+  - Add `TickerFutureExtension` extension on `Future` with `whenCompleteOrCancelFuture` method.
+  - Adds `AnimatedVisibility` widget.
+  - Adds `AnimatedBooleanState` widget.
+  - Adds `AnimatedLocation` widget.
+  - Adds `TightSizeTransition` widget.
+
