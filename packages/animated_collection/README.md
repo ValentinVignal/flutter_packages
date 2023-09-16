@@ -5,5 +5,6 @@
 A collection of animated widgets.
 
 - `AnimatedVisibility`.
+- `AnimatedBoolean`.
 - `AnimatedLocation`.
 - `TightSizeTransition`.

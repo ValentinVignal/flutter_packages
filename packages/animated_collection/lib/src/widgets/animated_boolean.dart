@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// {@template animated_collection.animated_boolean_state}
+/// {@template animated_collection.animated_boolean}
 /// A widget that animates its builder whenever the value changes.
 ///
 /// This widget is useful when you want to animate a widget whenever a boolean
@@ -11,9 +11,9 @@ import 'package:flutter/material.dart';
 /// to animate the widget. The value is passed to the builder's `value` and
 /// depends on the [curve] and [duration].
 /// {@endtemplate}
-class AnimatedBooleanState extends ImplicitlyAnimatedWidget {
-  /// {@macro animated_collection.animated_boolean_state}
-  const AnimatedBooleanState({
+class AnimatedBoolean extends ImplicitlyAnimatedWidget {
+  /// {@macro animated_collection.animated_boolean}
+  const AnimatedBoolean({
     required this.value,
     required this.builder,
     this.child,
@@ -37,12 +37,11 @@ class AnimatedBooleanState extends ImplicitlyAnimatedWidget {
   static const defaultDuration = Duration(milliseconds: 200);
 
   @override
-  AnimatedWidgetBaseState<AnimatedBooleanState> createState() =>
+  AnimatedWidgetBaseState<AnimatedBoolean> createState() =>
       _AnimatedBooleanState();
 }
 
-class _AnimatedBooleanState
-    extends AnimatedWidgetBaseState<AnimatedBooleanState> {
+class _AnimatedBooleanState extends AnimatedWidgetBaseState<AnimatedBoolean> {
   Tween<double>? _tween;
 
   @override
