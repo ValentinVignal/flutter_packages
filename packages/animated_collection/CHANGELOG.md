@@ -1,3 +1,7 @@
+## 0.0.1
+
+- Updates the license and package description.
+
 ## 0.0.0
 
 - Initial release:

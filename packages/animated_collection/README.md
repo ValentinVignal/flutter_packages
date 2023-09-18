@@ -2,7 +2,7 @@
 
 ## animated_collection
 
-A collection of animated widgets.
+A Flutter library with simple animated widgets and utilities methods to use with animations.
 
 - `AnimatedVisibility`.
 - `AnimatedBoolean`.
