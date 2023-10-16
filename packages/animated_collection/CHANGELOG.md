@@ -1,3 +1,7 @@
+## NEXT
+
+- Uses the `duration` passed to the `AnimatedVisibility`.
+
 ## 0.0.1
 
 - Updates the license and package description.
