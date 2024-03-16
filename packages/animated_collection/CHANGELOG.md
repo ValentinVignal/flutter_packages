@@ -1,3 +1,7 @@
+## NEXT
+
+- Upgrade dependencies.
+
 ## 0.0.2
 
 - Uses the `duration` passed to the `AnimatedVisibility`.
@@ -14,4 +18,3 @@
   - Adds `AnimatedBooleanState` widget.
   - Adds `AnimatedLocation` widget.
   - Adds `TightSizeTransition` widget.
-
