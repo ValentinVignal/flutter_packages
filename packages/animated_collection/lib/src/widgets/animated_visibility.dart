@@ -45,7 +45,7 @@ class AnimatedVisibility extends StatelessWidget {
       axis: axis,
       axisAlignment: axisAlignment,
       curve: curve,
-      crossAxisSizeFactor: 1,
+      fixedCrossAxisSizeFactor: 1,
       duration: duration,
       child: visible ? child : const SizedBox.shrink(),
     );
