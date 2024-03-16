@@ -1,4 +1,4 @@
-## NEXT
+## 1.0.0
 
 - Upgrade dependencies.
 - Upgrades to Flutter 3.19 and Dart 3.2.
