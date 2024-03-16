@@ -72,9 +72,9 @@ void main() {
 
 class TestWidget extends StatelessWidget {
   const TestWidget({
-    Key? key,
+    super.key,
     required this.position,
-  }) : super(key: key);
+  });
 
   final Offset position;
 
@@ -108,8 +108,8 @@ class TestWidget extends StatelessWidget {
 
 class MyBox extends StatelessWidget {
   const MyBox({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
