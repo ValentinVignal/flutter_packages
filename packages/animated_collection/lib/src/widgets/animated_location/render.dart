@@ -55,10 +55,10 @@ class AnimatedLocationLeader extends SingleChildRenderObjectWidget {
   /// The [link] property must not be null, and must not be currently being used
   /// by any other [CompositedTransformTarget] object that is in the tree.
   const AnimatedLocationLeader({
-    Key? key,
+    super.key,
     required this.controller,
-    Widget? child,
-  }) : super(key: key, child: child);
+    super.child,
+  });
 
   final AnimatedLocationController controller;
 
@@ -85,7 +85,7 @@ class AnimatedLocationLeader extends SingleChildRenderObjectWidget {
 
 /// The element of the [AnimatedLocationLeader].
 class AnimatedLocationLeaderElement extends SingleChildRenderObjectElement {
-  AnimatedLocationLeaderElement(AnimatedLocationLeader widget) : super(widget);
+  AnimatedLocationLeaderElement(AnimatedLocationLeader super.widget);
 
   @override
   AnimatedLocationLeader get widget => super.widget as AnimatedLocationLeader;

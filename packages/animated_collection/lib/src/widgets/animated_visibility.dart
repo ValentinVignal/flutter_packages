@@ -14,8 +14,8 @@ class AnimatedVisibility extends StatelessWidget {
     this.axisAlignment = 0,
     this.curve = Curves.easeInOut,
     this.duration = defaultDuration,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   /// The child to display when [visible] is `true`.
   final Widget child;
