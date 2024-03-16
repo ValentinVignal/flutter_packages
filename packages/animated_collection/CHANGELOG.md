@@ -1,6 +1,10 @@
 ## NEXT
 
 - Upgrade dependencies.
+- Upgrades to Flutter 3.19 and Dart 3.2.
+- **Breaking**: Removes `TightSizeTransition` as
+  https://github.com/flutter/flutter/pull/134659 as been deployed on stable
+  3.19.0. Use `SizeTransition` from Flutter instead.
 
 ## 0.0.2
 
