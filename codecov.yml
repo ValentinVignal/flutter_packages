@@ -8,6 +8,10 @@ flags:
     paths:
       - packages/animated_collection/
     carryforward: true
+  imperative_page_routes:
+    paths:
+      - packages/imperative_page_routes/
+    carryforward: true
 
 coverage:
   status:
@@ -15,3 +19,6 @@ coverage:
       animated_collection: 
         flags:
           - animated_collection
+      imperative_page_routes:
+        flags:
+          - imperative_page_routes
