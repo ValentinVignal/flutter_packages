@@ -1,3 +1,6 @@
-## 0.0.0
+## NEXT
 
-- Initial release.
+- Initial release:
+  - Adds `BottomSheetPage`.
+  - Adds `DialogPage`.
+  - Adds `DrawerPage`.
