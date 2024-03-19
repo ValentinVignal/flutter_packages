@@ -8,5 +8,8 @@
         "Vignal",
         "vsync",
         "wakatime"
+    ],
+    "ignorePaths": [
+        "**/.gitignore"
     ]
 }
