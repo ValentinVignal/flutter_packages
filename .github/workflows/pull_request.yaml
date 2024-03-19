@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Linter
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
       - run: dart pub global activate melos
@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Analyze
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
       - run: dart pub global activate melos
@@ -31,14 +31,14 @@ jobs:
     runs-on: ubuntu-latest
     name: Tests
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
       - run: dart pub global activate melos
       - run: melos bootstrap
       - run: melos run test-coverage
       - name: Upload to Codecov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           flags: animated_collection
   spelling:
@@ -46,6 +46,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Check code spelling
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Check spelling
-        uses: streetsidesoftware/cspell-action@v2
+        uses: streetsidesoftware/cspell-action@v6
