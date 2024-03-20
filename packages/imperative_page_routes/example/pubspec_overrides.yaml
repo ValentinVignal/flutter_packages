@@ -1,0 +1,4 @@
+# melos_managed_dependency_overrides: imperative_page_routes
+dependency_overrides:
+  imperative_page_routes:
+    path: ..
