@@ -40,7 +40,8 @@ jobs:
       - name: Upload to Codecov
         uses: codecov/codecov-action@v4
         with:
-          flags: animated_collection
+          flags: animated_collection,imperative_page_routes
+          token: ${{ secrets.CODECOV_TOKEN }}
   spelling:
     # Verifies there is no spelling errors in the code.
     runs-on: ubuntu-latest

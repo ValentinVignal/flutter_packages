@@ -22,4 +22,5 @@ jobs:
       - name: Upload to Codecov
         uses: codecov/codecov-action@v4
         with:
-          flags: animated_collection
+          flags: animated_collection,imperative_page_routes
+          token: ${{ secrets.CODECOV_TOKEN }}
