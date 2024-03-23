@@ -1,5 +1,5 @@
 name: imperative_page_routes
-description: A Flutter library with pages for imperative routing.
+description: A Flutter library with pages from imperative routing that can be used in a declarative way.
 version: 0.0.0
 homepage: https://github.com/ValentinVignal/flutter_packages/tree/main/packages/imperative_page_routes
 repository: https://github.com/ValentinVignal/flutter_packages
