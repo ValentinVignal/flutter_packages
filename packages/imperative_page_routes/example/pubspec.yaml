@@ -32,8 +32,7 @@ dependencies:
   go_router: ^13.2.1
   flutter:
     sdk: flutter
-  imperative_page_routes:
-    path: ../
+  imperative_page_routes: ^0.0.0
 
 dev_dependencies:
   build_runner: ^2.4.8
