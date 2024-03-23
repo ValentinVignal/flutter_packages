@@ -1,4 +1,4 @@
-## NEXT
+## 0.0.0
 
 - Initial release:
   - Adds `BottomSheetPage`.
