@@ -1,4 +1,4 @@
-## NEXT
+## 0.0.1
 
 - Modifies the package description to be clearer.
 
