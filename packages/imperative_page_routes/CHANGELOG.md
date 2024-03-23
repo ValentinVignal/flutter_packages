@@ -1,3 +1,7 @@
+## NEXT
+
+- Modifies the package description to be clearer.
+
 ## 0.0.0
 
 - Initial release:

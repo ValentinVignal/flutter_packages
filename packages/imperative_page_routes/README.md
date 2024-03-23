@@ -2,4 +2,4 @@
 
 ## imperative_route_pages
 
-A Flutter library with pages for imperative routing.
+A Flutter library with pages from imperative routing that can be used in a declarative way.
