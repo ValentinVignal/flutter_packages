@@ -1,6 +1,7 @@
-## NEXT
+## 0.0.2
 
 - Fixes codecov badge in README.
+- Relax flutter constraints to accept flutter 3.16.0.
 
 ## 0.0.1
 
