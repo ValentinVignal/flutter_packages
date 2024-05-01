@@ -15,7 +15,7 @@ class AnimatedSizeTransition extends StatelessWidget {
     super.key,
   });
 
-  /// The child to display.
+  /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget child;
 
   /// The axis of the transition. The default is [Axis.vertical].
