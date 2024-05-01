@@ -1,2 +1,5 @@
 .dart_tool/
 coverage/
+
+**/pubspec_overrides.yaml
+
