@@ -7,4 +7,4 @@ A Flutter library with simple animated widgets and utilities methods to use with
 - `AnimatedVisibility`.
 - `AnimatedBoolean`.
 - `AnimatedLocation`.
-- `TightSizeTransition`.
+- `AnimatedAppearing`.
