@@ -1,3 +1,7 @@
+## 1.1.0
+
+- Adds `AnimatedAppearing`.
+
 ## 1.0.0
 
 - Upgrade dependencies.
