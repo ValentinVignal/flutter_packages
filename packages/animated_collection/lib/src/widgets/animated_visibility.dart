@@ -1,3 +1,4 @@
+import 'package:animated_collection/src/widgets/duration.dart';
 import 'package:flutter/material.dart';
 
 import 'animated_size_transition.dart';
@@ -17,7 +18,7 @@ class AnimatedVisibility extends StatelessWidget {
     super.key,
   });
 
-  /// The child to display when [visible] is `true`.
+  /// {@macro flutter.widgets.ProxyWidget.child}
   final Widget child;
 
   /// If `true`, it displays the [child], else if displays a [SizedBox.shrink].
@@ -34,10 +35,6 @@ class AnimatedVisibility extends StatelessWidget {
 
   /// The duration of the animation.
   final Duration duration;
-
-  /// The duration of the transition.
-  @visibleForTesting
-  static const defaultDuration = Duration(milliseconds: 250);
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:animated_collection/animated_collection.dart';
+import 'package:animated_collection/src/widgets/duration.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -72,12 +73,12 @@ void main() {
       expect(actualPositionedBox.widthFactor, 1);
 
       await pumpWidget(false);
-      await tester.pump(AnimatedVisibility.defaultDuration * 0.5);
+      await tester.pump(defaultDuration * 0.5);
       expect(find.byKey(key), findsOneWidget);
       expect(actualPositionedBox.heightFactor, 0.5);
       expect(actualPositionedBox.widthFactor, 1);
 
-      await tester.pump(AnimatedVisibility.defaultDuration * 0.5);
+      await tester.pump(defaultDuration * 0.5);
       expect(find.byKey(key), findsOneWidget);
       expect(actualPositionedBox.heightFactor, 0.0);
       expect(actualPositionedBox.widthFactor, 1);
