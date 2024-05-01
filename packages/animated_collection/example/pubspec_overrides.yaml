@@ -1,4 +1,0 @@
-# melos_managed_dependency_overrides: animated_collection
-dependency_overrides:
-  animated_collection:
-    path: ..
