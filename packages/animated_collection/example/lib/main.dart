@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animated_collection/animated_collection.dart';
 import 'package:flutter/material.dart';
 
@@ -44,10 +46,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
   var _alignment = Alignment.center;
 
+  // Animated appearing.
+  final _random = Random();
+
+  Color _generateColor() {
+    return Color(0xff000000 + _random.nextInt(0xffffff));
+  }
+
+  final _colors = <Color>[];
+
+  @override
+  void initState() {
+    super.initState();
+    _colors.addAll([_generateColor(), _generateColor()]);
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('animated_collection'),
@@ -55,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
             tabs: [
               Tab(text: 'AnimatedVisibility'),
               Tab(text: 'AnimatedLocation'),
+              Tab(text: 'AnimatedAppearing'),
             ],
           ),
         ),
@@ -73,6 +91,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     final newIndex = (currentIndex + 1) % _alignments.length;
                     setState(() {
                       _alignment = _alignments[newIndex];
+                    });
+                    break;
+                  case 2:
+                    setState(() {
+                      _colors.addAll([_generateColor(), _generateColor()]);
                     });
                     break;
                 }
@@ -115,6 +138,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
+            ),
+            ListView.builder(
+              itemCount: _colors.length,
+              itemBuilder: (context, index) {
+                return AnimatedAppearing(
+                  child: ListTile(
+                    tileColor: _colors[index],
+                  ),
+                );
+              },
             ),
           ],
         ),
