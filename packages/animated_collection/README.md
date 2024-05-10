@@ -8,3 +8,6 @@ A Flutter library with simple animated widgets and utilities methods to use with
 - `AnimatedBoolean`.
 - `AnimatedLocation`.
 - `AnimatedAppearing`.
+- `AnimatedFlexible`.
+- `AnimatedExpanded`.
+- `AnimatedSpacer`.

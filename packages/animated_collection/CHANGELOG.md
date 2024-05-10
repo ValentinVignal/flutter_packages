@@ -1,3 +1,10 @@
+## NEXT
+
+- Adds
+  - `AnimatedFlexible`
+  - `AnimatedExpanded`
+  - `AnimatedSpacer`
+
 ## 1.1.0
 
 - Adds `AnimatedAppearing`.
