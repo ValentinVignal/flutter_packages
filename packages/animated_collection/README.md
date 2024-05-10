@@ -4,10 +4,26 @@
 
 A Flutter library with simple animated widgets and utilities methods to use with animations.
 
-- `AnimatedVisibility`.
-- `AnimatedBoolean`.
-- `AnimatedLocation`.
-- `AnimatedAppearing`.
+### `AnimatedVisibility`
+
+![](https://github.com/ValentinVignal/flutter_packages/blob/main/packages/animated_collection/docs/animated-visibility.gif?raw=true)
+
+### `AnimatedBoolean`
+
+![](https://github.com/ValentinVignal/flutter_packages/blob/main/packages/animated_collection/docs/animated-boolean.gif?raw=true)
+
+### `AnimatedLocation`
+
+![](https://github.com/ValentinVignal/flutter_packages/blob/main/packages/animated_collection/docs/animated-location.gif?raw=true)
+
+### `AnimatedAppearing`
+
+![](https://github.com/ValentinVignal/flutter_packages/blob/main/packages/animated_collection/docs/animated-appearing.gif?raw=true)
+
+### Animated flex
+
 - `AnimatedFlexible`.
 - `AnimatedExpanded`.
 - `AnimatedSpacer`.
+
+![](https://github.com/ValentinVignal/flutter_packages/blob/main/packages/animated_collection/docs/animated-expanded.gif?raw=true)
