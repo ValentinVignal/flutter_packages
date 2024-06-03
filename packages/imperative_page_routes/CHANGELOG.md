@@ -1,3 +1,7 @@
+## NEXT
+
+- Adds `popGestureEnabled` getter (introduced in flutter 3.22.x).
+
 ## 0.0.2
 
 - Fixes codecov badge in README.
