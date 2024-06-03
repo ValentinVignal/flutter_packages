@@ -60,38 +60,5 @@ class _DrawerPageRoute extends TransitionRoute<dynamic> {
   Duration get transitionDuration => const Duration(milliseconds: 200);
 
   @override
-  bool get popGestureEnabled {
-    // If there's nothing to go back to, then obviously we don't support
-    // the back gesture.
-    if (isFirst) {
-      return false;
-    }
-    // If the route wouldn't actually pop if we popped it, then the gesture
-    // would be really confusing (or would skip internal routes), so disallow it.
-    if (willHandlePopInternally) {
-      return false;
-    }
-    // If attempts to dismiss this route might be vetoed such as in a page
-    // with forms, then do not allow the user to dismiss the route with a swipe.
-    if (popDisposition == RoutePopDisposition.doNotPop) {
-      return false;
-    }
-    // If we're in an animation already, we cannot be manually swiped.
-    if (animation!.status != AnimationStatus.completed) {
-      return false;
-    }
-    // If we're being popped into, we also cannot be swiped until the pop above
-    // it completes. This translates to our secondary animation being
-    // dismissed.
-    if (secondaryAnimation!.status != AnimationStatus.dismissed) {
-      return false;
-    }
-    // If we're in a gesture already, we cannot start another.
-    if (navigator!.userGestureInProgress) {
-      return false;
-    }
-
-    // Looks like a back gesture would be welcome!
-    return true;
-  }
+  bool get popGestureEnabled => false;
 }
