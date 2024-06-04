@@ -13,14 +13,16 @@ class DrawerPage extends Page<dynamic> {
 
   @override
   Route<dynamic> createRoute(BuildContext context) {
-    return _DrawerPageRoute(
+    return DrawerPageRoute(
       settings: this,
     );
   }
 }
 
-class _DrawerPageRoute extends TransitionRoute<dynamic> {
-  _DrawerPageRoute({
+/// The route used by [DrawerPage].
+class DrawerPageRoute extends TransitionRoute<dynamic> {
+  /// The route used by [DrawerPage].
+  DrawerPageRoute({
     required DrawerPage settings,
   }) : super(
           settings: settings,
