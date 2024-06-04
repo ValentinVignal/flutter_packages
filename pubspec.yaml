@@ -2,6 +2,6 @@ name: flutter_packages
 publish_to: none
 
 environment:
-  sdk: ^3.0.6
+  sdk: ">=3.4.0 <4.0.0"
 dev_dependencies:
   melos: ^5.1.0

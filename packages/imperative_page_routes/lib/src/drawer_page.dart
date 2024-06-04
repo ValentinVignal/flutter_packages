@@ -58,4 +58,7 @@ class _DrawerPageRoute extends TransitionRoute<dynamic> {
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 200);
+
+  @override
+  bool get popGestureEnabled => false;
 }
