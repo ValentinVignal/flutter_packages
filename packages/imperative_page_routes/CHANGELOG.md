@@ -1,4 +1,4 @@
-## NEXT
+## 0.1.0
 
 - Adds `popGestureEnabled` getter (introduced in flutter 3.22.x).
 
