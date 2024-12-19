@@ -6,22 +6,6 @@ part of 'main.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$integerHash() => r'5bfc9345d636458f4a9da9e4676f1199cc06d2fa';
-
-/// See also [integer].
-@ProviderFor(integer)
-final integerProvider = AutoDisposeProvider<int>.internal(
-  integer,
-  name: r'integerProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$integerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef IntegerRef = AutoDisposeProviderRef<int>;
 String _$myIntegerStateHash() => r'6e0f5229d73367854236933bac07bb267ad733af';
 
 /// See also [_MyIntegerState].

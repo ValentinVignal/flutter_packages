@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:meta/meta_meta.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:riverpod_state_provider_annotation/riverpod_state_provider_annotation.dart';
 
 part 'main.g.dart';
 
@@ -30,24 +29,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-@riverpod
-int integer(Ref ref) {
-  ref.watch(stateProvider.notifier);
-  return 0;
-}
-
-final stateProvider = StateProvider.autoDispose<int>((ref) => 0);
-
 @RiverpodStateProvider()
 int myInteger() {
   return 0;
-}
-
-// API
-
-@Target({TargetKind.function})
-class RiverpodStateProvider {
-  const RiverpodStateProvider();
 }
 
 // Generated
