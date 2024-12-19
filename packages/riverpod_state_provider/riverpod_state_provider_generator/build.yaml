@@ -1,0 +1,23 @@
+targets:
+  $default:
+    builders:
+      riverpod_state_provider_generator:
+        enabled: true
+        generate_for:
+          exclude:
+            - test
+            - example
+          include:
+            - test/integration/*
+            - test/integration/**/*
+
+builders:
+  riverpod_generator:
+  
+    import: "package:riverpod_state_provider_generator/builder.dart"
+    builder_factories: ["riverpodStateProviderBuilder"]
+    build_extensions: {".dart": [".rsp.part"]}
+    auto_apply: dependents
+    build_to: source
+    runs_before: ["riverpod_generator|riverpod_generator"]
+

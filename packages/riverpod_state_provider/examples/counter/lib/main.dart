@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_state_provider_annotation/riverpod_state_provider_annotation.dart';
 
 part 'main.g.dart';
+part 'main.rsp.dart';
 
 // A Counter example implemented with riverpod
 
@@ -34,71 +35,42 @@ int myInteger() {
   return 0;
 }
 
-// Generated
-final myIntegerProvider = _myIntegerStateProvider;
-
-@riverpod
-class _MyIntegerState extends _$MyIntegerState {
-  _MyIntegerState({this.overrideInitialState});
-
-  final _MyIntegerOverrideValue? overrideInitialState;
-
-  @override
-  int build() {
-    if (overrideInitialState != null) {
-      return overrideInitialState!.value;
-    }
-    return myInteger();
-  }
-
-  // Remove the protected status
-  @override
-  int get state => super.state;
-
-  @override
-  set state(int value) => super.state = value;
-
-  /// Calls a function with the current [state] and assigns the result as the
-  /// new state.
-  ///
-  /// This allows simplifying the syntax for updating the state when the update
-  /// depends on the previous state, such that rather than:
-  ///
-  /// ```dart
-  /// ref.read(provider.notifier).state = ref.read(provider.notifier).state + 1;
-  /// ```
-  ///
-  /// we can do:
-  ///
-  /// ```dart
-  /// ref.read(provider.notifier).update((state) => state + 1);
-  /// ```
-  int update(int Function(int state) cb) => state = cb(state);
+@RiverpodStateProvider()
+int? myNullableInteger() {
+  return 0;
 }
 
-class _MyIntegerOverrideValue {
-  const _MyIntegerOverrideValue(this.value);
-
-  final int value;
+@RiverpodStateProvider()
+double myDouble() {
+  return 0;
 }
 
-extension MyIntegerRiverpodStateProviderExtension
-    on AutoDisposeNotifierProvider<_MyIntegerState, int> {
-  Override overrideWithValue(int value) {
-    return overrideWith(() {
-      return _MyIntegerState(
-        overrideInitialState: _MyIntegerOverrideValue(value),
-      );
-    });
-  }
+class MyClass<T> {
+  const MyClass({required this.value});
+
+  final T value;
 }
 
-// End generated
+@RiverpodStateProvider()
+MyClass<int> myClassInteger() {
+  return MyClass(value: 0);
+}
 
-/// Annotating a class by `@riverpod` defines a new shared state for your application,
-/// accessible using the generated [counterProvider].
-/// This class is both responsible for initializing the state (through the [build] method)
-/// and exposing ways to modify it (cf [increment]).
+@RiverpodStateProvider()
+Set<int> mySetInteger() {
+  return {0};
+}
+
+@RiverpodStateProvider()
+List<int> myListInteger() {
+  return [0];
+}
+
+@RiverpodStateProvider()
+Map<int, int> myMapInteger() {
+  return {0: 0};
+}
+
 @riverpod
 class Counter extends _$Counter {
   /// Classes annotated by `@riverpod` **must** define a [build] function.
@@ -107,6 +79,18 @@ class Counter extends _$Counter {
   /// You can also freely define parameters on this method.
   @override
   int build() => 0;
+
+  void increment() => state++;
+}
+
+@riverpod
+class CounterFamily extends _$CounterFamily {
+  /// Classes annotated by `@riverpod` **must** define a [build] function.
+  /// This function is expected to return the initial state of your shared state.
+  /// It is totally acceptable for this function to return a [Future] or [Stream] if you need to.
+  /// You can also freely define parameters on this method.
+  @override
+  int build(String param) => 0;
 
   void increment() => state++;
 }
@@ -121,13 +105,39 @@ class Home extends ConsumerWidget {
       appBar: AppBar(title: const Text('Counter example')),
       body: Center(
         child: Text(
-            '${ref.watch(counterProvider)} - ${ref.watch(myIntegerProvider)}'),
+          [
+            '${ref.watch(counterProvider)}',
+            '${ref.watch(myIntegerProvider)}',
+            '${ref.watch(myNullableIntegerProvider)}',
+            '${ref.watch(myDoubleProvider)}',
+            '${ref.watch(myClassIntegerProvider).value}',
+            '${ref.watch(mySetIntegerProvider)}',
+            '${ref.watch(myListIntegerProvider)}',
+            '${ref.watch(myMapIntegerProvider)}',
+          ].join('\n'),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         // The read method is a utility to read a provider without listening to it
         onPressed: () {
           ref.read(counterProvider.notifier).increment();
           ref.read(myIntegerProvider.notifier).state++;
+          ref
+              .read(myNullableIntegerProvider.notifier)
+              .update((state) => (state ?? 0) + 1);
+          ref.read(myDoubleProvider.notifier).state += 0.5;
+          ref
+              .read(myClassIntegerProvider.notifier)
+              .update((state) => MyClass(value: state.value + 1));
+          ref
+              .read(mySetIntegerProvider.notifier)
+              .update((state) => {state.single + 1});
+          ref
+              .read(myListIntegerProvider.notifier)
+              .update((state) => [state.single + 1]);
+          ref
+              .read(myMapIntegerProvider.notifier)
+              .update((state) => {0: state[0]! + 1});
         },
         child: const Icon(Icons.add),
       ),
