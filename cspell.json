@@ -5,12 +5,19 @@
         "intellij",
         "LTRB",
         "LTWH",
+        "pubspec",
         "riverpod",
         "Vignal",
         "vsync",
         "wakatime"
     ],
     "ignorePaths": [
-        "**/.gitignore"
+        "**/.gitignore",
+        "**/pubspec.lock",
+        "**/android/**",
+        "**/ios/**",
+        "**/linux/**",
+        "**/macos/**",
+        "**/windows/**",
     ]
 }

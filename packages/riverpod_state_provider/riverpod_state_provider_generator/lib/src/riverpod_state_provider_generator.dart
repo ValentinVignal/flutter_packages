@@ -1,7 +1,7 @@
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/element/element.dart';
-import 'package:build/src/builder/build_step.dart';
+import 'package:build/build.dart';
 import 'package:meta/meta.dart';
 import 'package:riverpod_state_provider_annotation/riverpod_state_provider_annotation.dart';
 import 'package:source_gen/source_gen.dart';
