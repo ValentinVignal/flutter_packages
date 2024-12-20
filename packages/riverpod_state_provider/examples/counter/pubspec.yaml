@@ -26,8 +26,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.6.1
-  riverpod_state_provider_annotation:
-    path: ../../riverpod_state_provider_annotation
+  riverpod_state_provider_annotation: ^0.0.0
 
 dev_dependencies:
   build_runner: ^2.4.14
