@@ -12,6 +12,10 @@ flags:
     paths:
       - packages/imperative_page_routes/
     carryforward: true
+  riverpod_state_provider_generator:
+    paths:
+      - packages/riverpod_state_provider/riverpod_state_provider_generator/
+    carryforward: true
 
 coverage:
   status:
@@ -22,3 +26,6 @@ coverage:
       imperative_page_routes:
         flags:
           - imperative_page_routes
+      riverpod_state_provider_generator:
+        flags:
+          - riverpod_state_provider_generator
