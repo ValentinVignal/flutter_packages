@@ -6,10 +6,6 @@ import 'package:meta/meta.dart';
 import 'package:riverpod_state_provider_annotation/riverpod_state_provider_annotation.dart';
 import 'package:source_gen/source_gen.dart';
 
-// TODO:
-// - parameters
-//
-
 @immutable
 class RiverpodStateProviderGenerator
     extends GeneratorForAnnotation<RiverpodStateProvider> {
@@ -45,6 +41,7 @@ class RiverpodStateProviderGenerator
 
     final buffer = StringBuffer();
     buffer.write('''
+@StateProviderFor($name)
 final ${name}Provider = _${name}StateProvider;
 
 @riverpod
