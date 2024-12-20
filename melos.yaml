@@ -13,14 +13,27 @@ scripts:
   analyze:
     run: dart analyze 
 
+  test:dart:
+    exec: flutter test 
+    packageFilters:
+      flutter: false
+      dirExists: test
+
   test:flutter:
     exec: flutter test 
     packageFilters:
       flutter: true
       dirExists: test
 
+
   test:
-    run: melos run test:flutter
+    run: melos run test:dart; melos run test:flutter 
+
+  test-coverage:dart:
+    exec: dart test --coverage=coverage/lcov.info
+    packageFilters:
+      flutter: false
+      dirExists: test
 
   test-coverage:flutter:
     exec: flutter test --coverage
@@ -29,5 +42,5 @@ scripts:
       dirExists: test
 
   test-coverage:
-    run: melos run test-coverage:flutter
+    run: melos run test-coverage:dart; melos run test-coverage:flutter
   
