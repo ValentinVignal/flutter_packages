@@ -6,14 +6,12 @@ targets:
         generate_for:
           exclude:
             - test
-            - example
           include:
             - test/integration/*
             - test/integration/**/*
 
 builders:
-  riverpod_generator:
-  
+  riverpod_state_provider_generator:
     import: "package:riverpod_state_provider_generator/builder.dart"
     builder_factories: ["riverpodStateProviderBuilder"]
     build_extensions: {".dart": [".rsp.part"]}

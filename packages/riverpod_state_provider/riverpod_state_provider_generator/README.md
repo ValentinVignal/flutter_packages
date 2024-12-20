@@ -26,7 +26,7 @@ int myInteger() {
 }
 ```
 
-Add `riverpod_state_provider_generator` and `build_runner` to your `dev_dependencies` and run
+Add `riverpod_state_provider_generator`, `riverpod_generator` and `build_runner` to your `dev_dependencies` and run
 
 ```shell
 dart run build_runner build -d
