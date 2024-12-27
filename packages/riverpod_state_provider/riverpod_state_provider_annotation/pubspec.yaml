@@ -6,13 +6,12 @@ repository: https://github.com/ValentinVignal/flutter_packages
 issue_tracker: https://github.com/ValentinVignal/flutter_packages/issues
 
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.3.0
 
-# Add regular dependencies here.
 dependencies:
   riverpod_annotation: ^2.6.1
   meta: ^1.15.0
 
 dev_dependencies:
-  lints: ^5.0.0
+  lints: ^4.0.0
   test: ^1.24.0
