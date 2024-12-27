@@ -1,6 +1,6 @@
 name: riverpod_state_provider_annotation
 description: A package exposing annotations for riverpod_state_provider_generator
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/ValentinVignal/flutter_packages/tree/main/packages/riverpod_state_provider/riverpod_state_provider_annotation
 repository: https://github.com/ValentinVignal/flutter_packages
 issue_tracker: https://github.com/ValentinVignal/flutter_packages/issues
@@ -10,7 +10,7 @@ environment:
 
 dependencies:
   riverpod_annotation: ^2.6.1
-  meta: ^1.15.0
+  meta: ^1.11.0
 
 dev_dependencies:
   lints: ^4.0.0
