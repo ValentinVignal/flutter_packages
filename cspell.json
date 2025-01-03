@@ -19,6 +19,7 @@
         "**/linux/**",
         "**/macos/**",
         "**/windows/**",
-        "**/.metadata"
+        "**/.metadata",
+        "**/*.g.dart",
     ]
 }
