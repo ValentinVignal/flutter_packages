@@ -1,3 +1,7 @@
+## 0.1.0
+
+- Adds support to family providers.
+
 ## 0.0.2
 
 - Accept meta 1.11.0
