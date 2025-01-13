@@ -6,6 +6,8 @@ import 'package:meta/meta.dart';
 import 'package:riverpod_state_provider_annotation/riverpod_state_provider_annotation.dart';
 import 'package:source_gen/source_gen.dart';
 
+const _typeChecker = TypeChecker.fromRuntime(RiverpodStateProvider);
+
 @immutable
 class RiverpodStateProviderGenerator
     extends GeneratorForAnnotation<RiverpodStateProvider> {
@@ -101,21 +103,50 @@ class RiverpodStateProviderGenerator
   }) {
     if (!isFamily) {
       final prefix = isKeepAlive ? '' : 'AutoDispose';
-      return '${prefix}NotifierProvider<_$stateClassName, $type>';
+      return '${prefix}NotifierProvider<$stateClassName, $type>';
     } else {
-      return '_${stateClassName}Provider';
+      return '${stateClassName}Provider';
     }
   }
 
   String _getDecorator(ConstantReader annotation) {
     final isKeepAlive = annotation.peek('keepAlive')?.boolValue ?? false;
-    if (isKeepAlive) {
-      return '''
-@Riverpod(
-  keepAlive: true,
-)''';
+
+    final dependencies = annotation.peek('dependencies')?.listValue;
+
+    if (isKeepAlive || dependencies != null) {
+      final builder = StringBuffer('@Riverpod(');
+
+      if (isKeepAlive) {
+        builder.write('keepAlive: true,');
+      }
+      if (dependencies != null) {
+        builder.write('dependencies: [');
+        builder.write(dependencies.map((dependency) {
+          final type = dependency.toTypeValue();
+          if (type != null) {
+            return type.getDisplayString();
+          } else {
+            final function = dependency.toFunctionValue()! as FunctionElement;
+            final annotation = _typeChecker.firstAnnotationOfExact(function);
+            if (annotation == null) {
+              return function.name;
+            }
+            return _getStateClassNameFromFunctionName(function.name);
+          }
+        }).join(', '));
+        builder.write('],');
+      }
+      builder.writeln(')');
+
+      return builder.toString();
     }
     return '@riverpod';
+  }
+
+  String _getStateClassNameFromFunctionName(String name) {
+    final pascalName = name.camelToPascal();
+    return '${pascalName}State';
   }
 
   Future<String> _generateProvider(
@@ -136,16 +167,16 @@ class RiverpodStateProviderGenerator
 
     final name = element.name;
     final pascalName = name.camelToPascal();
-    final stateClassName = '${pascalName}State';
+    final stateClassName = _getStateClassNameFromFunctionName(name);
 
     final buffer = StringBuffer();
     buffer.write('''
 @StateProviderFor($name)
-final ${name}Provider = _${name}StateProvider;
+final ${name}Provider = ${name}StateProvider;
 
 ${_getDecorator(annotation)}
-class _$stateClassName extends _\$$stateClassName {
-  _$stateClassName({this.overrideInitialState});
+class $stateClassName extends _\$$stateClassName {
+  $stateClassName({this.overrideInitialState});
 
   final _${pascalName}OverrideValue? overrideInitialState;
 
@@ -191,7 +222,7 @@ extension ${pascalName}RiverpodStateProviderExtension
     on ${_getExtensionType(isFamily: isFamily, stateClassName: stateClassName, type: type, isKeepAlive: isKeepAlive)} {
   Override overrideWithValue($type value) {
     return overrideWith(() {
-      return _$stateClassName(
+      return $stateClassName(
         overrideInitialState: _${pascalName}OverrideValue(value),
       );
     });
