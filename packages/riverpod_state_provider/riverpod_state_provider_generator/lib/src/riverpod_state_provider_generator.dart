@@ -24,7 +24,7 @@ class RiverpodStateProviderGenerator
       );
     }
 
-    return _generateProvider(element);
+    return _generateProvider(annotation, element);
   }
 
   String _getType(ResolvedLibraryResult library, TypeAnnotation? returnType) {
@@ -42,11 +42,15 @@ class RiverpodStateProviderGenerator
   }
 
   String _buildParametersDefinition(List<ParameterElement> parameters) {
-    final requiredPositionals =
-        parameters.where((element) => element.isRequiredPositional).toList();
-    final optionalPositionals =
-        parameters.where((element) => element.isOptionalPositional).toList();
-    final named = parameters.where((element) => element.isNamed).toList();
+    final parametersToDefine = parameters.skip(1);
+    final requiredPositionals = parametersToDefine
+        .where((element) => element.isRequiredPositional)
+        .toList();
+    final optionalPositionals = parametersToDefine
+        .where((element) => element.isOptionalPositional)
+        .toList();
+    final named =
+        parametersToDefine.where((element) => element.isNamed).toList();
 
     final buffer = StringBuffer();
     String encodeParameter(ParameterElement e) {
@@ -79,7 +83,8 @@ class RiverpodStateProviderGenerator
     final buffer = StringBuffer();
 
     buffer.writeAll(
-      parameters.map((e) {
+      parameters.mapIndexed((i, e) {
+        if (i == 0) return 'ref';
         if (e.isNamed) return '${e.name}: ${e.name}';
         return e.name;
       }).expand((e) => [e, ',']),
@@ -92,22 +97,40 @@ class RiverpodStateProviderGenerator
     required String stateClassName,
     required String type,
     required bool isFamily,
+    required bool isKeepAlive,
   }) {
     if (!isFamily) {
-      return 'AutoDisposeNotifierProvider<_$stateClassName, $type>';
+      final prefix = isKeepAlive ? '' : 'AutoDispose';
+      return '${prefix}NotifierProvider<_$stateClassName, $type>';
     } else {
       return '_${stateClassName}Provider';
     }
   }
 
-  Future<String> _generateProvider(FunctionElement element) async {
+  String _getDecorator(ConstantReader annotation) {
+    final isKeepAlive = annotation.peek('keepAlive')?.boolValue ?? false;
+    if (isKeepAlive) {
+      return '''
+@Riverpod(
+  keepAlive: true,
+)''';
+    }
+    return '@riverpod';
+  }
+
+  Future<String> _generateProvider(
+    ConstantReader annotation,
+    FunctionElement element,
+  ) async {
+    final isKeepAlive = annotation.peek('keepAlive')?.boolValue ?? false;
+
     final library = await element.session
         ?.getResolvedLibraryByElement(element.library) as ResolvedLibraryResult;
     final functionDeclaration =
         library.getElementDeclaration(element)?.node as FunctionDeclaration;
 
     final parameters = element.parameters;
-    final isFamily = parameters.isNotEmpty;
+    final isFamily = parameters.length > 1;
 
     final type = _getType(library, functionDeclaration.returnType);
 
@@ -120,7 +143,7 @@ class RiverpodStateProviderGenerator
 @StateProviderFor($name)
 final ${name}Provider = _${name}StateProvider;
 
-@riverpod
+${_getDecorator(annotation)}
 class _$stateClassName extends _\$$stateClassName {
   _$stateClassName({this.overrideInitialState});
 
@@ -165,7 +188,7 @@ class _${pascalName}OverrideValue {
 }
 
 extension ${pascalName}RiverpodStateProviderExtension
-    on ${_getExtensionType(isFamily: isFamily, stateClassName: stateClassName, type: type)} {
+    on ${_getExtensionType(isFamily: isFamily, stateClassName: stateClassName, type: type, isKeepAlive: isKeepAlive)} {
   Override overrideWithValue($type value) {
     return overrideWith(() {
       return _$stateClassName(
@@ -184,5 +207,14 @@ extension on String {
   String camelToPascal() {
     if (isEmpty) return '';
     return this[0].toUpperCase() + substring(1);
+  }
+}
+
+extension<T> on Iterable<T> {
+  Iterable<R> mapIndexed<R>(R Function(int index, T element) convert) sync* {
+    var index = 0;
+    for (var element in this) {
+      yield convert(index++, element);
+    }
   }
 }
