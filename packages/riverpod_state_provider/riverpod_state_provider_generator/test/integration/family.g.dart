@@ -7,7 +7,7 @@ part of 'family.dart';
 // **************************************************************************
 
 String _$myFamilyPositionalParametersStateHash() =>
-    r'985466c4ff10cba2b0828309e3afff87bb6eb126';
+    r'eb3f9d771bef1e8a755bd46c1d72aefbd287bfe4';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -47,25 +47,25 @@ abstract class _$MyFamilyPositionalParametersState
   ]);
 }
 
-/// See also [_MyFamilyPositionalParametersState].
-@ProviderFor(_MyFamilyPositionalParametersState)
-const _myFamilyPositionalParametersStateProvider =
-    _MyFamilyPositionalParametersStateFamily();
+/// See also [MyFamilyPositionalParametersState].
+@ProviderFor(MyFamilyPositionalParametersState)
+const myFamilyPositionalParametersStateProvider =
+    MyFamilyPositionalParametersStateFamily();
 
-/// See also [_MyFamilyPositionalParametersState].
-class _MyFamilyPositionalParametersStateFamily extends Family<int> {
-  /// See also [_MyFamilyPositionalParametersState].
-  const _MyFamilyPositionalParametersStateFamily();
+/// See also [MyFamilyPositionalParametersState].
+class MyFamilyPositionalParametersStateFamily extends Family<int> {
+  /// See also [MyFamilyPositionalParametersState].
+  const MyFamilyPositionalParametersStateFamily();
 
-  /// See also [_MyFamilyPositionalParametersState].
-  _MyFamilyPositionalParametersStateProvider call(
+  /// See also [MyFamilyPositionalParametersState].
+  MyFamilyPositionalParametersStateProvider call(
     String param1,
     int param2,
     bool param3, [
     double param4 = 0.0,
     List<int>? param5,
   ]) {
-    return _MyFamilyPositionalParametersStateProvider(
+    return MyFamilyPositionalParametersStateProvider(
       param1,
       param2,
       param3,
@@ -75,8 +75,8 @@ class _MyFamilyPositionalParametersStateFamily extends Family<int> {
   }
 
   @override
-  _MyFamilyPositionalParametersStateProvider getProviderOverride(
-    covariant _MyFamilyPositionalParametersStateProvider provider,
+  MyFamilyPositionalParametersStateProvider getProviderOverride(
+    covariant MyFamilyPositionalParametersStateProvider provider,
   ) {
     return call(
       provider.param1,
@@ -99,35 +99,35 @@ class _MyFamilyPositionalParametersStateFamily extends Family<int> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'_myFamilyPositionalParametersStateProvider';
+  String? get name => r'myFamilyPositionalParametersStateProvider';
 }
 
-/// See also [_MyFamilyPositionalParametersState].
-class _MyFamilyPositionalParametersStateProvider
-    extends AutoDisposeNotifierProviderImpl<_MyFamilyPositionalParametersState,
+/// See also [MyFamilyPositionalParametersState].
+class MyFamilyPositionalParametersStateProvider
+    extends AutoDisposeNotifierProviderImpl<MyFamilyPositionalParametersState,
         int> {
-  /// See also [_MyFamilyPositionalParametersState].
-  _MyFamilyPositionalParametersStateProvider(
+  /// See also [MyFamilyPositionalParametersState].
+  MyFamilyPositionalParametersStateProvider(
     String param1,
     int param2,
     bool param3, [
     double param4 = 0.0,
     List<int>? param5,
   ]) : this._internal(
-          () => _MyFamilyPositionalParametersState()
+          () => MyFamilyPositionalParametersState()
             ..param1 = param1
             ..param2 = param2
             ..param3 = param3
             ..param4 = param4
             ..param5 = param5,
-          from: _myFamilyPositionalParametersStateProvider,
-          name: r'_myFamilyPositionalParametersStateProvider',
+          from: myFamilyPositionalParametersStateProvider,
+          name: r'myFamilyPositionalParametersStateProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
                   : _$myFamilyPositionalParametersStateHash,
-          dependencies: _MyFamilyPositionalParametersStateFamily._dependencies,
-          allTransitiveDependencies: _MyFamilyPositionalParametersStateFamily
+          dependencies: MyFamilyPositionalParametersStateFamily._dependencies,
+          allTransitiveDependencies: MyFamilyPositionalParametersStateFamily
               ._allTransitiveDependencies,
           param1: param1,
           param2: param2,
@@ -136,7 +136,7 @@ class _MyFamilyPositionalParametersStateProvider
           param5: param5,
         );
 
-  _MyFamilyPositionalParametersStateProvider._internal(
+  MyFamilyPositionalParametersStateProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -158,7 +158,7 @@ class _MyFamilyPositionalParametersStateProvider
 
   @override
   int runNotifierBuild(
-    covariant _MyFamilyPositionalParametersState notifier,
+    covariant MyFamilyPositionalParametersState notifier,
   ) {
     return notifier.build(
       param1,
@@ -170,10 +170,10 @@ class _MyFamilyPositionalParametersStateProvider
   }
 
   @override
-  Override overrideWith(_MyFamilyPositionalParametersState Function() create) {
+  Override overrideWith(MyFamilyPositionalParametersState Function() create) {
     return ProviderOverride(
       origin: this,
-      override: _MyFamilyPositionalParametersStateProvider._internal(
+      override: MyFamilyPositionalParametersStateProvider._internal(
         () => create()
           ..param1 = param1
           ..param2 = param2
@@ -195,14 +195,14 @@ class _MyFamilyPositionalParametersStateProvider
   }
 
   @override
-  AutoDisposeNotifierProviderElement<_MyFamilyPositionalParametersState, int>
+  AutoDisposeNotifierProviderElement<MyFamilyPositionalParametersState, int>
       createElement() {
     return _MyFamilyPositionalParametersStateProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is _MyFamilyPositionalParametersStateProvider &&
+    return other is MyFamilyPositionalParametersStateProvider &&
         other.param1 == param1 &&
         other.param2 == param2 &&
         other.param3 == param3 &&
@@ -225,7 +225,7 @@ class _MyFamilyPositionalParametersStateProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin _MyFamilyPositionalParametersStateRef
+mixin MyFamilyPositionalParametersStateRef
     on AutoDisposeNotifierProviderRef<int> {
   /// The parameter `param1` of this provider.
   String get param1;
@@ -245,29 +245,29 @@ mixin _MyFamilyPositionalParametersStateRef
 
 class _MyFamilyPositionalParametersStateProviderElement
     extends AutoDisposeNotifierProviderElement<
-        _MyFamilyPositionalParametersState,
-        int> with _MyFamilyPositionalParametersStateRef {
+        MyFamilyPositionalParametersState,
+        int> with MyFamilyPositionalParametersStateRef {
   _MyFamilyPositionalParametersStateProviderElement(super.provider);
 
   @override
   String get param1 =>
-      (origin as _MyFamilyPositionalParametersStateProvider).param1;
+      (origin as MyFamilyPositionalParametersStateProvider).param1;
   @override
   int get param2 =>
-      (origin as _MyFamilyPositionalParametersStateProvider).param2;
+      (origin as MyFamilyPositionalParametersStateProvider).param2;
   @override
   bool get param3 =>
-      (origin as _MyFamilyPositionalParametersStateProvider).param3;
+      (origin as MyFamilyPositionalParametersStateProvider).param3;
   @override
   double get param4 =>
-      (origin as _MyFamilyPositionalParametersStateProvider).param4;
+      (origin as MyFamilyPositionalParametersStateProvider).param4;
   @override
   List<int>? get param5 =>
-      (origin as _MyFamilyPositionalParametersStateProvider).param5;
+      (origin as MyFamilyPositionalParametersStateProvider).param5;
 }
 
 String _$myFamilyMixedParametersStateHash() =>
-    r'2ba0f231b435c62b8b488c74b1ce693b2f3e61b4';
+    r'51a2fd5d1ae0e1c1e5a3a371c508f8795a0fcd0c';
 
 abstract class _$MyFamilyMixedParametersState
     extends BuildlessAutoDisposeNotifier<List<bool>> {
@@ -286,25 +286,25 @@ abstract class _$MyFamilyMixedParametersState
   });
 }
 
-/// See also [_MyFamilyMixedParametersState].
-@ProviderFor(_MyFamilyMixedParametersState)
-const _myFamilyMixedParametersStateProvider =
-    _MyFamilyMixedParametersStateFamily();
+/// See also [MyFamilyMixedParametersState].
+@ProviderFor(MyFamilyMixedParametersState)
+const myFamilyMixedParametersStateProvider =
+    MyFamilyMixedParametersStateFamily();
 
-/// See also [_MyFamilyMixedParametersState].
-class _MyFamilyMixedParametersStateFamily extends Family<List<bool>> {
-  /// See also [_MyFamilyMixedParametersState].
-  const _MyFamilyMixedParametersStateFamily();
+/// See also [MyFamilyMixedParametersState].
+class MyFamilyMixedParametersStateFamily extends Family<List<bool>> {
+  /// See also [MyFamilyMixedParametersState].
+  const MyFamilyMixedParametersStateFamily();
 
-  /// See also [_MyFamilyMixedParametersState].
-  _MyFamilyMixedParametersStateProvider call(
+  /// See also [MyFamilyMixedParametersState].
+  MyFamilyMixedParametersStateProvider call(
     String param1,
     int param2, {
     required bool param3,
     double param4 = 0.0,
     List<int>? param5,
   }) {
-    return _MyFamilyMixedParametersStateProvider(
+    return MyFamilyMixedParametersStateProvider(
       param1,
       param2,
       param3: param3,
@@ -314,8 +314,8 @@ class _MyFamilyMixedParametersStateFamily extends Family<List<bool>> {
   }
 
   @override
-  _MyFamilyMixedParametersStateProvider getProviderOverride(
-    covariant _MyFamilyMixedParametersStateProvider provider,
+  MyFamilyMixedParametersStateProvider getProviderOverride(
+    covariant MyFamilyMixedParametersStateProvider provider,
   ) {
     return call(
       provider.param1,
@@ -338,36 +338,36 @@ class _MyFamilyMixedParametersStateFamily extends Family<List<bool>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'_myFamilyMixedParametersStateProvider';
+  String? get name => r'myFamilyMixedParametersStateProvider';
 }
 
-/// See also [_MyFamilyMixedParametersState].
-class _MyFamilyMixedParametersStateProvider
-    extends AutoDisposeNotifierProviderImpl<_MyFamilyMixedParametersState,
+/// See also [MyFamilyMixedParametersState].
+class MyFamilyMixedParametersStateProvider
+    extends AutoDisposeNotifierProviderImpl<MyFamilyMixedParametersState,
         List<bool>> {
-  /// See also [_MyFamilyMixedParametersState].
-  _MyFamilyMixedParametersStateProvider(
+  /// See also [MyFamilyMixedParametersState].
+  MyFamilyMixedParametersStateProvider(
     String param1,
     int param2, {
     required bool param3,
     double param4 = 0.0,
     List<int>? param5,
   }) : this._internal(
-          () => _MyFamilyMixedParametersState()
+          () => MyFamilyMixedParametersState()
             ..param1 = param1
             ..param2 = param2
             ..param3 = param3
             ..param4 = param4
             ..param5 = param5,
-          from: _myFamilyMixedParametersStateProvider,
-          name: r'_myFamilyMixedParametersStateProvider',
+          from: myFamilyMixedParametersStateProvider,
+          name: r'myFamilyMixedParametersStateProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
                   : _$myFamilyMixedParametersStateHash,
-          dependencies: _MyFamilyMixedParametersStateFamily._dependencies,
+          dependencies: MyFamilyMixedParametersStateFamily._dependencies,
           allTransitiveDependencies:
-              _MyFamilyMixedParametersStateFamily._allTransitiveDependencies,
+              MyFamilyMixedParametersStateFamily._allTransitiveDependencies,
           param1: param1,
           param2: param2,
           param3: param3,
@@ -375,7 +375,7 @@ class _MyFamilyMixedParametersStateProvider
           param5: param5,
         );
 
-  _MyFamilyMixedParametersStateProvider._internal(
+  MyFamilyMixedParametersStateProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -397,7 +397,7 @@ class _MyFamilyMixedParametersStateProvider
 
   @override
   List<bool> runNotifierBuild(
-    covariant _MyFamilyMixedParametersState notifier,
+    covariant MyFamilyMixedParametersState notifier,
   ) {
     return notifier.build(
       param1,
@@ -409,10 +409,10 @@ class _MyFamilyMixedParametersStateProvider
   }
 
   @override
-  Override overrideWith(_MyFamilyMixedParametersState Function() create) {
+  Override overrideWith(MyFamilyMixedParametersState Function() create) {
     return ProviderOverride(
       origin: this,
-      override: _MyFamilyMixedParametersStateProvider._internal(
+      override: MyFamilyMixedParametersStateProvider._internal(
         () => create()
           ..param1 = param1
           ..param2 = param2
@@ -434,14 +434,14 @@ class _MyFamilyMixedParametersStateProvider
   }
 
   @override
-  AutoDisposeNotifierProviderElement<_MyFamilyMixedParametersState, List<bool>>
+  AutoDisposeNotifierProviderElement<MyFamilyMixedParametersState, List<bool>>
       createElement() {
     return _MyFamilyMixedParametersStateProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is _MyFamilyMixedParametersStateProvider &&
+    return other is MyFamilyMixedParametersStateProvider &&
         other.param1 == param1 &&
         other.param2 == param2 &&
         other.param3 == param3 &&
@@ -464,7 +464,7 @@ class _MyFamilyMixedParametersStateProvider
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-mixin _MyFamilyMixedParametersStateRef
+mixin MyFamilyMixedParametersStateRef
     on AutoDisposeNotifierProviderRef<List<bool>> {
   /// The parameter `param1` of this provider.
   String get param1;
@@ -483,21 +483,21 @@ mixin _MyFamilyMixedParametersStateRef
 }
 
 class _MyFamilyMixedParametersStateProviderElement
-    extends AutoDisposeNotifierProviderElement<_MyFamilyMixedParametersState,
-        List<bool>> with _MyFamilyMixedParametersStateRef {
+    extends AutoDisposeNotifierProviderElement<MyFamilyMixedParametersState,
+        List<bool>> with MyFamilyMixedParametersStateRef {
   _MyFamilyMixedParametersStateProviderElement(super.provider);
 
   @override
-  String get param1 => (origin as _MyFamilyMixedParametersStateProvider).param1;
+  String get param1 => (origin as MyFamilyMixedParametersStateProvider).param1;
   @override
-  int get param2 => (origin as _MyFamilyMixedParametersStateProvider).param2;
+  int get param2 => (origin as MyFamilyMixedParametersStateProvider).param2;
   @override
-  bool get param3 => (origin as _MyFamilyMixedParametersStateProvider).param3;
+  bool get param3 => (origin as MyFamilyMixedParametersStateProvider).param3;
   @override
-  double get param4 => (origin as _MyFamilyMixedParametersStateProvider).param4;
+  double get param4 => (origin as MyFamilyMixedParametersStateProvider).param4;
   @override
   List<int>? get param5 =>
-      (origin as _MyFamilyMixedParametersStateProvider).param5;
+      (origin as MyFamilyMixedParametersStateProvider).param5;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

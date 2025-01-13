@@ -10,11 +10,11 @@ part of 'main.dart';
 // **************************************************************************
 
 @StateProviderFor(myInteger)
-final myIntegerProvider = _myIntegerStateProvider;
+final myIntegerProvider = myIntegerStateProvider;
 
 @riverpod
-class _MyIntegerState extends _$MyIntegerState {
-  _MyIntegerState({this.overrideInitialState});
+class MyIntegerState extends _$MyIntegerState {
+  MyIntegerState({this.overrideInitialState});
 
   final _MyIntegerOverrideValue? overrideInitialState;
 
@@ -57,22 +57,82 @@ class _MyIntegerOverrideValue {
 }
 
 extension MyIntegerRiverpodStateProviderExtension
-    on AutoDisposeNotifierProvider<_MyIntegerState, int> {
+    on AutoDisposeNotifierProvider<MyIntegerState, int> {
   Override overrideWithValue(int value) {
     return overrideWith(() {
-      return _MyIntegerState(
+      return MyIntegerState(
         overrideInitialState: _MyIntegerOverrideValue(value),
       );
     });
   }
 }
 
+@StateProviderFor(myIntegerKeepAlive)
+final myIntegerKeepAliveProvider = myIntegerKeepAliveStateProvider;
+
+@Riverpod(
+  keepAlive: true,
+)
+class MyIntegerKeepAliveState extends _$MyIntegerKeepAliveState {
+  MyIntegerKeepAliveState({this.overrideInitialState});
+
+  final _MyIntegerKeepAliveOverrideValue? overrideInitialState;
+
+  @override
+  int build() {
+    if (overrideInitialState != null) {
+      return overrideInitialState!.value;
+    }
+    return myIntegerKeepAlive();
+  }
+
+  @override
+  int get state => super.state;
+
+  @override
+  set state(int value) => super.state = value;
+
+  /// Calls a function with the current [state] and assigns the result as the
+  /// new state.
+  ///
+  /// This allows simplifying the syntax for updating the state when the update
+  /// depends on the previous state, such that rather than:
+  ///
+  /// ```dart
+  /// ref.read(provider.notifier).state = ref.read(provider.notifier).state + 1;
+  /// ```
+  ///
+  /// we can do:
+  ///
+  /// ```dart
+  /// ref.read(provider.notifier).update((state) => state + 1);
+  /// ```
+  int update(int Function(int state) cb) => state = cb(state);
+}
+
+class _MyIntegerKeepAliveOverrideValue {
+  const _MyIntegerKeepAliveOverrideValue(this.value);
+
+  final int value;
+}
+
+extension MyIntegerKeepAliveRiverpodStateProviderExtension
+    on NotifierProvider<MyIntegerKeepAliveState, int> {
+  Override overrideWithValue(int value) {
+    return overrideWith(() {
+      return MyIntegerKeepAliveState(
+        overrideInitialState: _MyIntegerKeepAliveOverrideValue(value),
+      );
+    });
+  }
+}
+
 @StateProviderFor(myList)
-final myListProvider = _myListStateProvider;
+final myListProvider = myListStateProvider;
 
 @riverpod
-class _MyListState extends _$MyListState {
-  _MyListState({this.overrideInitialState});
+class MyListState extends _$MyListState {
+  MyListState({this.overrideInitialState});
 
   final _MyListOverrideValue? overrideInitialState;
 
@@ -115,11 +175,71 @@ class _MyListOverrideValue {
 }
 
 extension MyListRiverpodStateProviderExtension
-    on AutoDisposeNotifierProvider<_MyListState, List<int>> {
+    on AutoDisposeNotifierProvider<MyListState, List<int>> {
   Override overrideWithValue(List<int> value) {
     return overrideWith(() {
-      return _MyListState(
+      return MyListState(
         overrideInitialState: _MyListOverrideValue(value),
+      );
+    });
+  }
+}
+
+@StateProviderFor(myListKeepAlive)
+final myListKeepAliveProvider = myListKeepAliveStateProvider;
+
+@Riverpod(
+  keepAlive: true,
+)
+class MyListKeepAliveState extends _$MyListKeepAliveState {
+  MyListKeepAliveState({this.overrideInitialState});
+
+  final _MyListKeepAliveOverrideValue? overrideInitialState;
+
+  @override
+  List<int> build() {
+    if (overrideInitialState != null) {
+      return overrideInitialState!.value;
+    }
+    return myListKeepAlive();
+  }
+
+  @override
+  List<int> get state => super.state;
+
+  @override
+  set state(List<int> value) => super.state = value;
+
+  /// Calls a function with the current [state] and assigns the result as the
+  /// new state.
+  ///
+  /// This allows simplifying the syntax for updating the state when the update
+  /// depends on the previous state, such that rather than:
+  ///
+  /// ```dart
+  /// ref.read(provider.notifier).state = ref.read(provider.notifier).state + 1;
+  /// ```
+  ///
+  /// we can do:
+  ///
+  /// ```dart
+  /// ref.read(provider.notifier).update((state) => state + 1);
+  /// ```
+  List<int> update(List<int> Function(List<int> state) cb) => state = cb(state);
+}
+
+class _MyListKeepAliveOverrideValue {
+  const _MyListKeepAliveOverrideValue(this.value);
+
+  final List<int> value;
+}
+
+extension MyListKeepAliveRiverpodStateProviderExtension
+    on NotifierProvider<MyListKeepAliveState, List<int>> {
+  Override overrideWithValue(List<int> value) {
+    return overrideWith(() {
+      return MyListKeepAliveState(
+        overrideInitialState: _MyListKeepAliveOverrideValue(value),
       );
     });
   }
@@ -127,12 +247,12 @@ extension MyListRiverpodStateProviderExtension
 
 @StateProviderFor(myFamilyPositionalParameters)
 final myFamilyPositionalParametersProvider =
-    _myFamilyPositionalParametersStateProvider;
+    myFamilyPositionalParametersStateProvider;
 
 @riverpod
-class _MyFamilyPositionalParametersState
+class MyFamilyPositionalParametersState
     extends _$MyFamilyPositionalParametersState {
-  _MyFamilyPositionalParametersState({this.overrideInitialState});
+  MyFamilyPositionalParametersState({this.overrideInitialState});
 
   final _MyFamilyPositionalParametersOverrideValue? overrideInitialState;
 
@@ -148,6 +268,7 @@ class _MyFamilyPositionalParametersState
       return overrideInitialState!.value;
     }
     return myFamilyPositionalParameters(
+      ref,
       param1,
       param2,
       param3,
@@ -187,10 +308,10 @@ class _MyFamilyPositionalParametersOverrideValue {
 }
 
 extension MyFamilyPositionalParametersRiverpodStateProviderExtension
-    on _MyFamilyPositionalParametersStateProvider {
+    on MyFamilyPositionalParametersStateProvider {
   Override overrideWithValue(int value) {
     return overrideWith(() {
-      return _MyFamilyPositionalParametersState(
+      return MyFamilyPositionalParametersState(
         overrideInitialState: _MyFamilyPositionalParametersOverrideValue(value),
       );
     });
@@ -198,11 +319,11 @@ extension MyFamilyPositionalParametersRiverpodStateProviderExtension
 }
 
 @StateProviderFor(myFamilyMixedParameters)
-final myFamilyMixedParametersProvider = _myFamilyMixedParametersStateProvider;
+final myFamilyMixedParametersProvider = myFamilyMixedParametersStateProvider;
 
 @riverpod
-class _MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
-  _MyFamilyMixedParametersState({this.overrideInitialState});
+class MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
+  MyFamilyMixedParametersState({this.overrideInitialState});
 
   final _MyFamilyMixedParametersOverrideValue? overrideInitialState;
 
@@ -218,6 +339,7 @@ class _MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
       return overrideInitialState!.value;
     }
     return myFamilyMixedParameters(
+      ref,
       param1,
       param2,
       param3: param3,
@@ -258,10 +380,10 @@ class _MyFamilyMixedParametersOverrideValue {
 }
 
 extension MyFamilyMixedParametersRiverpodStateProviderExtension
-    on _MyFamilyMixedParametersStateProvider {
+    on MyFamilyMixedParametersStateProvider {
   Override overrideWithValue(List<bool> value) {
     return overrideWith(() {
-      return _MyFamilyMixedParametersState(
+      return MyFamilyMixedParametersState(
         overrideInitialState: _MyFamilyMixedParametersOverrideValue(value),
       );
     });
