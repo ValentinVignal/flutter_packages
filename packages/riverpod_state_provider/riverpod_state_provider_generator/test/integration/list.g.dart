@@ -6,14 +6,14 @@ part of 'list.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$myListStateHash() => r'e209df3ce55b7c96f07d1cbb80609ac95c191793';
+String _$myListStateHash() => r'b82ea856ae92d559e0b91a4803386d0545740595';
 
-/// See also [_MyListState].
-@ProviderFor(_MyListState)
-final _myListStateProvider =
-    AutoDisposeNotifierProvider<_MyListState, List<int>>.internal(
-  _MyListState.new,
-  name: r'_myListStateProvider',
+/// See also [MyListState].
+@ProviderFor(MyListState)
+final myListStateProvider =
+    AutoDisposeNotifierProvider<MyListState, List<int>>.internal(
+  MyListState.new,
+  name: r'myListStateProvider',
   debugGetCreateSourceHash:
       const bool.fromEnvironment('dart.vm.product') ? null : _$myListStateHash,
   dependencies: null,

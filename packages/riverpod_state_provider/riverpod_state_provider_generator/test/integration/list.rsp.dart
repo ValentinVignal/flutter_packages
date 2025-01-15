@@ -10,11 +10,11 @@ part of 'list.dart';
 // **************************************************************************
 
 @StateProviderFor(myList)
-final myListProvider = _myListStateProvider;
+final myListProvider = myListStateProvider;
 
 @riverpod
-class _MyListState extends _$MyListState {
-  _MyListState({this.overrideInitialState});
+class MyListState extends _$MyListState {
+  MyListState({this.overrideInitialState});
 
   final _MyListOverrideValue? overrideInitialState;
 
@@ -57,10 +57,10 @@ class _MyListOverrideValue {
 }
 
 extension MyListRiverpodStateProviderExtension
-    on AutoDisposeNotifierProvider<_MyListState, List<int>> {
+    on AutoDisposeNotifierProvider<MyListState, List<int>> {
   Override overrideWithValue(List<int> value) {
     return overrideWith(() {
-      return _MyListState(
+      return MyListState(
         overrideInitialState: _MyListOverrideValue(value),
       );
     });

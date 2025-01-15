@@ -6,6 +6,8 @@ import 'package:meta/meta.dart';
 import 'package:riverpod_state_provider_annotation/riverpod_state_provider_annotation.dart';
 import 'package:source_gen/source_gen.dart';
 
+const _typeChecker = TypeChecker.fromRuntime(RiverpodStateProvider);
+
 @immutable
 class RiverpodStateProviderGenerator
     extends GeneratorForAnnotation<RiverpodStateProvider> {
@@ -24,7 +26,7 @@ class RiverpodStateProviderGenerator
       );
     }
 
-    return _generateProvider(element);
+    return _generateProvider(annotation, element);
   }
 
   String _getType(ResolvedLibraryResult library, TypeAnnotation? returnType) {
@@ -42,11 +44,15 @@ class RiverpodStateProviderGenerator
   }
 
   String _buildParametersDefinition(List<ParameterElement> parameters) {
-    final requiredPositionals =
-        parameters.where((element) => element.isRequiredPositional).toList();
-    final optionalPositionals =
-        parameters.where((element) => element.isOptionalPositional).toList();
-    final named = parameters.where((element) => element.isNamed).toList();
+    final parametersToDefine = parameters.skip(1);
+    final requiredPositionals = parametersToDefine
+        .where((element) => element.isRequiredPositional)
+        .toList();
+    final optionalPositionals = parametersToDefine
+        .where((element) => element.isOptionalPositional)
+        .toList();
+    final named =
+        parametersToDefine.where((element) => element.isNamed).toList();
 
     final buffer = StringBuffer();
     String encodeParameter(ParameterElement e) {
@@ -79,7 +85,8 @@ class RiverpodStateProviderGenerator
     final buffer = StringBuffer();
 
     buffer.writeAll(
-      parameters.map((e) {
+      parameters.mapIndexed((i, e) {
+        if (i == 0) return 'ref';
         if (e.isNamed) return '${e.name}: ${e.name}';
         return e.name;
       }).expand((e) => [e, ',']),
@@ -92,37 +99,84 @@ class RiverpodStateProviderGenerator
     required String stateClassName,
     required String type,
     required bool isFamily,
+    required bool isKeepAlive,
   }) {
     if (!isFamily) {
-      return 'AutoDisposeNotifierProvider<_$stateClassName, $type>';
+      final prefix = isKeepAlive ? '' : 'AutoDispose';
+      return '${prefix}NotifierProvider<$stateClassName, $type>';
     } else {
-      return '_${stateClassName}Provider';
+      return '${stateClassName}Provider';
     }
   }
 
-  Future<String> _generateProvider(FunctionElement element) async {
+  String _getDecorator(ConstantReader annotation) {
+    final isKeepAlive = annotation.peek('keepAlive')?.boolValue ?? false;
+
+    final dependencies = annotation.peek('dependencies')?.listValue;
+
+    if (isKeepAlive || dependencies != null) {
+      final builder = StringBuffer('@Riverpod(');
+
+      if (isKeepAlive) {
+        builder.write('keepAlive: true,');
+      }
+      if (dependencies != null) {
+        builder.write('dependencies: [');
+        builder.write(dependencies.map((dependency) {
+          final type = dependency.toTypeValue();
+          if (type != null) {
+            return type.getDisplayString();
+          } else {
+            final function = dependency.toFunctionValue()! as FunctionElement;
+            final annotation = _typeChecker.firstAnnotationOfExact(function);
+            if (annotation == null) {
+              return function.name;
+            }
+            return _getStateClassNameFromFunctionName(function.name);
+          }
+        }).join(', '));
+        builder.write('],');
+      }
+      builder.writeln(')');
+
+      return builder.toString();
+    }
+    return '@riverpod';
+  }
+
+  String _getStateClassNameFromFunctionName(String name) {
+    final pascalName = name.camelToPascal();
+    return '${pascalName}State';
+  }
+
+  Future<String> _generateProvider(
+    ConstantReader annotation,
+    FunctionElement element,
+  ) async {
+    final isKeepAlive = annotation.peek('keepAlive')?.boolValue ?? false;
+
     final library = await element.session
         ?.getResolvedLibraryByElement(element.library) as ResolvedLibraryResult;
     final functionDeclaration =
         library.getElementDeclaration(element)?.node as FunctionDeclaration;
 
     final parameters = element.parameters;
-    final isFamily = parameters.isNotEmpty;
+    final isFamily = parameters.length > 1;
 
     final type = _getType(library, functionDeclaration.returnType);
 
     final name = element.name;
     final pascalName = name.camelToPascal();
-    final stateClassName = '${pascalName}State';
+    final stateClassName = _getStateClassNameFromFunctionName(name);
 
     final buffer = StringBuffer();
     buffer.write('''
 @StateProviderFor($name)
-final ${name}Provider = _${name}StateProvider;
+final ${name}Provider = ${name}StateProvider;
 
-@riverpod
-class _$stateClassName extends _\$$stateClassName {
-  _$stateClassName({this.overrideInitialState});
+${_getDecorator(annotation)}
+class $stateClassName extends _\$$stateClassName {
+  $stateClassName({this.overrideInitialState});
 
   final _${pascalName}OverrideValue? overrideInitialState;
 
@@ -165,10 +219,10 @@ class _${pascalName}OverrideValue {
 }
 
 extension ${pascalName}RiverpodStateProviderExtension
-    on ${_getExtensionType(isFamily: isFamily, stateClassName: stateClassName, type: type)} {
+    on ${_getExtensionType(isFamily: isFamily, stateClassName: stateClassName, type: type, isKeepAlive: isKeepAlive)} {
   Override overrideWithValue($type value) {
     return overrideWith(() {
-      return _$stateClassName(
+      return $stateClassName(
         overrideInitialState: _${pascalName}OverrideValue(value),
       );
     });
@@ -184,5 +238,14 @@ extension on String {
   String camelToPascal() {
     if (isEmpty) return '';
     return this[0].toUpperCase() + substring(1);
+  }
+}
+
+extension<T> on Iterable<T> {
+  Iterable<R> mapIndexed<R>(R Function(int index, T element) convert) sync* {
+    var index = 0;
+    for (var element in this) {
+      yield convert(index++, element);
+    }
   }
 }

@@ -11,12 +11,12 @@ part of 'family.dart';
 
 @StateProviderFor(myFamilyPositionalParameters)
 final myFamilyPositionalParametersProvider =
-    _myFamilyPositionalParametersStateProvider;
+    myFamilyPositionalParametersStateProvider;
 
 @riverpod
-class _MyFamilyPositionalParametersState
+class MyFamilyPositionalParametersState
     extends _$MyFamilyPositionalParametersState {
-  _MyFamilyPositionalParametersState({this.overrideInitialState});
+  MyFamilyPositionalParametersState({this.overrideInitialState});
 
   final _MyFamilyPositionalParametersOverrideValue? overrideInitialState;
 
@@ -32,6 +32,7 @@ class _MyFamilyPositionalParametersState
       return overrideInitialState!.value;
     }
     return myFamilyPositionalParameters(
+      ref,
       param1,
       param2,
       param3,
@@ -71,10 +72,10 @@ class _MyFamilyPositionalParametersOverrideValue {
 }
 
 extension MyFamilyPositionalParametersRiverpodStateProviderExtension
-    on _MyFamilyPositionalParametersStateProvider {
+    on MyFamilyPositionalParametersStateProvider {
   Override overrideWithValue(int value) {
     return overrideWith(() {
-      return _MyFamilyPositionalParametersState(
+      return MyFamilyPositionalParametersState(
         overrideInitialState: _MyFamilyPositionalParametersOverrideValue(value),
       );
     });
@@ -82,11 +83,11 @@ extension MyFamilyPositionalParametersRiverpodStateProviderExtension
 }
 
 @StateProviderFor(myFamilyMixedParameters)
-final myFamilyMixedParametersProvider = _myFamilyMixedParametersStateProvider;
+final myFamilyMixedParametersProvider = myFamilyMixedParametersStateProvider;
 
 @riverpod
-class _MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
-  _MyFamilyMixedParametersState({this.overrideInitialState});
+class MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
+  MyFamilyMixedParametersState({this.overrideInitialState});
 
   final _MyFamilyMixedParametersOverrideValue? overrideInitialState;
 
@@ -102,6 +103,7 @@ class _MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
       return overrideInitialState!.value;
     }
     return myFamilyMixedParameters(
+      ref,
       param1,
       param2,
       param3: param3,
@@ -142,10 +144,10 @@ class _MyFamilyMixedParametersOverrideValue {
 }
 
 extension MyFamilyMixedParametersRiverpodStateProviderExtension
-    on _MyFamilyMixedParametersStateProvider {
+    on MyFamilyMixedParametersStateProvider {
   Override overrideWithValue(List<bool> value) {
     return overrideWith(() {
-      return _MyFamilyMixedParametersState(
+      return MyFamilyMixedParametersState(
         overrideInitialState: _MyFamilyMixedParametersOverrideValue(value),
       );
     });
