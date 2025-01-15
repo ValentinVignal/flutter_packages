@@ -125,7 +125,9 @@ class RiverpodStateProviderGenerator
         builder.write(dependencies.map((dependency) {
           final type = dependency.toTypeValue();
           if (type != null) {
-            return type.getDisplayString();
+            // It is a mandatory parameter for flutter 3.19.
+            // ignore: deprecated_member_use
+            return type.getDisplayString(withNullability: true);
           } else {
             final function = dependency.toFunctionValue()! as FunctionElement;
             final annotation = _typeChecker.firstAnnotationOfExact(function);
