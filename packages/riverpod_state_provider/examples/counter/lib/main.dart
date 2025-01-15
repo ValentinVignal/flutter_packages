@@ -44,7 +44,6 @@ class Home extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    myIntegerProvider.overrideWith(_MyIntegerState.new);
     return Scaffold(
       appBar: AppBar(title: const Text('Counter example')),
       body: Center(

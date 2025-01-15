@@ -1,4 +1,4 @@
-## NEXT
+## 0.2.2
 
 - Fixes legacy code for Flutter 3.19.
 

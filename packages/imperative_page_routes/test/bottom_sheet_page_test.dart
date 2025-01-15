@@ -14,9 +14,8 @@ void main() {
         home: Navigator(
           key: navigator,
           pages: pages,
-          onPopPage: (route, result) {
+          onDidRemovePage: (_) {
             pages.removeLast();
-            return route.didPop(result);
           },
         ),
       ),
