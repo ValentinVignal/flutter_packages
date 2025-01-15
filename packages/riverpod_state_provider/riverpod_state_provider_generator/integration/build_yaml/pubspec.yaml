@@ -4,7 +4,7 @@ environment:
   sdk: ^3.3.0
 
 dependencies:
-  riverpod_state_provider_annotation: ^0.0.0
+  riverpod_state_provider_annotation: ^0.1.0
   riverpod: ^2.6.1
 
 dev_dependencies:
