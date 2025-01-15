@@ -20,14 +20,14 @@ final counterProvider = AutoDisposeNotifierProvider<Counter, int>.internal(
 );
 
 typedef _$Counter = AutoDisposeNotifier<int>;
-String _$myIntegerStateHash() => r'6e0f5229d73367854236933bac07bb267ad733af';
+String _$myIntegerStateHash() => r'1a2e3285c9c180fad25467dd4114862e73620faa';
 
-/// See also [_MyIntegerState].
-@ProviderFor(_MyIntegerState)
-final _myIntegerStateProvider =
-    AutoDisposeNotifierProvider<_MyIntegerState, int>.internal(
-  _MyIntegerState.new,
-  name: r'_myIntegerStateProvider',
+/// See also [MyIntegerState].
+@ProviderFor(MyIntegerState)
+final myIntegerStateProvider =
+    AutoDisposeNotifierProvider<MyIntegerState, int>.internal(
+  MyIntegerState.new,
+  name: r'myIntegerStateProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
       : _$myIntegerStateHash,

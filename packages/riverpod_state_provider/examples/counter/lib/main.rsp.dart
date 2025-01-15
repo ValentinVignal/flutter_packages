@@ -10,11 +10,11 @@ part of 'main.dart';
 // **************************************************************************
 
 @StateProviderFor(myInteger)
-final myIntegerProvider = _myIntegerStateProvider;
+final myIntegerProvider = myIntegerStateProvider;
 
 @riverpod
-class _MyIntegerState extends _$MyIntegerState {
-  _MyIntegerState({this.overrideInitialState});
+class MyIntegerState extends _$MyIntegerState {
+  MyIntegerState({this.overrideInitialState});
 
   final _MyIntegerOverrideValue? overrideInitialState;
 
@@ -57,10 +57,10 @@ class _MyIntegerOverrideValue {
 }
 
 extension MyIntegerRiverpodStateProviderExtension
-    on AutoDisposeNotifierProvider<_MyIntegerState, int> {
+    on AutoDisposeNotifierProvider<MyIntegerState, int> {
   Override overrideWithValue(int value) {
     return overrideWith(() {
-      return _MyIntegerState(
+      return MyIntegerState(
         overrideInitialState: _MyIntegerOverrideValue(value),
       );
     });
