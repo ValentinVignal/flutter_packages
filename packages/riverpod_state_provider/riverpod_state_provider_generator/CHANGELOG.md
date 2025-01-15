@@ -1,3 +1,7 @@
+## NEXT
+
+- Fixes legacy code for Flutter 3.19.
+
 ## 0.2.1
 
 - Fixes dependency issues.
