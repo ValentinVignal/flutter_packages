@@ -1,3 +1,7 @@
+## 0.2.1
+
+- Fixes dependency issues.
+
 ## 0.2.0
 
 - Adds support for `keepAlive` and `dependencies`.
