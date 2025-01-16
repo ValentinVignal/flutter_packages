@@ -173,6 +173,7 @@ class RiverpodStateProviderGenerator
 
     final buffer = StringBuffer();
     buffer.write('''
+@Deprecated('Use ${name}StateProvider instead')
 @StateProviderFor($name)
 final ${name}Provider = ${name}StateProvider;
 

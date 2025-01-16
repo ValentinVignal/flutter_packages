@@ -44,3 +44,7 @@ scripts:
   test-coverage:
     run: melos run test-coverage:dart; melos run test-coverage:flutter
   
+  generate:
+    run: melos exec --depends-on=build_runner -- "dart run build_runner build -d"
+    description: Build all generated files for Dart & Flutter packages in this project.
+  

@@ -9,6 +9,7 @@ part of 'family.dart';
 // RiverpodStateProviderGenerator
 // **************************************************************************
 
+@Deprecated('Use myFamilyPositionalParametersStateProvider instead')
 @StateProviderFor(myFamilyPositionalParameters)
 final myFamilyPositionalParametersProvider =
     myFamilyPositionalParametersStateProvider;
@@ -82,6 +83,7 @@ extension MyFamilyPositionalParametersRiverpodStateProviderExtension
   }
 }
 
+@Deprecated('Use myFamilyMixedParametersStateProvider instead')
 @StateProviderFor(myFamilyMixedParameters)
 final myFamilyMixedParametersProvider = myFamilyMixedParametersStateProvider;
 

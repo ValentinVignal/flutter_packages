@@ -9,6 +9,7 @@ part of 'main.dart';
 // RiverpodStateProviderGenerator
 // **************************************************************************
 
+@Deprecated('Use myIntegerStateProvider instead')
 @StateProviderFor(myInteger)
 final myIntegerProvider = myIntegerStateProvider;
 
