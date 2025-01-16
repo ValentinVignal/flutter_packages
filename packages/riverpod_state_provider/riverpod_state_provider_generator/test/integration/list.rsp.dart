@@ -9,6 +9,7 @@ part of 'list.dart';
 // RiverpodStateProviderGenerator
 // **************************************************************************
 
+@Deprecated('Use myListStateProvider instead')
 @StateProviderFor(myList)
 final myListProvider = myListStateProvider;
 

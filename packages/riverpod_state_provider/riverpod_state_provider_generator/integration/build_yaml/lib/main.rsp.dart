@@ -9,6 +9,7 @@ part of 'main.dart';
 // RiverpodStateProviderGenerator
 // **************************************************************************
 
+@Deprecated('Use myIntegerStateProvider instead')
 @StateProviderFor(myInteger)
 final myIntegerProvider = myIntegerStateProvider;
 
@@ -67,6 +68,7 @@ extension MyIntegerRiverpodStateProviderExtension
   }
 }
 
+@Deprecated('Use myIntegerKeepAliveStateProvider instead')
 @StateProviderFor(myIntegerKeepAlive)
 final myIntegerKeepAliveProvider = myIntegerKeepAliveStateProvider;
 
@@ -127,6 +129,7 @@ extension MyIntegerKeepAliveRiverpodStateProviderExtension
   }
 }
 
+@Deprecated('Use myListStateProvider instead')
 @StateProviderFor(myList)
 final myListProvider = myListStateProvider;
 
@@ -185,6 +188,7 @@ extension MyListRiverpodStateProviderExtension
   }
 }
 
+@Deprecated('Use myListKeepAliveStateProvider instead')
 @StateProviderFor(myListKeepAlive)
 final myListKeepAliveProvider = myListKeepAliveStateProvider;
 
@@ -245,6 +249,7 @@ extension MyListKeepAliveRiverpodStateProviderExtension
   }
 }
 
+@Deprecated('Use myFamilyPositionalParametersStateProvider instead')
 @StateProviderFor(myFamilyPositionalParameters)
 final myFamilyPositionalParametersProvider =
     myFamilyPositionalParametersStateProvider;
@@ -318,6 +323,7 @@ extension MyFamilyPositionalParametersRiverpodStateProviderExtension
   }
 }
 
+@Deprecated('Use myFamilyMixedParametersStateProvider instead')
 @StateProviderFor(myFamilyMixedParameters)
 final myFamilyMixedParametersProvider = myFamilyMixedParametersStateProvider;
 
