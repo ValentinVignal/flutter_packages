@@ -1,3 +1,7 @@
+## NEXT
+
+- Deprecates generated proxy provider.
+
 ## 0.2.2
 
 - Fixes legacy code for Flutter 3.19.
