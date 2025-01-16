@@ -1,4 +1,4 @@
-## NEXT
+## 0.2.3
 
 - Deprecates generated proxy provider.
 
