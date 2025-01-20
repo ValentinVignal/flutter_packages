@@ -173,6 +173,7 @@ class RiverpodStateProviderGenerator
 
     final buffer = StringBuffer();
     buffer.write('''
+@StateProviderFor($name)
 ${_getDecorator(annotation)}
 class $stateClassName extends _\$$stateClassName {
   $stateClassName({this.overrideInitialState});

@@ -9,6 +9,7 @@ part of 'family.dart';
 // RiverpodStateProviderGenerator
 // **************************************************************************
 
+@StateProviderFor(myFamilyPositionalParameters)
 @riverpod
 class MyFamilyPositionalParametersState
     extends _$MyFamilyPositionalParametersState {
@@ -72,6 +73,7 @@ extension MyFamilyPositionalParametersRiverpodStateProviderExtension
   }
 }
 
+@StateProviderFor(myFamilyMixedParameters)
 @riverpod
 class MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
   MyFamilyMixedParametersState({this.overrideInitialState});

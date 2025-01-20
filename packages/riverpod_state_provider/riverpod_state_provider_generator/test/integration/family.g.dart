@@ -7,7 +7,7 @@ part of 'family.dart';
 // **************************************************************************
 
 String _$myFamilyPositionalParametersStateHash() =>
-    r'617045e1cc2e0d02a58350c44808db0fd164234b';
+    r'3fbc7bfbef3ae193a1a9b34d9ed6152f80391e6c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -267,7 +267,7 @@ class _MyFamilyPositionalParametersStateProviderElement
 }
 
 String _$myFamilyMixedParametersStateHash() =>
-    r'eee2eeaec099036b98a5d5a034bcc6b96ce26dff';
+    r'4e43255f17cb5fd1a05eb45ad05d48c1ccfb1820';
 
 abstract class _$MyFamilyMixedParametersState
     extends BuildlessAutoDisposeNotifier<List<bool>> {

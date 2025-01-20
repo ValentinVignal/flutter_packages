@@ -9,6 +9,7 @@ part of 'main.dart';
 // RiverpodStateProviderGenerator
 // **************************************************************************
 
+@StateProviderFor(myInteger)
 @riverpod
 class MyIntegerState extends _$MyIntegerState {
   MyIntegerState({this.overrideInitialState});
@@ -58,6 +59,7 @@ extension MyIntegerRiverpodStateProviderExtension
   }
 }
 
+@StateProviderFor(myIntegerKeepAlive)
 @Riverpod(
   keepAlive: true,
 )
@@ -109,6 +111,7 @@ extension MyIntegerKeepAliveRiverpodStateProviderExtension
   }
 }
 
+@StateProviderFor(myList)
 @riverpod
 class MyListState extends _$MyListState {
   MyListState({this.overrideInitialState});
@@ -158,6 +161,7 @@ extension MyListRiverpodStateProviderExtension
   }
 }
 
+@StateProviderFor(myListKeepAlive)
 @Riverpod(
   keepAlive: true,
 )
@@ -209,6 +213,7 @@ extension MyListKeepAliveRiverpodStateProviderExtension
   }
 }
 
+@StateProviderFor(myFamilyPositionalParameters)
 @riverpod
 class MyFamilyPositionalParametersState
     extends _$MyFamilyPositionalParametersState {
@@ -272,6 +277,7 @@ extension MyFamilyPositionalParametersRiverpodStateProviderExtension
   }
 }
 
+@StateProviderFor(myFamilyMixedParameters)
 @riverpod
 class MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
   MyFamilyMixedParametersState({this.overrideInitialState});

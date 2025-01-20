@@ -9,6 +9,7 @@ part of 'main.dart';
 // RiverpodStateProviderGenerator
 // **************************************************************************
 
+@StateProviderFor(myInteger)
 @riverpod
 class MyIntegerState extends _$MyIntegerState {
   MyIntegerState({this.overrideInitialState});

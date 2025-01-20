@@ -9,6 +9,7 @@ part of 'list.dart';
 // RiverpodStateProviderGenerator
 // **************************************************************************
 
+@StateProviderFor(myList)
 @riverpod
 class MyListState extends _$MyListState {
   MyListState({this.overrideInitialState});

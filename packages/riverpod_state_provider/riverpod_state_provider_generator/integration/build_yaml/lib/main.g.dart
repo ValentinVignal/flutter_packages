@@ -6,7 +6,7 @@ part of 'main.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$myIntegerStateHash() => r'cb209b9d0b1c9b8cca4c62e02756b21f23adef74';
+String _$myIntegerStateHash() => r'6c2b5cfbbe99e6c419179416e0967e9e42cf1e1f';
 
 /// See also [MyIntegerState].
 @ProviderFor(MyIntegerState)
@@ -23,7 +23,7 @@ final myIntegerStateProvider =
 
 typedef _$MyIntegerState = AutoDisposeNotifier<int>;
 String _$myIntegerKeepAliveStateHash() =>
-    r'5149308480d57d96964b8444dabd87bd24246c5c';
+    r'1254b1711c0f6204faa0fa1a9df0a796dc07016c';
 
 /// See also [MyIntegerKeepAliveState].
 @ProviderFor(MyIntegerKeepAliveState)
@@ -39,7 +39,7 @@ final myIntegerKeepAliveStateProvider =
 );
 
 typedef _$MyIntegerKeepAliveState = Notifier<int>;
-String _$myListStateHash() => r'4ec982cc358114072c3f4419a59fa7c513b0b450';
+String _$myListStateHash() => r'453dfea8b76b3cc3c6eb312563c7ebd07b91ac05';
 
 /// See also [MyListState].
 @ProviderFor(MyListState)
@@ -55,7 +55,7 @@ final myListStateProvider =
 
 typedef _$MyListState = AutoDisposeNotifier<List<int>>;
 String _$myListKeepAliveStateHash() =>
-    r'fbe5dbb51cdbd3cfdd9ab3c5812c6f8844ed5b3c';
+    r'af44936d2a06093bbab7488fb3d507064bc766f2';
 
 /// See also [MyListKeepAliveState].
 @ProviderFor(MyListKeepAliveState)
@@ -72,7 +72,7 @@ final myListKeepAliveStateProvider =
 
 typedef _$MyListKeepAliveState = Notifier<List<int>>;
 String _$myFamilyPositionalParametersStateHash() =>
-    r'617045e1cc2e0d02a58350c44808db0fd164234b';
+    r'3fbc7bfbef3ae193a1a9b34d9ed6152f80391e6c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -332,7 +332,7 @@ class _MyFamilyPositionalParametersStateProviderElement
 }
 
 String _$myFamilyMixedParametersStateHash() =>
-    r'eee2eeaec099036b98a5d5a034bcc6b96ce26dff';
+    r'4e43255f17cb5fd1a05eb45ad05d48c1ccfb1820';
 
 abstract class _$MyFamilyMixedParametersState
     extends BuildlessAutoDisposeNotifier<List<bool>> {

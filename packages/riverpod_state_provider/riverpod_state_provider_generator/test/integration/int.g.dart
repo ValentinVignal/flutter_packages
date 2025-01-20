@@ -6,7 +6,7 @@ part of 'int.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$myIntegerStateHash() => r'cb209b9d0b1c9b8cca4c62e02756b21f23adef74';
+String _$myIntegerStateHash() => r'6c2b5cfbbe99e6c419179416e0967e9e42cf1e1f';
 
 /// See also [MyIntegerState].
 @ProviderFor(MyIntegerState)
