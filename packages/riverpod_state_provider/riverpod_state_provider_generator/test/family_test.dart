@@ -8,7 +8,7 @@ void main() {
     test('Can read and update the provider', () {
       final container = createContainer();
 
-      var value = container.read(myFamilyPositionalParametersProvider(
+      var value = container.read(myFamilyPositionalParametersStateProvider(
         'a',
         2,
         true,
@@ -18,7 +18,7 @@ void main() {
       expect(value, 0);
 
       container
-          .read(myFamilyPositionalParametersProvider(
+          .read(myFamilyPositionalParametersStateProvider(
             'a',
             2,
             true,
@@ -26,7 +26,7 @@ void main() {
             const [4],
           ).notifier)
           .state++;
-      value = container.read(myFamilyPositionalParametersProvider(
+      value = container.read(myFamilyPositionalParametersStateProvider(
         'a',
         2,
         true,
@@ -36,7 +36,7 @@ void main() {
       expect(value, 1);
 
       container
-          .read(myFamilyPositionalParametersProvider(
+          .read(myFamilyPositionalParametersStateProvider(
             'a',
             2,
             true,
@@ -44,7 +44,7 @@ void main() {
             const [4],
           ).notifier)
           .update((state) => state + 1);
-      value = container.read(myFamilyPositionalParametersProvider(
+      value = container.read(myFamilyPositionalParametersStateProvider(
         'a',
         2,
         true,
@@ -57,7 +57,7 @@ void main() {
     test('The providers are independent', () {
       final container = createContainer();
 
-      var value0 = container.read(myFamilyPositionalParametersProvider(
+      var value0 = container.read(myFamilyPositionalParametersStateProvider(
         'a',
         2,
         true,
@@ -65,7 +65,7 @@ void main() {
         const [4],
       ));
       expect(value0, 0);
-      var value1 = container.read(myFamilyPositionalParametersProvider(
+      var value1 = container.read(myFamilyPositionalParametersStateProvider(
         'b',
         3,
         false,
@@ -75,7 +75,7 @@ void main() {
       expect(value1, 0);
 
       container
-          .read(myFamilyPositionalParametersProvider(
+          .read(myFamilyPositionalParametersStateProvider(
             'a',
             2,
             true,
@@ -85,7 +85,7 @@ void main() {
           .state++;
 
       container
-          .read(myFamilyPositionalParametersProvider(
+          .read(myFamilyPositionalParametersStateProvider(
             'b',
             3,
             false,
@@ -93,7 +93,7 @@ void main() {
             const [5],
           ).notifier)
           .state += 2;
-      value0 = container.read(myFamilyPositionalParametersProvider(
+      value0 = container.read(myFamilyPositionalParametersStateProvider(
         'a',
         2,
         true,
@@ -101,7 +101,7 @@ void main() {
         const [4],
       ));
       expect(value0, 1);
-      value1 = container.read(myFamilyPositionalParametersProvider(
+      value1 = container.read(myFamilyPositionalParametersStateProvider(
         'b',
         3,
         false,
@@ -111,7 +111,7 @@ void main() {
       expect(value1, 2);
 
       container
-          .read(myFamilyPositionalParametersProvider(
+          .read(myFamilyPositionalParametersStateProvider(
             'a',
             2,
             true,
@@ -120,7 +120,7 @@ void main() {
           ).notifier)
           .update((state) => state + 1);
       container
-          .read(myFamilyPositionalParametersProvider(
+          .read(myFamilyPositionalParametersStateProvider(
             'b',
             3,
             false,
@@ -128,7 +128,7 @@ void main() {
             const [5],
           ).notifier)
           .update((state) => state + 2);
-      value0 = container.read(myFamilyPositionalParametersProvider(
+      value0 = container.read(myFamilyPositionalParametersStateProvider(
         'a',
         2,
         true,
@@ -136,7 +136,7 @@ void main() {
         const [4],
       ));
       expect(value0, 2);
-      value1 = container.read(myFamilyPositionalParametersProvider(
+      value1 = container.read(myFamilyPositionalParametersStateProvider(
         'b',
         3,
         false,
@@ -148,7 +148,7 @@ void main() {
 
     test('The generated provider can be overridden', () {
       final container = createContainer(overrides: [
-        myFamilyPositionalParametersProvider(
+        myFamilyPositionalParametersStateProvider(
           'a',
           2,
           true,
@@ -157,7 +157,7 @@ void main() {
         ).overrideWithValue(42),
       ]);
 
-      var value = container.read(myFamilyPositionalParametersProvider(
+      var value = container.read(myFamilyPositionalParametersStateProvider(
         'a',
         2,
         true,
@@ -167,7 +167,7 @@ void main() {
       expect(value, 42);
 
       container
-          .read(myFamilyPositionalParametersProvider(
+          .read(myFamilyPositionalParametersStateProvider(
             'a',
             2,
             true,
@@ -175,7 +175,7 @@ void main() {
             const [4],
           ).notifier)
           .state++;
-      value = container.read(myFamilyPositionalParametersProvider(
+      value = container.read(myFamilyPositionalParametersStateProvider(
         'a',
         2,
         true,
@@ -185,7 +185,7 @@ void main() {
       expect(value, 43);
 
       container
-          .read(myFamilyPositionalParametersProvider(
+          .read(myFamilyPositionalParametersStateProvider(
             'a',
             2,
             true,
@@ -193,7 +193,7 @@ void main() {
             const [4],
           ).notifier)
           .update((state) => state + 1);
-      value = container.read(myFamilyPositionalParametersProvider(
+      value = container.read(myFamilyPositionalParametersStateProvider(
         'a',
         2,
         true,
@@ -207,7 +207,7 @@ void main() {
     test('Can read and update the provider', () {
       final container = createContainer();
 
-      var value = container.read(myFamilyMixedParametersProvider(
+      var value = container.read(myFamilyMixedParametersStateProvider(
         'a',
         2,
         param3: true,
@@ -217,7 +217,7 @@ void main() {
       expect(value, const [true]);
 
       container
-          .read(myFamilyMixedParametersProvider(
+          .read(myFamilyMixedParametersStateProvider(
             'a',
             2,
             param3: true,
@@ -225,7 +225,7 @@ void main() {
             param5: const [4],
           ).notifier)
           .state = const [false, true];
-      value = container.read(myFamilyMixedParametersProvider(
+      value = container.read(myFamilyMixedParametersStateProvider(
         'a',
         2,
         param3: true,
@@ -235,7 +235,7 @@ void main() {
       expect(value, const [false, true]);
 
       container
-          .read(myFamilyMixedParametersProvider(
+          .read(myFamilyMixedParametersStateProvider(
             'a',
             2,
             param3: true,
@@ -243,7 +243,7 @@ void main() {
             param5: const [4],
           ).notifier)
           .update((state) => const [true, false]);
-      value = container.read(myFamilyMixedParametersProvider(
+      value = container.read(myFamilyMixedParametersStateProvider(
         'a',
         2,
         param3: true,
@@ -256,7 +256,7 @@ void main() {
     test('The providers are independent', () {
       final container = createContainer();
 
-      var value0 = container.read(myFamilyMixedParametersProvider(
+      var value0 = container.read(myFamilyMixedParametersStateProvider(
         'a',
         2,
         param3: true,
@@ -264,7 +264,7 @@ void main() {
         param5: const [4],
       ));
       expect(value0, const [true]);
-      var value1 = container.read(myFamilyMixedParametersProvider(
+      var value1 = container.read(myFamilyMixedParametersStateProvider(
         'b',
         3,
         param3: false,
@@ -274,7 +274,7 @@ void main() {
       expect(value1, const [true]);
 
       container
-          .read(myFamilyMixedParametersProvider(
+          .read(myFamilyMixedParametersStateProvider(
             'a',
             2,
             param3: true,
@@ -284,7 +284,7 @@ void main() {
           .state = const [false, true];
 
       container
-          .read(myFamilyMixedParametersProvider(
+          .read(myFamilyMixedParametersStateProvider(
             'b',
             3,
             param3: false,
@@ -292,7 +292,7 @@ void main() {
             param5: const [0, 1],
           ).notifier)
           .state = const [];
-      value0 = container.read(myFamilyMixedParametersProvider(
+      value0 = container.read(myFamilyMixedParametersStateProvider(
         'a',
         2,
         param3: true,
@@ -300,7 +300,7 @@ void main() {
         param5: const [4],
       ));
       expect(value0, const [false, true]);
-      value1 = container.read(myFamilyMixedParametersProvider(
+      value1 = container.read(myFamilyMixedParametersStateProvider(
         'b',
         3,
         param3: false,
@@ -310,7 +310,7 @@ void main() {
       expect(value1, const []);
 
       container
-          .read(myFamilyMixedParametersProvider(
+          .read(myFamilyMixedParametersStateProvider(
             'a',
             2,
             param3: true,
@@ -319,7 +319,7 @@ void main() {
           ).notifier)
           .update((state) => const [true, false]);
       container
-          .read(myFamilyMixedParametersProvider(
+          .read(myFamilyMixedParametersStateProvider(
             'b',
             3,
             param3: false,
@@ -327,7 +327,7 @@ void main() {
             param5: const [0, 1],
           ).notifier)
           .update((state) => const [true, true]);
-      value0 = container.read(myFamilyMixedParametersProvider(
+      value0 = container.read(myFamilyMixedParametersStateProvider(
         'a',
         2,
         param3: true,
@@ -335,7 +335,7 @@ void main() {
         param5: const [4],
       ));
       expect(value0, const [true, false]);
-      value1 = container.read(myFamilyMixedParametersProvider(
+      value1 = container.read(myFamilyMixedParametersStateProvider(
         'b',
         3,
         param3: false,
@@ -347,7 +347,7 @@ void main() {
 
     test('The generated provider can be overridden', () {
       final container = createContainer(overrides: [
-        myFamilyMixedParametersProvider(
+        myFamilyMixedParametersStateProvider(
           'a',
           2,
           param3: true,
@@ -356,7 +356,7 @@ void main() {
         ).overrideWithValue(const [true, false]),
       ]);
 
-      var value = container.read(myFamilyMixedParametersProvider(
+      var value = container.read(myFamilyMixedParametersStateProvider(
         'a',
         2,
         param3: true,
@@ -366,7 +366,7 @@ void main() {
       expect(value, const [true, false]);
 
       container
-          .read(myFamilyMixedParametersProvider(
+          .read(myFamilyMixedParametersStateProvider(
             'a',
             2,
             param3: true,
@@ -374,7 +374,7 @@ void main() {
             param5: const [4],
           ).notifier)
           .state = const [];
-      value = container.read(myFamilyMixedParametersProvider(
+      value = container.read(myFamilyMixedParametersStateProvider(
         'a',
         2,
         param3: true,
@@ -384,7 +384,7 @@ void main() {
       expect(value, const []);
 
       container
-          .read(myFamilyMixedParametersProvider(
+          .read(myFamilyMixedParametersStateProvider(
             'a',
             2,
             param3: true,
@@ -392,7 +392,7 @@ void main() {
             param5: const [4],
           ).notifier)
           .update((state) => const [false, false]);
-      value = container.read(myFamilyMixedParametersProvider(
+      value = container.read(myFamilyMixedParametersStateProvider(
         'a',
         2,
         param3: true,

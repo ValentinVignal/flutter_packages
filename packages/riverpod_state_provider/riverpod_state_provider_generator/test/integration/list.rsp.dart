@@ -9,15 +9,11 @@ part of 'list.dart';
 // RiverpodStateProviderGenerator
 // **************************************************************************
 
-@Deprecated('Use myListStateProvider instead')
-@StateProviderFor(myList)
-final myListProvider = myListStateProvider;
-
 @riverpod
 class MyListState extends _$MyListState {
   MyListState({this.overrideInitialState});
 
-  final _MyListOverrideValue? overrideInitialState;
+  final ValueOverride<List<int>>? overrideInitialState;
 
   @override
   List<int> build() {
@@ -51,18 +47,12 @@ class MyListState extends _$MyListState {
   List<int> update(List<int> Function(List<int> state) cb) => state = cb(state);
 }
 
-class _MyListOverrideValue {
-  const _MyListOverrideValue(this.value);
-
-  final List<int> value;
-}
-
 extension MyListRiverpodStateProviderExtension
     on AutoDisposeNotifierProvider<MyListState, List<int>> {
   Override overrideWithValue(List<int> value) {
     return overrideWith(() {
       return MyListState(
-        overrideInitialState: _MyListOverrideValue(value),
+        overrideInitialState: ValueOverride<List<int>>(value),
       );
     });
   }
