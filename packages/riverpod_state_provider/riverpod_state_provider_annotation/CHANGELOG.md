@@ -1,3 +1,7 @@
+## NEXT
+
+- Adds `ValueOverride` to be used by `riverpod_state_provider_generator`.
+
 ## 0.1.0
 
 - Adds support for `keepAlive` and `dependencies`.

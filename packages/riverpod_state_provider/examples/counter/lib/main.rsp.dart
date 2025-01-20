@@ -9,15 +9,12 @@ part of 'main.dart';
 // RiverpodStateProviderGenerator
 // **************************************************************************
 
-@Deprecated('Use myIntegerStateProvider instead')
 @StateProviderFor(myInteger)
-final myIntegerProvider = myIntegerStateProvider;
-
 @riverpod
 class MyIntegerState extends _$MyIntegerState {
   MyIntegerState({this.overrideInitialState});
 
-  final _MyIntegerOverrideValue? overrideInitialState;
+  final ValueOverride<int>? overrideInitialState;
 
   @override
   int build() {
@@ -51,18 +48,12 @@ class MyIntegerState extends _$MyIntegerState {
   int update(int Function(int state) cb) => state = cb(state);
 }
 
-class _MyIntegerOverrideValue {
-  const _MyIntegerOverrideValue(this.value);
-
-  final int value;
-}
-
 extension MyIntegerRiverpodStateProviderExtension
     on AutoDisposeNotifierProvider<MyIntegerState, int> {
   Override overrideWithValue(int value) {
     return overrideWith(() {
       return MyIntegerState(
-        overrideInitialState: _MyIntegerOverrideValue(value),
+        overrideInitialState: ValueOverride<int>(value),
       );
     });
   }
