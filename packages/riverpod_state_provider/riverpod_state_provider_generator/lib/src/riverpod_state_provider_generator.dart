@@ -173,15 +173,11 @@ class RiverpodStateProviderGenerator
 
     final buffer = StringBuffer();
     buffer.write('''
-@Deprecated('Use ${name}StateProvider instead')
-@StateProviderFor($name)
-final ${name}Provider = ${name}StateProvider;
-
 ${_getDecorator(annotation)}
 class $stateClassName extends _\$$stateClassName {
   $stateClassName({this.overrideInitialState});
 
-  final _${pascalName}OverrideValue? overrideInitialState;
+  final ValueOverride<$type>? overrideInitialState;
 
   @override
   $type build(${_buildParametersDefinition(parameters)}) {
@@ -215,18 +211,12 @@ class $stateClassName extends _\$$stateClassName {
   $type update($type Function($type state) cb) => state = cb(state);
 }
 
-class _${pascalName}OverrideValue {
-  const _${pascalName}OverrideValue(this.value);
-
-  final $type value;
-}
-
 extension ${pascalName}RiverpodStateProviderExtension
     on ${_getExtensionType(isFamily: isFamily, stateClassName: stateClassName, type: type, isKeepAlive: isKeepAlive)} {
   Override overrideWithValue($type value) {
     return overrideWith(() {
       return $stateClassName(
-        overrideInitialState: _${pascalName}OverrideValue(value),
+        overrideInitialState: ValueOverride<$type>(value),
       );
     });
   }

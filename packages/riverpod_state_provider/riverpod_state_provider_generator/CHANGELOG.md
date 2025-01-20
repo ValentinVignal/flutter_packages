@@ -1,3 +1,7 @@
+## NEXT
+
+- **BREAKING**: Removes deprecated proxy provider.
+
 ## 0.2.3
 
 - Deprecates generated proxy provider.
