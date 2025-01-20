@@ -20,7 +20,7 @@ final counterProvider = AutoDisposeNotifierProvider<Counter, int>.internal(
 );
 
 typedef _$Counter = AutoDisposeNotifier<int>;
-String _$myIntegerStateHash() => r'1a2e3285c9c180fad25467dd4114862e73620faa';
+String _$myIntegerStateHash() => r'cb209b9d0b1c9b8cca4c62e02756b21f23adef74';
 
 /// See also [MyIntegerState].
 @ProviderFor(MyIntegerState)

@@ -50,7 +50,7 @@ class Home extends ConsumerWidget {
         child: Text(
           [
             '${ref.watch(counterProvider)}',
-            '${ref.watch(myIntegerProvider)}',
+            '${ref.watch(myIntegerStateProvider)}',
           ].join('\n'),
         ),
       ),
@@ -58,7 +58,7 @@ class Home extends ConsumerWidget {
         // The read method is a utility to read a provider without listening to it
         onPressed: () {
           ref.read(counterProvider.notifier).increment();
-          ref.read(myIntegerProvider.notifier).state++;
+          ref.read(myIntegerStateProvider.notifier).state++;
         },
         child: const Icon(Icons.add),
       ),
