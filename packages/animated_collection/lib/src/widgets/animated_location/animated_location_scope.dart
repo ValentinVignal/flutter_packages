@@ -123,6 +123,14 @@ class _AnimatedLocationScopeState extends State<AnimatedLocationScope>
   }
 
   @override
+  void dispose() {
+    for (final tracker in _trackers.values) {
+      _disposeTracker(tracker);
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InheritedAnimatedLocationScope(
       state: this,
@@ -148,7 +156,6 @@ class _AnimatedLocationTracker {
   var count = 0;
 
   bool _removeRequested = false;
-  bool _overlayInserted = false;
 
   void addOverlay(BuildContext context) {
     final overlayState = Overlay.of(context);
@@ -156,16 +163,14 @@ class _AnimatedLocationTracker {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (!_removeRequested) {
         overlayState.insert(overlayEntry);
-        _overlayInserted = true;
       }
     });
   }
 
   void removeOverlay() {
     _removeRequested = true;
-    if (_overlayInserted) {
-      overlayEntry.remove();
-    }
+    overlayEntry.remove();
+    overlayEntry.dispose();
   }
 }
 
