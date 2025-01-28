@@ -1,4 +1,4 @@
-## NEXT
+## 1.2.1
 
 - Fix memory leaks in `AnimatedLocation`.
 
