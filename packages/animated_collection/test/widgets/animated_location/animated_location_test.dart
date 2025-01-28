@@ -2,32 +2,37 @@ import 'package:animated_collection/animated_collection.dart';
 import 'package:animated_collection/src/widgets/animated_location/render.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:leak_tracker_flutter_testing/leak_tracker_flutter_testing.dart';
 
 void main() {
   group('AnimatedLocation', () {
-    testWidgets('must be a descendant of `AnimatedLocationScope`',
-        (tester) async {
-      await tester.pumpWidget(
-        const AnimatedLocation(
-          tag: '0',
-          child: SizedBox(),
-        ),
-      );
+    testWidgets(
+      'must be a descendant of `AnimatedLocationScope`',
+      // The exception thrown prevent the framework from disposing the states.
+      experimentalLeakTesting: LeakTesting.settings.withIgnoredAll(),
+      (tester) async {
+        await tester.pumpWidget(
+          const AnimatedLocation(
+            tag: '0',
+            child: SizedBox(),
+          ),
+        );
 
-      expect(
-        tester.takeException()?.toString(),
-        contains('No AnimatedLocationScope for an AnimatedLocation'),
-      );
-    });
+        expect(
+          tester.takeException()?.toString(),
+          contains('No AnimatedLocationScope for an AnimatedLocation'),
+        );
+      },
+    );
 
     testWidgets('should animating after position changed', (tester) async {
       final List<Offset> positions = <Offset>[];
       void recordMetrics() {
-        positions.add(tester.getTopLeft(find.byType(MyBox)));
+        positions.add(tester.getTopLeft(find.byType(_MyBox)));
       }
 
       await tester.pumpWidget(
-        const TestWidget(
+        const _TestWidget(
           position: Offset(0, 0),
         ),
       );
@@ -35,7 +40,7 @@ void main() {
       expect(find.byType(AnimatedLocationFollower), findsNothing);
 
       await tester.pumpWidget(
-        const TestWidget(
+        const _TestWidget(
           position: Offset(100, 100),
         ),
       );
@@ -70,9 +75,8 @@ void main() {
   });
 }
 
-class TestWidget extends StatelessWidget {
-  const TestWidget({
-    super.key,
+class _TestWidget extends StatelessWidget {
+  const _TestWidget({
     required this.position,
   });
 
@@ -95,7 +99,7 @@ class TestWidget extends StatelessWidget {
                 left: position.dx,
                 child: const AnimatedLocation(
                   tag: 'id',
-                  child: MyBox(),
+                  child: _MyBox(),
                 ),
               ),
             ],
@@ -106,10 +110,8 @@ class TestWidget extends StatelessWidget {
   }
 }
 
-class MyBox extends StatelessWidget {
-  const MyBox({
-    super.key,
-  });
+class _MyBox extends StatelessWidget {
+  const _MyBox();
 
   @override
   Widget build(BuildContext context) {
