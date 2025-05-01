@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Support riverpod_generator 2.6.5.
+
 ## 1.0.0
 
 - **BREAKING**: Removes deprecated proxy provider.
