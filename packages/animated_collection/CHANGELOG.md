@@ -1,4 +1,4 @@
-## NEXT
+## 1.3.0
 
 - Adds `AnimatedVisibility.builder`.
 
