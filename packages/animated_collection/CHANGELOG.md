@@ -1,3 +1,7 @@
+## NEXT
+
+- Adds `AnimatedVisibility.builder`.
+
 ## 1.2.1
 
 - Fix memory leaks in `AnimatedLocation`.
