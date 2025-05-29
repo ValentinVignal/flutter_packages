@@ -16,6 +16,10 @@ flags:
     paths:
       - packages/riverpod_state_provider/riverpod_state_provider_generator/
     carryforward: true
+  static_json_serializable_generator:
+    paths:
+      - packages/static_json_serializable/static_json_serializable_generator/
+    carryforward: true
 
 coverage:
   status:
@@ -29,3 +33,7 @@ coverage:
       riverpod_state_provider_generator:
         flags:
           - riverpod_state_provider_generator
+      static_json_serializable_generator:
+        flags:
+          - static_json_serializable_generator
+      
