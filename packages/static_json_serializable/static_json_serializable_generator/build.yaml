@@ -1,0 +1,20 @@
+targets:
+  $default:
+    builders:
+      static_json_serializable_generator:
+        enabled: true
+        generate_for:
+          exclude:
+            - test
+          include:
+            - test/integration/*
+            - test/integration/**/*
+
+builders:
+  static_json_serializable_generator:
+    import: "package:static_json_serializable_generator/static_json_serializable_generator.dart"
+    builder_factories: ["staticJsonSerializable"]
+    build_extensions: {".dart": ["static_json_serializable.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
