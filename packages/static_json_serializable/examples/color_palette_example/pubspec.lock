@@ -518,14 +518,14 @@ packages:
       path: "../../static_json_serializable_annotation"
       relative: true
     source: path
-    version: "0.0.0"
+    version: "0.1.0"
   static_json_serializable_generator:
     dependency: "direct dev"
     description:
       path: "../../static_json_serializable_generator"
       relative: true
     source: path
-    version: "0.0.0"
+    version: "0.1.0"
   stream_channel:
     dependency: transitive
     description:

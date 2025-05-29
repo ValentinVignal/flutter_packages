@@ -1,6 +1,6 @@
 name: static_json_serializable_annotation
 description: A package exposing annotations for static_json_serializable_generator.
-version: 0.0.0
+version: 0.1.0
 homepage: https://github.com/ValentinVignal/flutter_packages/tree/main/packages/static_json_serializable/static_json_serializable_annotation
 repository: https://github.com/ValentinVignal/flutter_packages
 issue_tracker: https://github.com/ValentinVignal/flutter_packages/issues
