@@ -1,6 +1,6 @@
 import 'package:animated_collection/animated_collection.dart';
 import 'package:animated_collection/src/widgets/duration.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter/scheduler.dart';
 
 /// A widgets that appears with an animation.

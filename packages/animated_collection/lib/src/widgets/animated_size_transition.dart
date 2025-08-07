@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// A widget that by default does a size transition between a new widget and the
 /// widget previously set on the [AnimatedSizeTransition] as a [child].

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// {@template animated_collection.animated_boolean}
 /// A widget that animates its builder whenever the value changes.

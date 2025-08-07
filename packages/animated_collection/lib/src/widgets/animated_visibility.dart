@@ -1,5 +1,5 @@
 import 'package:animated_collection/src/widgets/duration.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'animated_size_transition.dart';
 
