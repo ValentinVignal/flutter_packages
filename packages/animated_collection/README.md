@@ -27,3 +27,11 @@ A Flutter library with simple animated widgets and utilities methods to use with
 - `AnimatedSpacer`.
 
 ![](https://github.com/ValentinVignal/flutter_packages/blob/main/packages/animated_collection/doc/animated-expanded.gif?raw=true)
+
+### `AnimatedColor`
+
+![](https://github.com/ValentinVignal/flutter_packages/blob/main/packages/animated_collection/doc/animated-color.gif?raw=true)
+
+### `AnimatedValueWidget`
+
+A widget that can be used to animate a value by providing a `lerp` or `tweenBuilder` function.
