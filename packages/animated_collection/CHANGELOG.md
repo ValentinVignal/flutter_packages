@@ -1,4 +1,4 @@
-## NEXT
+## 1.4.0
 
 - Adds `AnimatedValueWidget`.
 - Adds `AnimatedColor`.
