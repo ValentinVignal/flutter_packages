@@ -1,3 +1,8 @@
+## NEXT
+
+- Adds `AnimatedValueWidget`.
+- Adds `AnimatedColor`.
+
 ## 1.3.0
 
 - Adds `AnimatedVisibility.builder`.

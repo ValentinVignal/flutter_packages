@@ -1,5 +1,5 @@
 import 'package:animated_collection/src/widgets/duration.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// An animated version of [Flexible] that animates its flex value.
 ///

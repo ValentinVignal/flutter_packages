@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.1 <4.0.0'
+  sdk: '>=3.8.1 <4.0.0'
 
 dependencies:
   animated_collection: ^1.2.0

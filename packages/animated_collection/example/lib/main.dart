@@ -15,10 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(useMaterial3: true),
       darkTheme: ThemeData.dark(useMaterial3: true),
-      home: const DefaultTabController(
-        length: 5,
-        child: MyHomePage(),
-      ),
+      home: const DefaultTabController(length: 6, child: MyHomePage()),
     );
   }
 }
@@ -68,10 +65,14 @@ class _MyHomePageState extends State<MyHomePage> {
   // need high number to make it smooth.
   int _flex = 100;
 
+  // Animated color.
+  late Color _color;
+
   @override
   void initState() {
     super.initState();
     _colors.addAll([_generateColor(), _generateColor()]);
+    _color = _generateColor();
   }
 
   void _onPressed() {
@@ -105,6 +106,11 @@ class _MyHomePageState extends State<MyHomePage> {
           _flex = _random.nextInt(500);
         });
         break;
+      case 5:
+        setState(() {
+          _color = _generateColor();
+        });
+        break;
     }
   }
 
@@ -120,6 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Tab(text: 'AnimatedAppearing'),
             Tab(text: 'AnimatedBoolean'),
             Tab(text: 'AnimatedExpanded'),
+            Tab(text: 'AnimatedColor'),
           ],
         ),
       ),
@@ -129,6 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: TabBarView(
         children: [
+          // AnimatedVisibility
           Center(
             child: Container(
               color: Colors.red,
@@ -139,14 +147,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: const SizedBox(
                     height: 200,
                     width: 200,
-                    child: Center(
-                      child: Text('Hide me'),
-                    ),
+                    child: Center(child: Text('Hide me')),
                   ),
                 ),
               ),
             ),
           ),
+          // AnimatedLocation
           AnimatedLocationScope(
             child: Align(
               alignment: _alignment,
@@ -162,16 +169,16 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
+          // AnimatedAppearing
           ListView.builder(
             itemCount: _colors.length,
             itemBuilder: (context, index) {
               return AnimatedAppearing(
-                child: ListTile(
-                  tileColor: _colors[index],
-                ),
+                child: ListTile(tileColor: _colors[index]),
               );
             },
           ),
+          // AnimatedBoolean
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -187,6 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
           ),
+          // AnimatedExpanded
           Center(
             child: Row(
               mainAxisSize: MainAxisSize.max,
@@ -198,10 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: ColoredBox(
                     color: Theme.of(context).colorScheme.primaryContainer,
                     child: const Center(
-                      child: Text(
-                        'Expanded 100',
-                        textAlign: TextAlign.center,
-                      ),
+                      child: Text('Expanded 100', textAlign: TextAlign.center),
                     ),
                   ),
                 ),
@@ -218,6 +223,25 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ],
+            ),
+          ),
+          // AnimatedColor
+          Center(
+            child: Container(
+              color: Colors.red,
+              child: AnimatedColor(
+                color: _color,
+                builder: (_, _, color) {
+                  return ColoredBox(
+                    color: color ?? Colors.transparent,
+                    child: const SizedBox(
+                      height: 200,
+                      width: 200,
+                      child: Center(child: Text('Change my color')),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ],
