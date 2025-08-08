@@ -1,3 +1,7 @@
+## NEXT
+
+- Makes `color` or `AnimatedColor` nullable.
+
 ## 1.4.0
 
 - Adds `AnimatedValueWidget`.

@@ -21,7 +21,7 @@ class AnimatedColor extends StatelessWidget {
   });
 
   /// The color to animate.
-  final Color color;
+  final Color? color;
 
   /// The builder that will be animated whenever the color changes.
   final Widget Function(BuildContext context, Widget? child, Color? value)
@@ -38,13 +38,35 @@ class AnimatedColor extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedValueWidget<Color?>.lerp(
-      value: color,
-      builder: builder,
-      lerp: (a, b, t) => Color.lerp(a, b, t),
+    // ImplicitAnimatedWidget handles `null` value as absent and does not
+    // animate to it, so we can use a custom wrapper to handle null values.
+    return AnimatedValueWidget<_ColorWrapper>.lerp(
+      value: _ColorWrapper(color),
+      builder: (BuildContext context, Widget? child, _ColorWrapper value) =>
+          builder(context, child, value.color),
+      lerp: (a, b, t) => _ColorWrapper(Color.lerp(a!.color, b!.color, t)),
       duration: duration,
       curve: curve,
       child: child,
     );
   }
+}
+
+class _ColorWrapper {
+  const _ColorWrapper(this.color);
+
+  final Color? color;
+
+  @override
+  String toString() => 'ColorWrapper($color)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! _ColorWrapper) return false;
+    return color == other.color;
+  }
+
+  @override
+  int get hashCode => color?.hashCode ?? 0;
 }
