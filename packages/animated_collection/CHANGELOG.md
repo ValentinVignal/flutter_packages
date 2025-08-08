@@ -1,4 +1,4 @@
-## NEXT
+## 1.4.1
 
 - Makes `color` or `AnimatedColor` nullable.
 
