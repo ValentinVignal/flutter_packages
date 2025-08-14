@@ -1,3 +1,8 @@
+## NEXT
+
+- Fix `lerp` signature of `AnimatedValueWidget<T>` and `AnimatedColor` to be non
+  nullable.
+
 ## 1.4.1
 
 - Makes `color` or `AnimatedColor` nullable.

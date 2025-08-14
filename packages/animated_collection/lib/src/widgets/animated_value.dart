@@ -20,7 +20,7 @@ class AnimatedValueWidget<T> extends ImplicitlyAnimatedWidget {
   const AnimatedValueWidget.lerp({
     required this.value,
     required this.builder,
-    required T Function(T?, T?, double) this.lerp,
+    required T Function(T, T, double) this.lerp,
     super.key,
     this.child,
     super.duration = defaultDuration,
@@ -53,7 +53,7 @@ class AnimatedValueWidget<T> extends ImplicitlyAnimatedWidget {
   final Tween<T> Function(T)? tweenBuilder;
 
   /// The custom lerp function to interpolate between [begin] and [end].
-  final T Function(T?, T?, double)? lerp;
+  final T Function(T, T, double)? lerp;
 
   /// The default duration for the animation.
   static const defaultDuration = Duration(milliseconds: 200);
@@ -72,13 +72,15 @@ class _AnimatedValueWidgetState<T>
     _tween = visitor(
       _tween,
       widget.value,
-      (dynamic value) => widget.tweenBuilder != null
-          ? widget.tweenBuilder!(value as T)
-          : TweenWithLerp<T>(
-              lerp: widget.lerp!,
-              begin: value as T?,
-              end: widget.value,
-            ),
+      (dynamic value) {
+        return widget.tweenBuilder != null
+            ? widget.tweenBuilder!(value as T)
+            : TweenWithLerp<T>(
+                lerp: widget.lerp!,
+                begin: value as T,
+                end: widget.value,
+              );
+      },
     ) as Tween<T>?;
   }
 
@@ -89,22 +91,22 @@ class _AnimatedValueWidgetState<T>
 }
 
 /// Creates a tween with a custom lerp function.
-///
-/// The [begin] and [end] properties may be null; the null value
-/// is treated as meaning the center.
 class TweenWithLerp<T> extends Tween<T> {
   /// Creates a tween with a custom lerp function.
-  ///
-  /// The [begin] and [end] properties may be null; the null value
-  /// is treated as meaning the center.
   TweenWithLerp({
-    required T Function(T? begin, T? end, double t) lerp,
-    super.begin,
-    super.end,
+    required T Function(T begin, T end, double t) lerp,
+    required T super.begin,
+    required T super.end,
   }) : _lerp = lerp;
 
   /// The custom lerp function to interpolate between [begin] and [end].
-  final T Function(T? begin, T? end, double t) _lerp;
+  final T Function(T begin, T end, double t) _lerp;
+
+  @override
+  T get begin => super.begin as T;
+
+  @override
+  T get end => super.end as T;
 
   /// Returns the value this variable has at the given animation clock value.
   @override
