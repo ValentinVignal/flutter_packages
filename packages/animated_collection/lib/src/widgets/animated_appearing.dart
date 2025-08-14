@@ -1,7 +1,7 @@
 import 'package:animated_collection/animated_collection.dart';
 import 'package:animated_collection/src/widgets/duration.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
 
 /// A widgets that appears with an animation.
 class AnimatedAppearing extends StatefulWidget {

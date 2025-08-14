@@ -2,6 +2,7 @@
 
 - Fix `lerp` signature of `AnimatedValueWidget<T>` and `AnimatedColor` to be non
   nullable.
+- Adds `AnimatedDouble`.
 
 ## 1.4.1
 
