@@ -44,7 +44,9 @@ class AnimatedColor extends StatelessWidget {
       value: _ColorWrapper(color),
       builder: (BuildContext context, Widget? child, _ColorWrapper value) =>
           builder(context, child, value.color),
-      lerp: (a, b, t) => _ColorWrapper(Color.lerp(a!.color, b!.color, t)),
+      lerp: (a, b, t) {
+        return _ColorWrapper(Color.lerp(a.color, b.color, t));
+      },
       duration: duration,
       curve: curve,
       child: child,
