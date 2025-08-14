@@ -1,5 +1,5 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/widgets.dart';
 
 typedef RectTweenSupplier = Tween<Rect?> Function(Rect begin, Rect end);
 
