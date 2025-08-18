@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -52,9 +53,7 @@ extension MyIntegerRiverpodStateProviderExtension
     on AutoDisposeNotifierProvider<MyIntegerState, int> {
   Override overrideWithValue(int value) {
     return overrideWith(() {
-      return MyIntegerState(
-        overrideInitialState: ValueOverride<int>(value),
-      );
+      return MyIntegerState(overrideInitialState: ValueOverride<int>(value));
     });
   }
 }

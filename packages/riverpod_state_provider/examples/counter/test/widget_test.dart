@@ -6,11 +6,7 @@ import 'package:counter/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    await tester.pumpWidget(
-      ProviderScope(
-        child: const MyApp(),
-      ),
-    );
+    await tester.pumpWidget(ProviderScope(child: const MyApp()));
 
     expect(find.text('0\n0'), findsOne);
     expect(find.text('1\n1'), findsNothing);
