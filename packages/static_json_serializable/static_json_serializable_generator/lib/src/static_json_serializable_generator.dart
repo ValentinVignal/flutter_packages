@@ -25,11 +25,12 @@ class StaticJsonSerializableGenerator
 
     final name = element.name;
 
-    final staticFields =
-        element.fields.where((field) => field.isStatic && field.isConst);
+    final staticFields = element.fields
+        .where((field) => field.isStatic && (field.isConst || field.isFinal));
+    final isConst = staticFields.every((field) => field.isConst);
 
     return [
-      'const \$${name.decapitalize()}StaticJson = {',
+      '${isConst ? 'const' : 'final'} \$${name.decapitalize()}StaticJson = {',
       for (final field in staticFields) "'${field.name}': $name.${field.name},",
       '};'
     ];
