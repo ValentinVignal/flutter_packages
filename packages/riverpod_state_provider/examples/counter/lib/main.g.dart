@@ -13,8 +13,9 @@ String _$counterHash() => r'4243b34530f53accfd9014a9f0e316fe304ada3e';
 final counterProvider = AutoDisposeNotifierProvider<Counter, int>.internal(
   Counter.new,
   name: r'counterProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$counterHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$counterHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
@@ -26,14 +27,14 @@ String _$myIntegerStateHash() => r'6c2b5cfbbe99e6c419179416e0967e9e42cf1e1f';
 @ProviderFor(MyIntegerState)
 final myIntegerStateProvider =
     AutoDisposeNotifierProvider<MyIntegerState, int>.internal(
-  MyIntegerState.new,
-  name: r'myIntegerStateProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$myIntegerStateHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      MyIntegerState.new,
+      name: r'myIntegerStateProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$myIntegerStateHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$MyIntegerState = AutoDisposeNotifier<int>;
 // ignore_for_file: type=lint

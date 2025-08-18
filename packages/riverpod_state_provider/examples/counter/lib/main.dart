@@ -6,11 +6,7 @@ part 'main.g.dart';
 part 'main.rsp.dart';
 
 void main() {
-  runApp(
-    ProviderScope(
-      child: const MyApp(),
-    ),
-  );
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
