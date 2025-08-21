@@ -1,4 +1,4 @@
-## NEXT
+## 1.5.1
 
 - Fixes `AnimatedValueWidget<T>` when the first `value` was `null`.
 
