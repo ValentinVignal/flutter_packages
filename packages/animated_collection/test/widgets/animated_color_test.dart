@@ -78,4 +78,34 @@ void main() {
     await tester.pump(AnimatedBoolean.defaultDuration * 0.5);
     expect(currentColor, null);
   });
+
+  testWidgets('It should work when animating from a null value',
+      (tester) async {
+    Color? currentColor;
+    Future<void> pumpWidget(Color? color) async {
+      final widget = AnimatedColor(
+        color: color,
+        builder: (context, child, value) {
+          currentColor = value;
+          return child!;
+        },
+        child: const SizedBox(),
+      );
+      await tester.pumpWidget(widget);
+    }
+
+    await pumpWidget(null);
+    expect(currentColor, null);
+
+    await pumpWidget(null);
+    await tester.pump(AnimatedBoolean.defaultDuration * 0.5);
+    expect(currentColor, null);
+
+    await pumpWidget(Color(0xffff0000));
+    await tester.pump(AnimatedBoolean.defaultDuration * 0.5);
+    expect(currentColor, isSameColorAs(Color(0x80ff0000)));
+
+    await tester.pump(AnimatedBoolean.defaultDuration * 0.5);
+    expect(currentColor, isSameColorAs(Color(0xffff0000)));
+  });
 }
