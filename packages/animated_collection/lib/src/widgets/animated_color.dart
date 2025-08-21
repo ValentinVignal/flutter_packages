@@ -1,4 +1,3 @@
-import 'package:animated_collection/src/widgets/value_wrapper.dart';
 import 'package:flutter/widgets.dart';
 
 import 'animated_value.dart';
@@ -41,14 +40,10 @@ class AnimatedColor extends StatelessWidget {
   Widget build(BuildContext context) {
     // ImplicitAnimatedWidget handles `null` value as absent and does not
     // animate to it, so we can use a custom wrapper to handle null values.
-    return AnimatedValueWidget<ValueWrapper<Color>>.lerp(
-      value: ValueWrapper(color),
-      builder:
-          (BuildContext context, Widget? child, ValueWrapper<Color> value) =>
-              builder(context, child, value.value),
-      lerp: (a, b, t) {
-        return ValueWrapper<Color>(Color.lerp(a.value, b.value, t));
-      },
+    return AnimatedValueWidget<Color?>.lerp(
+      value: color,
+      builder: builder,
+      lerp: Color.lerp,
       duration: duration,
       curve: curve,
       child: child,
