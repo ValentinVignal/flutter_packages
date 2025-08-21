@@ -1,3 +1,4 @@
+import 'package:animated_collection/animated_collection.dart';
 import 'package:flutter/widgets.dart';
 
 /// {@template animated_collection.animated_boolean}
@@ -11,14 +12,14 @@ import 'package:flutter/widgets.dart';
 /// to animate the widget. The value is passed to the builder's `value` and
 /// depends on the [curve] and [duration].
 /// {@endtemplate}
-class AnimatedBoolean extends ImplicitlyAnimatedWidget {
+class AnimatedBoolean extends StatelessWidget {
   /// {@macro animated_collection.animated_boolean}
   const AnimatedBoolean({
     required this.value,
     required this.builder,
     this.child,
-    super.duration = defaultDuration,
-    super.curve,
+    this.duration = defaultDuration,
+    this.curve = Curves.linear,
     super.key,
   });
 
@@ -32,31 +33,24 @@ class AnimatedBoolean extends ImplicitlyAnimatedWidget {
   /// The child of the builder.
   final Widget? child;
 
+  /// The curve to apply when animating the parameters of this container.
+  final Curve curve;
+
+  /// The duration over which to animate the parameters of this container.
+  final Duration duration;
+
   /// Default duration of the animation.
   @visibleForTesting
   static const defaultDuration = Duration(milliseconds: 200);
 
   @override
-  AnimatedWidgetBaseState<AnimatedBoolean> createState() =>
-      _AnimatedBooleanState();
-}
-
-class _AnimatedBooleanState extends AnimatedWidgetBaseState<AnimatedBoolean> {
-  Tween<double>? _tween;
-
-  @override
-  void forEachTween(TweenVisitor<dynamic> visitor) {
-    _tween = visitor(_tween, widget.value ? 1.0 : 0.0,
-            (dynamic value) => Tween<double>(begin: value as double))!
-        as Tween<double>;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return widget.builder(
-      context,
-      widget.child,
-      _tween!.evaluate(animation),
+    return AnimatedDouble(
+      value: value ? 1 : 0,
+      duration: duration,
+      curve: curve,
+      builder: builder,
+      child: child,
     );
   }
 }
