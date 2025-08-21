@@ -31,9 +31,9 @@ class AnimatedValueWidget<T> extends ImplicitlyAnimatedWidget {
   ///
   /// Use [AnimatedValueWidget.lerp] to animate a value using a custom [Tween].
   const AnimatedValueWidget.tween({
-    required this.value,
     required this.builder,
     required Tween<T> Function(T) this.tweenBuilder,
+    required this.value,
     super.key,
     this.child,
     super.duration = defaultDuration,
@@ -65,28 +65,36 @@ class AnimatedValueWidget<T> extends ImplicitlyAnimatedWidget {
 
 class _AnimatedValueWidgetState<T>
     extends AnimatedWidgetBaseState<AnimatedValueWidget<T>> {
-  Tween<T>? _tween;
+  Tween<_ValueWrapper<T>>? _tween;
 
   @override
   void forEachTween(TweenVisitor<dynamic> visitor) {
     _tween = visitor(
       _tween,
-      widget.value,
+      _ValueWrapper(widget.value),
       (dynamic value) {
-        return widget.tweenBuilder != null
-            ? widget.tweenBuilder!(value as T)
-            : TweenWithLerp<T>(
-                lerp: widget.lerp!,
-                begin: value as T,
-                end: widget.value,
-              );
+        if (widget.tweenBuilder != null) {
+          return _ValueWrapperTween<T>(
+            parent: widget.tweenBuilder!((value as _ValueWrapper<T>).value),
+          );
+        } else {
+          return TweenWithLerp<_ValueWrapper<T>>(
+            lerp: (a, b, t) => _ValueWrapper(widget.lerp!(a.value, b.value, t)),
+            begin: value,
+            end: _ValueWrapper(widget.value),
+          );
+        }
       },
-    ) as Tween<T>?;
+    ) as Tween<_ValueWrapper<T>>?;
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.builder(context, widget.child, _tween!.evaluate(animation));
+    return widget.builder(
+      context,
+      widget.child,
+      _tween!.evaluate(animation).value,
+    );
   }
 }
 
@@ -111,4 +119,54 @@ class TweenWithLerp<T> extends Tween<T> {
   /// Returns the value this variable has at the given animation clock value.
   @override
   T lerp(double t) => _lerp(begin, end, t);
+}
+
+/// A wrapper to handle nullable values.
+class _ValueWrapper<T> {
+  const _ValueWrapper(this.value);
+
+  final T value;
+
+  @override
+  String toString() => '_ValueWrapper($value)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is! _ValueWrapper<T>) return false;
+    return value == other.value;
+  }
+
+  @override
+  int get hashCode => value?.hashCode ?? 0;
+}
+
+class _ValueWrapperTween<T> extends Tween<_ValueWrapper<T?>> {
+  _ValueWrapperTween({
+    required this.parent,
+  }) : super(
+          begin: _ValueWrapper<T?>(parent.begin),
+          end: _ValueWrapper<T?>(parent.end),
+        );
+
+  final Tween<T> parent;
+
+  @override
+  set begin(_ValueWrapper<T?>? value) {
+    parent.begin = value?.value;
+    super.begin = value;
+  }
+
+  @override
+  set end(_ValueWrapper<T?>? value) {
+    parent.end = value?.value;
+    super.end = value;
+  }
+
+  @override
+  _ValueWrapper<T> lerp(double t) {
+    return _ValueWrapper(
+      parent.lerp(t),
+    );
+  }
 }
