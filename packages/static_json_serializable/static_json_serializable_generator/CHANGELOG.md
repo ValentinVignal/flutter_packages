@@ -1,3 +1,7 @@
+## NEXT
+
+- Add example.
+
 ## 0.2.0
 
 - Adds support for final fields.
