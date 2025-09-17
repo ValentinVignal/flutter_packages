@@ -8,6 +8,7 @@ import 'package:source_gen/source_gen.dart';
 
 const _typeChecker = TypeChecker.fromRuntime(RiverpodStateProvider);
 
+/// The generator that generates the code for the annotated elements.
 @immutable
 class RiverpodStateProviderGenerator
     extends GeneratorForAnnotation<RiverpodStateProvider> {
