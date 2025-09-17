@@ -1,6 +1,6 @@
 name: static_json_serializable_generator
 description: A code generator for serializing static variables of classes.
-version: 0.2.0
+version: 0.2.1
 homepage: https://github.com/ValentinVignal/flutter_packages/tree/main/packages/static_json_serializable/static_json_serializable_generator
 repository: https://github.com/ValentinVignal/flutter_packages
 issue_tracker: https://github.com/ValentinVignal/flutter_packages/issues
