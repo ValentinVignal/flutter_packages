@@ -1,3 +1,7 @@
+## 1.0.1
+
+- Add example.
+
 ## 1.0.0
 
 - Adds `ValueOverride` to be used by `riverpod_state_provider_generator`.
