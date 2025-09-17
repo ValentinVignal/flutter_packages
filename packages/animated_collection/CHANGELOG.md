@@ -1,4 +1,4 @@
-## NEXT
+## 1.5.2
 
 - Use `vector_math` 2.2.0 for `Matrix4` operations.
 
