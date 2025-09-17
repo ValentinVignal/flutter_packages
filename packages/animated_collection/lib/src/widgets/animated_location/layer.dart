@@ -330,10 +330,8 @@ class AnimatedLocationLayer extends ContainerLayer {
     }
     // Combine the matrices and store the result.
     inverseTransform.multiply(forwardTransform);
-    inverseTransform.translate(
-      controller.linkedOffset.dx,
-      controller.linkedOffset.dy,
-    );
+    inverseTransform.translateByDouble(
+        controller.linkedOffset.dx, controller.linkedOffset.dy, 0, 1);
     _lastTransform = inverseTransform;
     _inverseDirty = true;
   }

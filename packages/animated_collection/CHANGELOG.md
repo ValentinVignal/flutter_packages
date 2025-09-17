@@ -1,3 +1,7 @@
+## NEXT
+
+- Use `vector_math` 2.2.0 for `Matrix4` operations.
+
 ## 1.5.1
 
 - Fixes `AnimatedValueWidget<T>` when the first `value` was `null`.
