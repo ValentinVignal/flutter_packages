@@ -1,3 +1,7 @@
+## NEXT
+
+- Add example.
+
 ## 1.0.1
 
 - Support riverpod_generator 2.6.5.
