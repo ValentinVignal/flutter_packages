@@ -518,7 +518,7 @@ packages:
       path: "../../static_json_serializable_annotation"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.1.1"
   static_json_serializable_generator:
     dependency: "direct dev"
     description:
