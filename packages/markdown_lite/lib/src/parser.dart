@@ -17,6 +17,8 @@ List<AstNode> parse(String markdownString) {
   return parser.parse();
 }
 
+enum _InlineTokenKind { code, link, bold, strike, italic }
+
 class _MarkdownParser {
   const _MarkdownParser(this.input);
 
@@ -314,92 +316,72 @@ class _MarkdownParser {
     final nodes = <AstNode>[];
     var currentPos = 0;
 
+    // Precompile regexes
+    final reCode = RegExp(r'`([^`]+)`');
+    final reLink = RegExp(r'\[([^\]]+)\]\(([^)]+)\)');
+    final reBold = RegExp(r'(\*\*|__)([^\*_]+)\1');
+    final reStrike = RegExp(r'~~([^~]+)~~');
+    final reItalic = RegExp(r'(\*|_)([^\*_]+)\1');
+
     while (currentPos < text.length) {
-      var matched = false;
+      Match? best;
+      _InlineTokenKind? kind;
+      int bestAbsStart = text.length + 1;
 
-      // Try to match inline code first (highest priority to avoid conflicts)
-      final inlineCodeMatch = RegExp(
-        r'`([^`]+)`',
-      ).firstMatch(text.substring(currentPos));
-      if (inlineCodeMatch != null && inlineCodeMatch.start == 0) {
-        if (currentPos > 0 && nodes.isEmpty) {
-          // Add any preceding text
-          final precedingText = text.substring(0, currentPos);
-          if (precedingText.isNotEmpty) {
-            nodes.add(TextNode(text: precedingText, rawText: precedingText));
-          }
+      void consider(RegExp re, _InlineTokenKind k) {
+        final m = re.firstMatch(text.substring(currentPos));
+        if (m == null) return;
+        final absStart = currentPos + m.start;
+        if (absStart < bestAbsStart) {
+          bestAbsStart = absStart;
+          best = m;
+          kind = k;
         }
-
-        final rawText = inlineCodeMatch.group(0)!;
-        final codeText = inlineCodeMatch.group(1)!;
-        nodes.add(InlineCodeNode(text: codeText, rawText: rawText));
-        currentPos += rawText.length;
-        matched = true;
-        continue;
       }
 
-      // Try to match links
-      final linkMatch = RegExp(
-        r'\[([^\]]+)\]\(([^)]+)\)',
-      ).firstMatch(text.substring(currentPos));
-      if (linkMatch != null && linkMatch.start == 0) {
-        final rawText = linkMatch.group(0)!;
-        final linkText = linkMatch.group(1)!;
-        final url = linkMatch.group(2)!;
-        nodes.add(LinkNode(text: linkText, rawText: rawText, url: url));
-        currentPos += rawText.length;
-        matched = true;
-        continue;
+      // Consider all token types; priority when tied is the order considered
+      // (code > link > bold > strike > italic) which avoids some ambiguities.
+      consider(reCode, _InlineTokenKind.code);
+      consider(reLink, _InlineTokenKind.link);
+      consider(reBold, _InlineTokenKind.bold);
+      consider(reStrike, _InlineTokenKind.strike);
+      consider(reItalic, _InlineTokenKind.italic);
+
+      if (best == null) {
+        // No more tokens; remaining text is plain
+        if (currentPos < text.length) {
+          final plain = text.substring(currentPos);
+          nodes.add(TextNode(text: plain, rawText: plain));
+        }
+        break;
       }
 
-      // Try to match bold (** or __)
-      final boldMatch = RegExp(
-        r'(\*\*|__)([^\*_]+)\1',
-      ).firstMatch(text.substring(currentPos));
-      if (boldMatch != null && boldMatch.start == 0) {
-        final rawText = boldMatch.group(0)!;
-        final boldText = boldMatch.group(2)!;
-        nodes.add(BoldNode(text: boldText, rawText: rawText));
-        currentPos += rawText.length;
-        matched = true;
-        continue;
+      // Emit preceding plain text if any
+      if (bestAbsStart > currentPos) {
+        final plain = text.substring(currentPos, bestAbsStart);
+        if (plain.isNotEmpty) {
+          nodes.add(TextNode(text: plain, rawText: plain));
+        }
+        currentPos = bestAbsStart;
       }
 
-      // Try to match strikethrough (~~)
-      final strikeMatch = RegExp(
-        r'~~([^~]+)~~',
-      ).firstMatch(text.substring(currentPos));
-      if (strikeMatch != null && strikeMatch.start == 0) {
-        final rawText = strikeMatch.group(0)!;
-        final strikeText = strikeMatch.group(1)!;
-        nodes.add(StrikethroughNode(text: strikeText, rawText: rawText));
-        currentPos += rawText.length;
-        matched = true;
-        continue;
+      // Emit the matched token
+      final raw = best!.group(0)!;
+      switch (kind!) {
+        case _InlineTokenKind.code:
+          nodes.add(InlineCodeNode(text: best!.group(1)!, rawText: raw));
+        case _InlineTokenKind.link:
+          nodes.add(
+            LinkNode(text: best!.group(1)!, rawText: raw, url: best!.group(2)!),
+          );
+        case _InlineTokenKind.bold:
+          nodes.add(BoldNode(text: best!.group(2)!, rawText: raw));
+        case _InlineTokenKind.strike:
+          nodes.add(StrikethroughNode(text: best!.group(1)!, rawText: raw));
+        case _InlineTokenKind.italic:
+          nodes.add(ItalicNode(text: best!.group(2)!, rawText: raw));
       }
-
-      // Try to match italic (* or _)
-      final italicMatch = RegExp(
-        r'(\*|_)([^\*_]+)\1',
-      ).firstMatch(text.substring(currentPos));
-      if (italicMatch != null && italicMatch.start == 0) {
-        final rawText = italicMatch.group(0)!;
-        final italicText = italicMatch.group(2)!;
-        nodes.add(ItalicNode(text: italicText, rawText: rawText));
-        currentPos += rawText.length;
-        matched = true;
-        continue;
-      }
-
-      // If no match, consume one character as plain text
-      if (!matched) {
-        currentPos++;
-      }
-    }
-
-    // If we have accumulated plain text at the end, add it
-    if (nodes.isEmpty && text.isNotEmpty) {
-      nodes.add(TextNode(text: text, rawText: text));
+      currentPos = bestAbsStart + raw.length;
     }
 
     return nodes;
