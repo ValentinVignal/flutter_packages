@@ -317,39 +317,123 @@ class _MarkdownParser {
     final nodes = <AstNode>[];
     var currentPos = 0;
 
-    // Precompile regexes
-    final reCode = RegExp(r'`([^`]+)`');
-    final reLink = RegExp(r'\[([^\]]+)\]\(([^)]+)\)');
-    final reBold = RegExp(r'(\*\*|__)([^\*_]+)\1');
-    final reStrike = RegExp(r'~~([^~]+)~~');
-    final reItalic = RegExp(r'(\*|_)([^\*_]+)\1');
-
     while (currentPos < text.length) {
-      Match? best;
-      _InlineTokenKind? kind;
-      int bestAbsStart = text.length + 1;
+      // Try to find the next inline token in priority order
+      int? tokenStart;
+      _InlineTokenKind? tokenKind;
+      int tokenEnd = -1;
+      String? tokenContent;
+      String? linkUrl;
 
-      void consider(RegExp re, _InlineTokenKind k) {
-        final m = re.firstMatch(text.substring(currentPos));
-        if (m == null) return;
-        final absStart = currentPos + m.start;
-        if (absStart < bestAbsStart) {
-          bestAbsStart = absStart;
-          best = m;
-          kind = k;
+      // Helper to find matching delimiter
+      int? findClosing(String openDelim, String closeDelim, int startPos) {
+        var pos = startPos;
+        while (pos < text.length) {
+          final idx = text.indexOf(closeDelim, pos);
+          if (idx == -1) return null;
+          // Make sure we're not inside a code block
+          final beforeCode = text.substring(startPos, idx);
+          if (!beforeCode.contains('`')) return idx;
+          // Skip past this potential match
+          pos = idx + closeDelim.length;
+        }
+        return null;
+      }
+
+      // 1. Check for inline code (highest priority, no nesting)
+      final codeStart = text.indexOf('`', currentPos);
+      if (codeStart != -1) {
+        final codeEnd = text.indexOf('`', codeStart + 1);
+        if (codeEnd != -1) {
+          tokenStart = codeStart;
+          tokenKind = _InlineTokenKind.code;
+          tokenEnd = codeEnd + 1;
+          tokenContent = text.substring(codeStart + 1, codeEnd);
         }
       }
 
-      // Consider all token types; priority when tied is the order considered
-      // (code > link > bold > strike > italic) which avoids some ambiguities.
-      consider(reCode, _InlineTokenKind.code);
-      consider(reLink, _InlineTokenKind.link);
-      consider(reBold, _InlineTokenKind.bold);
-      consider(reStrike, _InlineTokenKind.strike);
-      consider(reItalic, _InlineTokenKind.italic);
+      // 2. Check for links
+      if (tokenStart == null || (tokenStart > currentPos)) {
+        final linkStart = text.indexOf('[', currentPos);
+        if (linkStart != -1 && (tokenStart == null || linkStart < tokenStart)) {
+          final linkTextEnd = text.indexOf(']', linkStart + 1);
+          if (linkTextEnd != -1 &&
+              linkTextEnd + 1 < text.length &&
+              text[linkTextEnd + 1] == '(') {
+            final linkUrlEnd = text.indexOf(')', linkTextEnd + 2);
+            if (linkUrlEnd != -1) {
+              tokenStart = linkStart;
+              tokenKind = _InlineTokenKind.link;
+              tokenEnd = linkUrlEnd + 1;
+              tokenContent = text.substring(linkStart + 1, linkTextEnd);
+              linkUrl = text.substring(linkTextEnd + 2, linkUrlEnd);
+            }
+          }
+        }
+      }
 
-      if (best == null) {
-        // No more tokens; remaining text is plain
+      // 3. Check for bold (**text** or __text__)
+      if (tokenStart == null || (tokenStart > currentPos)) {
+        for (final delim in ['**', '__']) {
+          final boldStart = text.indexOf(delim, currentPos);
+          if (boldStart != -1 &&
+              (tokenStart == null || boldStart < tokenStart)) {
+            final boldEnd = findClosing(delim, delim, boldStart + delim.length);
+            if (boldEnd != null && boldEnd > boldStart + delim.length) {
+              tokenStart = boldStart;
+              tokenKind = _InlineTokenKind.bold;
+              tokenEnd = boldEnd + delim.length;
+              tokenContent = text.substring(boldStart + delim.length, boldEnd);
+              break;
+            }
+          }
+        }
+      }
+
+      // 4. Check for strikethrough
+      if (tokenStart == null || (tokenStart > currentPos)) {
+        final strikeStart = text.indexOf('~~', currentPos);
+        if (strikeStart != -1 &&
+            (tokenStart == null || strikeStart < tokenStart)) {
+          final strikeEnd = text.indexOf('~~', strikeStart + 2);
+          if (strikeEnd != -1 && strikeEnd > strikeStart + 2) {
+            tokenStart = strikeStart;
+            tokenKind = _InlineTokenKind.strike;
+            tokenEnd = strikeEnd + 2;
+            tokenContent = text.substring(strikeStart + 2, strikeEnd);
+          }
+        }
+      }
+
+      // 5. Check for italic (*text* or _text_) - must be careful not to match ** or __
+      if (tokenStart == null || (tokenStart > currentPos)) {
+        for (final delim in ['*', '_']) {
+          final italicStart = text.indexOf(delim, currentPos);
+          if (italicStart != -1 &&
+              (tokenStart == null || italicStart < tokenStart)) {
+            // Make sure it's not part of ** or __
+            if (italicStart > 0 && text[italicStart - 1] == delim) continue;
+            if (italicStart + 1 < text.length && text[italicStart + 1] == delim)
+              continue;
+
+            final italicEnd = findClosing(delim, delim, italicStart + 1);
+            if (italicEnd != null && italicEnd > italicStart + 1) {
+              // Make sure closing is not part of ** or __
+              if (italicEnd + 1 < text.length && text[italicEnd + 1] == delim)
+                continue;
+
+              tokenStart = italicStart;
+              tokenKind = _InlineTokenKind.italic;
+              tokenEnd = italicEnd + 1;
+              tokenContent = text.substring(italicStart + 1, italicEnd);
+              break;
+            }
+          }
+        }
+      }
+
+      // If no token found, emit remaining text as plain
+      if (tokenStart == null) {
         if (currentPos < text.length) {
           final plain = text.substring(currentPos);
           nodes.add(TextNode(text: plain, rawText: plain));
@@ -357,65 +441,53 @@ class _MarkdownParser {
         break;
       }
 
-      // Emit preceding plain text if any
-      if (bestAbsStart > currentPos) {
-        final plain = text.substring(currentPos, bestAbsStart);
-        if (plain.isNotEmpty) {
-          nodes.add(TextNode(text: plain, rawText: plain));
-        }
-        currentPos = bestAbsStart;
+      // Emit plain text before the token
+      if (tokenStart > currentPos) {
+        final plain = text.substring(currentPos, tokenStart);
+        nodes.add(TextNode(text: plain, rawText: plain));
       }
 
-      // Emit the matched token
-      final raw = best!.group(0)!;
-      switch (kind!) {
+      // Emit the token
+      final raw = text.substring(tokenStart, tokenEnd);
+      switch (tokenKind!) {
         case _InlineTokenKind.code:
-          // Inline code doesn't support nested formatting
-          nodes.add(InlineCodeNode(text: best!.group(1)!, rawText: raw));
+          nodes.add(InlineCodeNode(text: tokenContent!, rawText: raw));
         case _InlineTokenKind.link:
-          // Recursively parse link text for nested formatting
-          final linkText = best!.group(1)!;
-          final url = best!.group(2)!;
-          final linkChildren = _parseInlineContent(linkText);
+          final linkChildren = _parseInlineContent(tokenContent!);
           nodes.add(
             LinkNode(
-              text: linkText,
+              text: tokenContent,
               rawText: raw,
-              url: url,
+              url: linkUrl!,
               children: linkChildren,
             ),
           );
         case _InlineTokenKind.bold:
-          // Recursively parse bold content for nested formatting
-          final boldText = best!.group(2)!;
-          final boldChildren = _parseInlineContent(boldText);
+          final boldChildren = _parseInlineContent(tokenContent!);
           nodes.add(
-            BoldNode(text: boldText, rawText: raw, children: boldChildren),
+            BoldNode(text: tokenContent, rawText: raw, children: boldChildren),
           );
         case _InlineTokenKind.strike:
-          // Recursively parse strikethrough content for nested formatting
-          final strikeText = best!.group(1)!;
-          final strikeChildren = _parseInlineContent(strikeText);
+          final strikeChildren = _parseInlineContent(tokenContent!);
           nodes.add(
             StrikethroughNode(
-              text: strikeText,
+              text: tokenContent,
               rawText: raw,
               children: strikeChildren,
             ),
           );
         case _InlineTokenKind.italic:
-          // Recursively parse italic content for nested formatting
-          final italicText = best!.group(2)!;
-          final italicChildren = _parseInlineContent(italicText);
+          final italicChildren = _parseInlineContent(tokenContent!);
           nodes.add(
             ItalicNode(
-              text: italicText,
+              text: tokenContent,
               rawText: raw,
               children: italicChildren,
             ),
           );
       }
-      currentPos = bestAbsStart + raw.length;
+
+      currentPos = tokenEnd;
     }
 
     return nodes;
