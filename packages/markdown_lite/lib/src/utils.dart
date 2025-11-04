@@ -49,6 +49,21 @@ void _writeNode(
         _writeNode(buf, child, depth + 1, indent, showRaw, textMax);
       }
       return;
+    case HeadingNode(children: final children):
+      for (final child in children) {
+        _writeNode(buf, child, depth + 1, indent, showRaw, textMax);
+      }
+      return;
+    case InlineStyleNode(children: final children):
+      for (final child in children) {
+        _writeNode(buf, child, depth + 1, indent, showRaw, textMax);
+      }
+      return;
+    case LinkNode(children: final children):
+      for (final child in children) {
+        _writeNode(buf, child, depth + 1, indent, showRaw, textMax);
+      }
+      return;
     case UnorderedListNode(items: final items):
       for (final item in items) {
         _writeNode(buf, item, depth + 1, indent, showRaw, textMax);
@@ -70,8 +85,8 @@ void _writeNode(
       }
       return;
     case BlankLineNode():
-      return;
-    default:
+    case TextNode():
+    case CodeBlockNode():
       return;
   }
 }

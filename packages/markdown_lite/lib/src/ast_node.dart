@@ -19,15 +19,22 @@ sealed class AstNode {
 
 /// Represents a heading node (H1-H6).
 sealed class HeadingNode extends AstNode {
-  const HeadingNode({required super.text, required super.rawText});
+  const HeadingNode({
+    required super.text,
+    required super.rawText,
+    this.children = const [],
+  });
 
   /// The level of the heading (1-6).
   int get level;
+
+  /// Inline nodes within the heading (bold, italic, links, etc.).
+  final List<AstNode> children;
 }
 
 /// Represents an H1 heading.
 final class H1Node extends HeadingNode {
-  const H1Node({required super.text, required super.rawText});
+  const H1Node({required super.text, required super.rawText, super.children});
 
   @override
   int get level => 1;
@@ -35,7 +42,7 @@ final class H1Node extends HeadingNode {
 
 /// Represents an H2 heading.
 final class H2Node extends HeadingNode {
-  const H2Node({required super.text, required super.rawText});
+  const H2Node({required super.text, required super.rawText, super.children});
 
   @override
   int get level => 2;
@@ -43,7 +50,7 @@ final class H2Node extends HeadingNode {
 
 /// Represents an H3 heading.
 final class H3Node extends HeadingNode {
-  const H3Node({required super.text, required super.rawText});
+  const H3Node({required super.text, required super.rawText, super.children});
 
   @override
   int get level => 3;
@@ -51,7 +58,7 @@ final class H3Node extends HeadingNode {
 
 /// Represents an H4 heading.
 final class H4Node extends HeadingNode {
-  const H4Node({required super.text, required super.rawText});
+  const H4Node({required super.text, required super.rawText, super.children});
 
   @override
   int get level => 4;
@@ -59,7 +66,7 @@ final class H4Node extends HeadingNode {
 
 /// Represents an H5 heading.
 final class H5Node extends HeadingNode {
-  const H5Node({required super.text, required super.rawText});
+  const H5Node({required super.text, required super.rawText, super.children});
 
   @override
   int get level => 5;
@@ -67,7 +74,7 @@ final class H5Node extends HeadingNode {
 
 /// Represents an H6 heading.
 final class H6Node extends HeadingNode {
-  const H6Node({required super.text, required super.rawText});
+  const H6Node({required super.text, required super.rawText, super.children});
 
   @override
   int get level => 6;
@@ -87,22 +94,37 @@ final class ParagraphNode extends AstNode {
 
 /// Base class for inline text styling nodes.
 sealed class InlineStyleNode extends AstNode {
-  const InlineStyleNode({required super.text, required super.rawText});
+  const InlineStyleNode({
+    required super.text,
+    required super.rawText,
+    this.children = const [],
+  });
+
+  /// Inline nodes within this styled node (can nest bold, italic, links, etc.).
+  final List<AstNode> children;
 }
 
 /// Represents bold text.
 final class BoldNode extends InlineStyleNode {
-  const BoldNode({required super.text, required super.rawText});
+  const BoldNode({required super.text, required super.rawText, super.children});
 }
 
 /// Represents italic text.
 final class ItalicNode extends InlineStyleNode {
-  const ItalicNode({required super.text, required super.rawText});
+  const ItalicNode({
+    required super.text,
+    required super.rawText,
+    super.children,
+  });
 }
 
 /// Represents strikethrough text.
 final class StrikethroughNode extends InlineStyleNode {
-  const StrikethroughNode({required super.text, required super.rawText});
+  const StrikethroughNode({
+    required super.text,
+    required super.rawText,
+    super.children,
+  });
 }
 
 /// Represents inline code.
@@ -180,10 +202,14 @@ final class LinkNode extends AstNode {
     required super.text,
     required super.rawText,
     required this.url,
+    this.children = const [],
   });
 
   /// The URL the link points to.
   final String url;
+
+  /// Inline nodes within the link text (can contain bold, italic, etc.).
+  final List<AstNode> children;
 }
 
 /// Represents a blockquote.

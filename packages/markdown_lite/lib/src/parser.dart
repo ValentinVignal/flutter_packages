@@ -100,14 +100,15 @@ class _MarkdownParser {
     final hashes = match.group(1)!;
     final text = match.group(2)!;
     final level = hashes.length;
+    final children = _parseInlineContent(text);
 
     final node = switch (level) {
-      1 => H1Node(text: text, rawText: line),
-      2 => H2Node(text: text, rawText: line),
-      3 => H3Node(text: text, rawText: line),
-      4 => H4Node(text: text, rawText: line),
-      5 => H5Node(text: text, rawText: line),
-      6 => H6Node(text: text, rawText: line),
+      1 => H1Node(text: text, rawText: line, children: children),
+      2 => H2Node(text: text, rawText: line, children: children),
+      3 => H3Node(text: text, rawText: line, children: children),
+      4 => H4Node(text: text, rawText: line, children: children),
+      5 => H5Node(text: text, rawText: line, children: children),
+      6 => H6Node(text: text, rawText: line, children: children),
       _ => null,
     };
 
@@ -369,17 +370,50 @@ class _MarkdownParser {
       final raw = best!.group(0)!;
       switch (kind!) {
         case _InlineTokenKind.code:
+          // Inline code doesn't support nested formatting
           nodes.add(InlineCodeNode(text: best!.group(1)!, rawText: raw));
         case _InlineTokenKind.link:
+          // Recursively parse link text for nested formatting
+          final linkText = best!.group(1)!;
+          final url = best!.group(2)!;
+          final linkChildren = _parseInlineContent(linkText);
           nodes.add(
-            LinkNode(text: best!.group(1)!, rawText: raw, url: best!.group(2)!),
+            LinkNode(
+              text: linkText,
+              rawText: raw,
+              url: url,
+              children: linkChildren,
+            ),
           );
         case _InlineTokenKind.bold:
-          nodes.add(BoldNode(text: best!.group(2)!, rawText: raw));
+          // Recursively parse bold content for nested formatting
+          final boldText = best!.group(2)!;
+          final boldChildren = _parseInlineContent(boldText);
+          nodes.add(
+            BoldNode(text: boldText, rawText: raw, children: boldChildren),
+          );
         case _InlineTokenKind.strike:
-          nodes.add(StrikethroughNode(text: best!.group(1)!, rawText: raw));
+          // Recursively parse strikethrough content for nested formatting
+          final strikeText = best!.group(1)!;
+          final strikeChildren = _parseInlineContent(strikeText);
+          nodes.add(
+            StrikethroughNode(
+              text: strikeText,
+              rawText: raw,
+              children: strikeChildren,
+            ),
+          );
         case _InlineTokenKind.italic:
-          nodes.add(ItalicNode(text: best!.group(2)!, rawText: raw));
+          // Recursively parse italic content for nested formatting
+          final italicText = best!.group(2)!;
+          final italicChildren = _parseInlineContent(italicText);
+          nodes.add(
+            ItalicNode(
+              text: italicText,
+              rawText: raw,
+              children: italicChildren,
+            ),
+          );
       }
       currentPos = bestAbsStart + raw.length;
     }
