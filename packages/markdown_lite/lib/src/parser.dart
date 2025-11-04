@@ -18,13 +18,12 @@ List<AstNode> parse(String markdownString) {
 }
 
 class _MarkdownParser {
-  _MarkdownParser(this.input);
+  const _MarkdownParser(this.input);
 
   final String input;
-  final List<AstNode> nodes = [];
-  int position = 0;
 
   List<AstNode> parse() {
+    final List<AstNode> nodes = [];
     final lines = input.split('\n');
     var i = 0;
 
@@ -33,6 +32,7 @@ class _MarkdownParser {
 
       // Skip empty lines
       if (line.trim().isEmpty) {
+        nodes.add(const BlankLineNode());
         i++;
         continue;
       }

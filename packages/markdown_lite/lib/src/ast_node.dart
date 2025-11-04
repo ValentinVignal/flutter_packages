@@ -197,3 +197,9 @@ final class BlockquoteNode extends AstNode {
   /// Nodes within the blockquote.
   final List<AstNode> children;
 }
+
+/// Represents an empty line between blocks.
+/// Carries no text; renderers should output a single newline for each instance.
+final class BlankLineNode extends AstNode {
+  const BlankLineNode() : super(text: '', rawText: '');
+}
