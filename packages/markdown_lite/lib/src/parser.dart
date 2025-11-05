@@ -222,6 +222,10 @@ class _MarkdownParser {
 
       final trimmed = line.trimLeft();
 
+      // Extract the marker (-, *, or +)
+      final markerMatch = RegExp(r'^([-*+])\s').firstMatch(trimmed);
+      final marker = markerMatch?.group(1) ?? '-';
+
       // Check for checkbox
       final checkboxMatch = RegExp(
         r'^[-*+]\s+\[([ xX])\]\s+(.+)$',
@@ -239,6 +243,7 @@ class _MarkdownParser {
           children: children,
           isChecked: checked,
           indentLevel: indentLevel,
+          marker: marker,
         );
       } else {
         final match = RegExp(r'^[-*+]\s+(.+)$').firstMatch(trimmed);
@@ -251,6 +256,7 @@ class _MarkdownParser {
             rawText: line,
             children: children,
             indentLevel: indentLevel,
+            marker: marker,
           );
         } else {
           i++;
@@ -337,6 +343,10 @@ class _MarkdownParser {
 
       final trimmed = line.trimLeft();
 
+      // Extract the marker (1., 2., etc.)
+      final markerMatch = RegExp(r'^(\d+\.)\s').firstMatch(trimmed);
+      final marker = markerMatch?.group(1) ?? '1.';
+
       // Check for checkbox
       final checkboxMatch = RegExp(
         r'^\d+\.\s+\[([ xX])\]\s+(.+)$',
@@ -354,6 +364,7 @@ class _MarkdownParser {
           children: children,
           isChecked: checked,
           indentLevel: indentLevel,
+          marker: marker,
         );
       } else {
         final match = RegExp(r'^\d+\.\s+(.+)$').firstMatch(trimmed);
@@ -366,6 +377,7 @@ class _MarkdownParser {
             rawText: line,
             children: children,
             indentLevel: indentLevel,
+            marker: marker,
           );
         } else {
           i++;
@@ -465,6 +477,7 @@ class _MarkdownParser {
       int tokenEnd = -1;
       String? tokenContent;
       String? linkUrl;
+      String? actualDelimiter; // Track the actual delimiter used
 
       // Helper to find matching delimiter
       int? findClosing(String openDelim, String closeDelim, int startPos) {
@@ -490,6 +503,7 @@ class _MarkdownParser {
           tokenKind = _InlineTokenKind.code;
           tokenEnd = codeEnd + 1;
           tokenContent = text.substring(codeStart + 1, codeEnd);
+          actualDelimiter = '`';
         }
       }
 
@@ -525,6 +539,7 @@ class _MarkdownParser {
               tokenKind = _InlineTokenKind.bold;
               tokenEnd = boldEnd + delim.length;
               tokenContent = text.substring(boldStart + delim.length, boldEnd);
+              actualDelimiter = delim;
               break;
             }
           }
@@ -542,6 +557,7 @@ class _MarkdownParser {
             tokenKind = _InlineTokenKind.strike;
             tokenEnd = strikeEnd + 2;
             tokenContent = text.substring(strikeStart + 2, strikeEnd);
+            actualDelimiter = '~~';
           }
         }
       }
@@ -572,6 +588,7 @@ class _MarkdownParser {
               tokenKind = _InlineTokenKind.italic;
               tokenEnd = italicEnd + 1;
               tokenContent = text.substring(italicStart + 1, italicEnd);
+              actualDelimiter = delim;
               break;
             }
           }
@@ -597,7 +614,13 @@ class _MarkdownParser {
       final raw = text.substring(tokenStart, tokenEnd);
       switch (tokenKind!) {
         case _InlineTokenKind.code:
-          nodes.add(InlineCodeNode(text: tokenContent!, rawText: raw));
+          nodes.add(
+            InlineCodeNode(
+              text: tokenContent!,
+              rawText: raw,
+              delimiter: actualDelimiter ?? '`',
+            ),
+          );
         case _InlineTokenKind.link:
           final linkChildren = _parseInlineContent(tokenContent!);
           nodes.add(
@@ -611,7 +634,12 @@ class _MarkdownParser {
         case _InlineTokenKind.bold:
           final boldChildren = _parseInlineContent(tokenContent!);
           nodes.add(
-            BoldNode(text: tokenContent, rawText: raw, children: boldChildren),
+            BoldNode(
+              text: tokenContent,
+              rawText: raw,
+              children: boldChildren,
+              delimiter: actualDelimiter ?? '**',
+            ),
           );
         case _InlineTokenKind.strike:
           final strikeChildren = _parseInlineContent(tokenContent!);
@@ -620,6 +648,7 @@ class _MarkdownParser {
               text: tokenContent,
               rawText: raw,
               children: strikeChildren,
+              delimiter: actualDelimiter ?? '~~',
             ),
           );
         case _InlineTokenKind.italic:
@@ -629,6 +658,7 @@ class _MarkdownParser {
               text: tokenContent,
               rawText: raw,
               children: italicChildren,
+              delimiter: actualDelimiter ?? '*',
             ),
           );
       }

@@ -30,6 +30,9 @@ sealed class HeadingNode extends AstNode {
 
   /// Inline nodes within the heading (bold, italic, links, etc.).
   final List<AstNode> children;
+
+  /// The prefix characters (e.g., "##" for H2).
+  String get prefix => '#' * level;
 }
 
 /// Represents an H1 heading.
@@ -98,15 +101,24 @@ sealed class InlineStyleNode extends AstNode {
     required super.text,
     required super.rawText,
     this.children = const [],
+    this.delimiter = '',
   });
 
   /// Inline nodes within this styled node (can nest bold, italic, links, etc.).
   final List<AstNode> children;
+
+  /// The delimiter used for this style (e.g., "**" for bold, "*" for italic).
+  final String delimiter;
 }
 
 /// Represents bold text.
 final class BoldNode extends InlineStyleNode {
-  const BoldNode({required super.text, required super.rawText, super.children});
+  const BoldNode({
+    required super.text,
+    required super.rawText,
+    super.children,
+    super.delimiter = '**',
+  });
 }
 
 /// Represents italic text.
@@ -115,6 +127,7 @@ final class ItalicNode extends InlineStyleNode {
     required super.text,
     required super.rawText,
     super.children,
+    super.delimiter = '*',
   });
 }
 
@@ -124,12 +137,17 @@ final class StrikethroughNode extends InlineStyleNode {
     required super.text,
     required super.rawText,
     super.children,
+    super.delimiter = '~~',
   });
 }
 
 /// Represents inline code.
 final class InlineCodeNode extends InlineStyleNode {
-  const InlineCodeNode({required super.text, required super.rawText});
+  const InlineCodeNode({
+    required super.text,
+    required super.rawText,
+    super.delimiter = '`',
+  });
 }
 
 /// Represents plain text (no special formatting).
@@ -176,6 +194,7 @@ final class ListItemNode extends AstNode {
     this.isChecked,
     this.nestedList,
     this.indentLevel = 0,
+    this.marker = '-',
   });
 
   /// Inline nodes within the list item.
@@ -190,6 +209,9 @@ final class ListItemNode extends AstNode {
 
   /// The indentation level of this list item (0 for top-level, 1 for first nested level, etc.).
   final int indentLevel;
+
+  /// The marker used for this list item (e.g., "-", "*", "+", or "1.", "2.", etc.).
+  final String marker;
 }
 
 /// Represents a code block.
