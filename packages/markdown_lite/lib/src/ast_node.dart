@@ -174,6 +174,8 @@ final class ListItemNode extends AstNode {
     required super.rawText,
     this.children = const [],
     this.isChecked,
+    this.nestedList,
+    this.indentLevel = 0,
   });
 
   /// Inline nodes within the list item.
@@ -182,6 +184,12 @@ final class ListItemNode extends AstNode {
   /// For checkbox items, whether the checkbox is checked.
   /// `null` if this is not a checkbox item.
   final bool? isChecked;
+
+  /// A nested list (ordered or unordered) within this list item.
+  final ListNode? nestedList;
+
+  /// The indentation level of this list item (0 for top-level, 1 for first nested level, etc.).
+  final int indentLevel;
 }
 
 /// Represents a code block.

@@ -185,15 +185,41 @@ class _MarkdownParser {
     return RegExp(r'^\d+\.\s').hasMatch(trimmed);
   }
 
+  int _getIndentLevel(String line) {
+    final leadingSpaces = line.length - line.trimLeft().length;
+    // Each indentation level is typically 2 or 4 spaces
+    // We'll use 2 spaces per level as it's more common in markdown
+    return leadingSpaces ~/ 2;
+  }
+
   (UnorderedListNode, int) _parseUnorderedList(
     List<String> lines,
     int startIndex,
   ) {
+    return _parseUnorderedListAtLevel(lines, startIndex, 0);
+  }
+
+  (UnorderedListNode, int) _parseUnorderedListAtLevel(
+    List<String> lines,
+    int startIndex,
+    int baseIndentLevel,
+  ) {
     final items = <ListItemNode>[];
     var i = startIndex;
 
-    while (i < lines.length && _isUnorderedListItem(lines[i])) {
+    while (i < lines.length) {
       final line = lines[i];
+
+      if (!_isUnorderedListItem(line)) break;
+
+      final indentLevel = _getIndentLevel(line);
+
+      // If this item is less indented than our base, stop
+      if (indentLevel < baseIndentLevel) break;
+
+      // If this item is more indented than base + 1, skip (will be handled by nested list)
+      if (indentLevel > baseIndentLevel) break;
+
       final trimmed = line.trimLeft();
 
       // Check for checkbox
@@ -201,18 +227,18 @@ class _MarkdownParser {
         r'^[-*+]\s+\[([ xX])\]\s+(.+)$',
       ).firstMatch(trimmed);
 
+      ListItemNode item;
       if (checkboxMatch != null) {
         final checked = checkboxMatch.group(1)!.toLowerCase() == 'x';
         final text = checkboxMatch.group(2)!;
         final children = _parseInlineContent(text);
 
-        items.add(
-          ListItemNode(
-            text: text,
-            rawText: line,
-            children: children,
-            isChecked: checked,
-          ),
+        item = ListItemNode(
+          text: text,
+          rawText: line,
+          children: children,
+          isChecked: checked,
+          indentLevel: indentLevel,
         );
       } else {
         final match = RegExp(r'^[-*+]\s+(.+)$').firstMatch(trimmed);
@@ -220,13 +246,61 @@ class _MarkdownParser {
           final text = match.group(1)!;
           final children = _parseInlineContent(text);
 
-          items.add(
-            ListItemNode(text: text, rawText: line, children: children),
+          item = ListItemNode(
+            text: text,
+            rawText: line,
+            children: children,
+            indentLevel: indentLevel,
           );
+        } else {
+          i++;
+          continue;
         }
       }
 
       i++;
+
+      // Check if the next line is a nested list (unordered or ordered)
+      if (i < lines.length) {
+        final nextIndentLevel = _getIndentLevel(lines[i]);
+        if (nextIndentLevel > indentLevel) {
+          if (_isUnorderedListItem(lines[i])) {
+            // Parse nested unordered list
+            final (nestedList, newIndex) = _parseUnorderedListAtLevel(
+              lines,
+              i,
+              nextIndentLevel,
+            );
+            item = ListItemNode(
+              text: item.text,
+              rawText: item.rawText,
+              children: item.children,
+              isChecked: item.isChecked,
+              indentLevel: item.indentLevel,
+              nestedList: nestedList,
+            );
+            i = newIndex;
+          } else if (_isOrderedListItem(lines[i])) {
+            // Parse nested ordered list
+            final (nestedList, newIndex) = _parseOrderedListAtLevel(
+              lines,
+              i,
+              nextIndentLevel,
+            );
+            item = ListItemNode(
+              text: item.text,
+              rawText: item.rawText,
+              children: item.children,
+              isChecked: item.isChecked,
+              indentLevel: item.indentLevel,
+              nestedList: nestedList,
+            );
+            i = newIndex;
+          }
+        }
+      }
+
+      items.add(item);
     }
 
     final rawLines = lines.sublist(startIndex, i);
@@ -237,11 +311,30 @@ class _MarkdownParser {
   }
 
   (OrderedListNode, int) _parseOrderedList(List<String> lines, int startIndex) {
+    return _parseOrderedListAtLevel(lines, startIndex, 0);
+  }
+
+  (OrderedListNode, int) _parseOrderedListAtLevel(
+    List<String> lines,
+    int startIndex,
+    int baseIndentLevel,
+  ) {
     final items = <ListItemNode>[];
     var i = startIndex;
 
-    while (i < lines.length && _isOrderedListItem(lines[i])) {
+    while (i < lines.length) {
       final line = lines[i];
+
+      if (!_isOrderedListItem(line)) break;
+
+      final indentLevel = _getIndentLevel(line);
+
+      // If this item is less indented than our base, stop
+      if (indentLevel < baseIndentLevel) break;
+
+      // If this item is more indented than base + 1, skip (will be handled by nested list)
+      if (indentLevel > baseIndentLevel) break;
+
       final trimmed = line.trimLeft();
 
       // Check for checkbox
@@ -249,18 +342,18 @@ class _MarkdownParser {
         r'^\d+\.\s+\[([ xX])\]\s+(.+)$',
       ).firstMatch(trimmed);
 
+      ListItemNode item;
       if (checkboxMatch != null) {
         final checked = checkboxMatch.group(1)!.toLowerCase() == 'x';
         final text = checkboxMatch.group(2)!;
         final children = _parseInlineContent(text);
 
-        items.add(
-          ListItemNode(
-            text: text,
-            rawText: line,
-            children: children,
-            isChecked: checked,
-          ),
+        item = ListItemNode(
+          text: text,
+          rawText: line,
+          children: children,
+          isChecked: checked,
+          indentLevel: indentLevel,
         );
       } else {
         final match = RegExp(r'^\d+\.\s+(.+)$').firstMatch(trimmed);
@@ -268,13 +361,61 @@ class _MarkdownParser {
           final text = match.group(1)!;
           final children = _parseInlineContent(text);
 
-          items.add(
-            ListItemNode(text: text, rawText: line, children: children),
+          item = ListItemNode(
+            text: text,
+            rawText: line,
+            children: children,
+            indentLevel: indentLevel,
           );
+        } else {
+          i++;
+          continue;
         }
       }
 
       i++;
+
+      // Check if the next line is a nested list (ordered or unordered)
+      if (i < lines.length) {
+        final nextIndentLevel = _getIndentLevel(lines[i]);
+        if (nextIndentLevel > indentLevel) {
+          if (_isOrderedListItem(lines[i])) {
+            // Parse nested ordered list
+            final (nestedList, newIndex) = _parseOrderedListAtLevel(
+              lines,
+              i,
+              nextIndentLevel,
+            );
+            item = ListItemNode(
+              text: item.text,
+              rawText: item.rawText,
+              children: item.children,
+              isChecked: item.isChecked,
+              indentLevel: item.indentLevel,
+              nestedList: nestedList,
+            );
+            i = newIndex;
+          } else if (_isUnorderedListItem(lines[i])) {
+            // Parse nested unordered list
+            final (nestedList, newIndex) = _parseUnorderedListAtLevel(
+              lines,
+              i,
+              nextIndentLevel,
+            );
+            item = ListItemNode(
+              text: item.text,
+              rawText: item.rawText,
+              children: item.children,
+              isChecked: item.isChecked,
+              indentLevel: item.indentLevel,
+              nestedList: nestedList,
+            );
+            i = newIndex;
+          }
+        }
+      }
+
+      items.add(item);
     }
 
     final rawLines = lines.sublist(startIndex, i);
@@ -412,15 +553,20 @@ class _MarkdownParser {
           if (italicStart != -1 &&
               (tokenStart == null || italicStart < tokenStart)) {
             // Make sure it's not part of ** or __
-            if (italicStart > 0 && text[italicStart - 1] == delim) continue;
-            if (italicStart + 1 < text.length && text[italicStart + 1] == delim)
+            if (italicStart > 0 && text[italicStart - 1] == delim) {
               continue;
+            }
+            if (italicStart + 1 < text.length &&
+                text[italicStart + 1] == delim) {
+              continue;
+            }
 
             final italicEnd = findClosing(delim, delim, italicStart + 1);
             if (italicEnd != null && italicEnd > italicStart + 1) {
               // Make sure closing is not part of ** or __
-              if (italicEnd + 1 < text.length && text[italicEnd + 1] == delim)
+              if (italicEnd + 1 < text.length && text[italicEnd + 1] == delim) {
                 continue;
+              }
 
               tokenStart = italicStart;
               tokenKind = _InlineTokenKind.italic;
