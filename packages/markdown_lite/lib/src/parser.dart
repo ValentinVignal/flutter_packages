@@ -17,7 +17,7 @@ List<AstNode> parse(String markdownString) {
   return parser.parse();
 }
 
-enum _InlineTokenKind { code, link, bold, strike, italic }
+enum _InlineTokenKind { code, link, autolink, bold, strike, italic }
 
 class _MarkdownParser {
   const _MarkdownParser(this.input);
@@ -562,6 +562,28 @@ class _MarkdownParser {
         }
       }
 
+      // 4.5. Check for auto-links (plain URLs)
+      if (tokenStart == null || (tokenStart > currentPos)) {
+        // Match http://, https://, or domain-like patterns (e.g., github.com)
+        final urlPattern = RegExp(
+          r'(?:https?://|(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z]{2,})[^\s\)\]]*',
+        );
+        final match = urlPattern.firstMatch(text.substring(currentPos));
+        if (match != null) {
+          final urlStart = currentPos + match.start;
+          if (tokenStart == null || urlStart < tokenStart) {
+            var url = match.group(0)!;
+            // Add https:// prefix for display if not present
+            final displayUrl = url.startsWith('http') ? url : 'https://$url';
+            tokenStart = urlStart;
+            tokenKind = _InlineTokenKind.autolink;
+            tokenEnd = urlStart + url.length;
+            tokenContent = url; // Keep original text as entered
+            linkUrl = displayUrl; // Use full URL for linking
+          }
+        }
+      }
+
       // 5. Check for italic (*text* or _text_) - must be careful not to match ** or __
       if (tokenStart == null || (tokenStart > currentPos)) {
         for (final delim in ['*', '_']) {
@@ -629,6 +651,17 @@ class _MarkdownParser {
               rawText: raw,
               url: linkUrl!,
               children: linkChildren,
+            ),
+          );
+        case _InlineTokenKind.autolink:
+          // Auto-links have the URL as both text and url
+          nodes.add(
+            LinkNode(
+              text: tokenContent!,
+              rawText: raw,
+              url: linkUrl!,
+              children: [TextNode(text: tokenContent, rawText: tokenContent)],
+              isAutoLink: true,
             ),
           );
         case _InlineTokenKind.bold:

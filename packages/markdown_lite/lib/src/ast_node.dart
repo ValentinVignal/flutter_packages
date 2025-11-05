@@ -233,6 +233,7 @@ final class LinkNode extends AstNode {
     required super.rawText,
     required this.url,
     this.children = const [],
+    this.isAutoLink = false,
   });
 
   /// The URL the link points to.
@@ -240,6 +241,9 @@ final class LinkNode extends AstNode {
 
   /// Inline nodes within the link text (can contain bold, italic, etc.).
   final List<AstNode> children;
+
+  /// Whether this is an auto-detected link (plain URL) vs markdown syntax [text](url).
+  final bool isAutoLink;
 }
 
 /// Represents a blockquote.
