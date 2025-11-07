@@ -402,52 +402,39 @@ class MarkdownTextEditingController extends TextEditingController {
       case md.BlankLineNode():
         return [TextSpan(text: '\n', style: base)];
 
-      // Blockquote: show > with syntax style
-      case md.BlockquoteNode(:final children):
+      // Blockquote: parse rawText which already includes >
+      case md.BlockquoteNode(:final rawText):
         final spans = <InlineSpan>[];
         final qStyle = _blockquoteStyle(context, base);
         final syntaxStyle = _blockquoteSyntaxStyle(context);
 
-        // The blockquote children contain the parsed content
-        // We need to add > before the content and before each line break
+        // Parse rawText line by line, styling > separately
+        final lines = rawText.split('\n');
+        for (var i = 0; i < lines.length; i++) {
+          final line = lines[i].trimLeft();
 
-        // Get all child spans first
-        final childSpans = <InlineSpan>[];
-        for (final child in children) {
-          childSpans.addAll(_visitNodeWithStyle(context, qStyle, child));
-        }
+          if (line.startsWith('>')) {
+            // Add the > with syntax style
+            final leadingSpaces = lines[i].length - lines[i].trimLeft().length;
+            if (leadingSpaces > 0) {
+              spans.add(TextSpan(text: ' ' * leadingSpaces, style: base));
+            }
+            spans.add(TextSpan(text: '> ', style: syntaxStyle));
 
-        // Now inject > at the beginning and after each newline
-        var needsPrefix = true;
-        for (final span in childSpans) {
-          if (span is TextSpan && span.text != null) {
-            final text = span.text!;
-            if (text.isEmpty) continue;
-
-            // Split by newlines and add > before each line
-            final lines = text.split('\n');
-            for (var i = 0; i < lines.length; i++) {
-              if (needsPrefix) {
-                spans.add(TextSpan(text: '> ', style: syntaxStyle));
-                needsPrefix = false;
-              }
-
-              if (lines[i].isNotEmpty) {
-                spans.add(TextSpan(text: lines[i], style: span.style));
-              }
-
-              // Add newline if not last line
-              if (i < lines.length - 1) {
-                spans.add(TextSpan(text: '\n', style: qStyle));
-                needsPrefix = true;
+            // Get the content after >
+            final content = line.substring(1).trimLeft();
+            if (content.isNotEmpty) {
+              // Parse inline content for styling
+              final contentNodes = md.parse(content);
+              for (final contentNode in contentNodes) {
+                spans.addAll(_visitNodeWithStyle(context, qStyle, contentNode));
               }
             }
-          } else {
-            if (needsPrefix) {
-              spans.add(TextSpan(text: '> ', style: syntaxStyle));
-              needsPrefix = false;
-            }
-            spans.add(span);
+          }
+
+          // Add newline if not last line
+          if (i < lines.length - 1) {
+            spans.add(TextSpan(text: '\n', style: base));
           }
         }
 
