@@ -136,6 +136,7 @@ class _MarkdownParser {
             text: text,
             rawText: rawText,
             language: language?.isEmpty ?? true ? null : language,
+            isTerminated: true,
           ),
           i + 1,
         );
@@ -144,8 +145,17 @@ class _MarkdownParser {
       i++;
     }
 
-    // No closing found, treat as paragraph
-    return null;
+    // No closing found: do NOT consume the rest of the document.
+    // Treat only the opening fence line as an (unterminated) code block marker.
+    return (
+      CodeBlockNode(
+        text: '',
+        rawText: firstLine,
+        language: language?.isEmpty ?? true ? null : language,
+        isTerminated: false,
+      ),
+      startIndex + 1,
+    );
   }
 
   (BlockquoteNode, int) _parseBlockquote(List<String> lines, int startIndex) {

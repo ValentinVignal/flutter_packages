@@ -351,6 +351,40 @@ console.log("Hello");
       final codeBlock = nodes[0] as CodeBlockNode;
       expect(codeBlock.language, equals('javascript'));
     });
+
+    test('unterminated code fence does not consume following lines', () {
+      final markdown = '''```dart
+void main() {
+  print('Hello');
+''';
+      final nodes = parse(markdown);
+      expect(nodes.length, greaterThanOrEqualTo(2));
+
+      // First node is the unterminated fence marker
+      expect(nodes.first, isA<CodeBlockNode>());
+      final codeBlock = nodes.first as CodeBlockNode;
+      expect(codeBlock.language, equals('dart'));
+      expect(codeBlock.text, equals(''));
+      expect(codeBlock.isTerminated, isFalse);
+
+      // Next content should be parsed normally (e.g., as a paragraph)
+      expect(
+        nodes[1],
+        anyOf([isA<ParagraphNode>(), isA<H1Node>(), isA<TextNode>()]),
+      );
+    });
+
+    test('parses lone opening fence as empty code block at EOF', () {
+      final markdown = '```\n';
+      final nodes = parse(markdown);
+      expect(nodes, hasLength(1));
+      expect(nodes[0], isA<CodeBlockNode>());
+
+      final codeBlock = nodes[0] as CodeBlockNode;
+      expect(codeBlock.text, equals(''));
+      expect(codeBlock.language, isNull);
+      expect(codeBlock.isTerminated, isFalse);
+    });
   });
 
   group('Blockquotes', () {

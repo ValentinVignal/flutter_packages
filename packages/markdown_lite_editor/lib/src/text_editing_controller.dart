@@ -367,25 +367,35 @@ class MarkdownTextEditingController extends TextEditingController {
         }
         return spans;
 
-      // Code block: show ``` with syntax style and language
-      case md.CodeBlockNode(:final language):
+      // Code block: show ``` with syntax style and language. If unterminated, do not render closing fence.
+      case md.CodeBlockNode(:final language, :final isTerminated):
         final spans = <InlineSpan>[];
         final syntaxStyle = _syntaxStyle(context);
         final codeStyle = _codeBlock(context, base);
         final langStyle = _codeBlockLanguageStyle(context);
 
-        // Opening ```
+        // Opening ``` (and optional language)
         spans.add(TextSpan(text: '```', style: syntaxStyle));
         if (language != null && language.isNotEmpty) {
           spans.add(TextSpan(text: language, style: langStyle));
         }
-        spans.add(TextSpan(text: '\n', style: base));
+        if (node.text.isNotEmpty) {
+          spans.add(TextSpan(text: '\n', style: base));
+        }
 
         // Code content
         spans.add(TextSpan(text: node.text, style: codeStyle));
 
-        // Closing ```
-        spans.add(TextSpan(text: '\n```', style: syntaxStyle));
+        // Closing ``` only if the block was terminated and we rendered content
+        if (isTerminated) {
+          final needsLeadingNewline = node.text.isNotEmpty;
+          spans.add(
+            TextSpan(
+              text: needsLeadingNewline ? '\n```' : '```',
+              style: syntaxStyle,
+            ),
+          );
+        }
         return spans;
 
       // Blank line

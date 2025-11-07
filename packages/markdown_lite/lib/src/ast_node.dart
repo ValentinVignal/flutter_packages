@@ -220,10 +220,15 @@ final class CodeBlockNode extends AstNode {
     required super.text,
     required super.rawText,
     this.language,
+    this.isTerminated = true,
   });
 
   /// The language specified for the code block, if any.
   final String? language;
+
+  /// Whether the code block had a closing fence (```).
+  /// False if the parser reached EOF without finding a closing fence.
+  final bool isTerminated;
 }
 
 /// Represents a link.
