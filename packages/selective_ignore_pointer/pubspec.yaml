@@ -1,0 +1,22 @@
+name: selective_ignore_pointer
+description: Fine-grained pointer event control. Block events for widget subtrees while allowing specific children to remain interactive.
+version: 0.0.0
+homepage: https://github.com/ValentinVignal/flutter_packages/tree/main/packages/selective_ignore_pointer
+repository: https://github.com/ValentinVignal/flutter_packages
+issue_tracker: https://github.com/ValentinVignal/flutter_packages/issues
+
+environment:
+  sdk: ^3.8.0
+  flutter: ">=3.32.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
