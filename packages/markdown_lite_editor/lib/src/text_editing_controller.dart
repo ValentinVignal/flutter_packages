@@ -294,7 +294,6 @@ class MarkdownTextEditingController extends TextEditingController {
   ) {
     final spans = <InlineSpan>[];
     final markerStyle = _listMarkerStyle(context);
-    final checkboxStyle = _checkboxStyle(context);
 
     for (final item in items) {
       // Add indentation based on indent level
@@ -302,21 +301,55 @@ class MarkdownTextEditingController extends TextEditingController {
         spans.add(TextSpan(text: '  ' * item.indentLevel, style: base));
       }
 
-      // Add list marker with style
-      spans.add(TextSpan(text: '${item.marker} ', style: markerStyle));
+      // Preserve exact number of spaces typed after the marker without duplicating
+      final trimmedRaw = item.rawText.trimLeft();
+      // Capture the exact spaces typed after the marker. Previous pattern mistakenly used 's*' (literal 's').
+      final markerSpaceMatch = RegExp(
+        '^${RegExp.escape(item.marker)}(\\s*)',
+      ).firstMatch(trimmedRaw);
+      final originalSpace = markerSpaceMatch?.group(1) ?? '';
+
+      // Count leading spaces that will appear in the rendered children (from item.text)
+      final leadingSpacesInText =
+          item.text.length - item.text.trimLeft().length;
+      // For items with content (item.text not empty), we already render leadingSpacesInText inside children.
+      // So only render the difference to avoid duplication. For empty items, render all original spaces.
+      final spacesToRender = item.text.isEmpty
+          ? originalSpace.length
+          : (originalSpace.length - leadingSpacesInText).clamp(
+              0,
+              originalSpace.length,
+            );
+
+      // Render marker itself
+      spans.add(TextSpan(text: item.marker, style: markerStyle));
+      // Render preserved spaces (if any)
+      if (spacesToRender > 0) {
+        spans.add(TextSpan(text: ' ' * spacesToRender, style: base));
+      }
 
       // Add checkbox if present with styled brackets and fill
       if (item.isChecked != null) {
+        // Reconstruct the original bracket form and any space that followed it
+        final trimmedRaw = item.rawText.trimLeft();
+        final rawMatch = RegExp(
+          r'^[-*+]\s+(\[[xX ]?\])(\s*)',
+        ).firstMatch(trimmedRaw);
+        String rawBracket = item.isChecked! ? '[x]' : '[ ]';
+        String spaceAfter = ' ';
+        if (rawMatch != null) {
+          rawBracket = rawMatch.group(1)!; // preserves [] vs [ ] vs [x]
+          spaceAfter = rawMatch.group(2)!; // may be empty or multiple spaces
+        }
         if (item.isChecked!) {
-          // Checked: [x] with filled background
           final checkedStyle = _checkboxCheckedStyle(context);
-          spans.add(TextSpan(text: '[x]', style: checkedStyle));
-          spans.add(TextSpan(text: ' ', style: base));
+          spans.add(TextSpan(text: rawBracket, style: checkedStyle));
         } else {
-          // Unchecked: [ ] with border-like appearance
           final uncheckedStyle = _checkboxUncheckedStyle(context);
-          spans.add(TextSpan(text: '[ ]', style: uncheckedStyle));
-          spans.add(TextSpan(text: ' ', style: base));
+          spans.add(TextSpan(text: rawBracket, style: uncheckedStyle));
+        }
+        if (spaceAfter.isNotEmpty) {
+          spans.add(TextSpan(text: spaceAfter, style: base));
         }
       }
 

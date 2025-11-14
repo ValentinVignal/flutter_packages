@@ -187,12 +187,14 @@ class _MarkdownParser {
 
   bool _isUnorderedListItem(String line) {
     final trimmed = line.trimLeft();
-    return RegExp(r'^[-*+]\s').hasMatch(trimmed);
+    // Accept markers with or without trailing space to allow empty items like '-' or '*'
+    return RegExp(r'^[-*+](?:\s|$)').hasMatch(trimmed);
   }
 
   bool _isOrderedListItem(String line) {
     final trimmed = line.trimLeft();
-    return RegExp(r'^\d+\.\s').hasMatch(trimmed);
+    // Accept ordered markers with or without trailing space (e.g. '1.' alone)
+    return RegExp(r'^\d+\.(?:\s|$)').hasMatch(trimmed);
   }
 
   int _getIndentLevel(String line) {
@@ -232,18 +234,19 @@ class _MarkdownParser {
 
       final trimmed = line.trimLeft();
 
-      // Extract the marker (-, *, or +)
-      final markerMatch = RegExp(r'^([-*+])\s').firstMatch(trimmed);
+      // Extract the marker (-, *, or +) optionally followed by space
+      final markerMatch = RegExp(r'^([-*+])(\s|$)').firstMatch(trimmed);
       final marker = markerMatch?.group(1) ?? '-';
 
       // Check for checkbox
       final checkboxMatch = RegExp(
-        r'^[-*+]\s+\[([ xX])\]\s+(.+)$',
+        r'^[-*+]\s+\[([xX ]?)\]\s*(.*)$',
       ).firstMatch(trimmed);
 
       ListItemNode item;
       if (checkboxMatch != null) {
-        final checked = checkboxMatch.group(1)!.toLowerCase() == 'x';
+        final checkboxContent = checkboxMatch.group(1)!.trim();
+        final checked = checkboxContent.toLowerCase() == 'x';
         final text = checkboxMatch.group(2)!;
         final children = _parseInlineContent(text);
 
@@ -265,6 +268,15 @@ class _MarkdownParser {
             text: text,
             rawText: line,
             children: children,
+            indentLevel: indentLevel,
+            marker: marker,
+          );
+        } else if (RegExp(r'^[-*+](?:\s|$)$').hasMatch(trimmed)) {
+          // Empty list item
+          item = ListItemNode(
+            text: '',
+            rawText: line,
+            children: const [],
             indentLevel: indentLevel,
             marker: marker,
           );
@@ -353,8 +365,8 @@ class _MarkdownParser {
 
       final trimmed = line.trimLeft();
 
-      // Extract the marker (1., 2., etc.)
-      final markerMatch = RegExp(r'^(\d+\.)\s').firstMatch(trimmed);
+      // Extract the marker (1., 2., etc.) optionally followed by space
+      final markerMatch = RegExp(r'^(\d+\.)').firstMatch(trimmed);
       final marker = markerMatch?.group(1) ?? '1.';
 
       // Check for checkbox
@@ -386,6 +398,15 @@ class _MarkdownParser {
             text: text,
             rawText: line,
             children: children,
+            indentLevel: indentLevel,
+            marker: marker,
+          );
+        } else if (RegExp(r'^\d+\.(?:\s|$)$').hasMatch(trimmed)) {
+          // Empty ordered list item
+          item = ListItemNode(
+            text: '',
+            rawText: line,
+            children: const [],
             indentLevel: indentLevel,
             marker: marker,
           );
