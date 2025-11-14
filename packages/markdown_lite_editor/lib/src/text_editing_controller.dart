@@ -108,9 +108,26 @@ class MarkdownTextEditingController extends TextEditingController {
     );
   }
 
-  TextStyle _checkboxStyle(BuildContext context) {
+  TextStyle _checkboxUncheckedStyle(BuildContext context) {
     final theme = Theme.of(context);
-    return TextStyle(color: theme.colorScheme.secondary);
+    return TextStyle(
+      color: theme.colorScheme.primary,
+      fontWeight: FontWeight.w600,
+      background: Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5
+        ..color = theme.colorScheme.primary,
+    );
+  }
+
+  TextStyle _checkboxCheckedStyle(BuildContext context) {
+    final theme = Theme.of(context);
+    return TextStyle(
+      color: theme.colorScheme.onPrimary,
+      backgroundColor: theme.colorScheme.primary,
+      fontWeight: FontWeight.bold,
+      // Filled background to make the checkbox stand out
+    );
   }
 
   TextStyle _blockquoteSyntaxStyle(BuildContext context) {
@@ -288,10 +305,19 @@ class MarkdownTextEditingController extends TextEditingController {
       // Add list marker with style
       spans.add(TextSpan(text: '${item.marker} ', style: markerStyle));
 
-      // Add checkbox if present
+      // Add checkbox if present with styled brackets and fill
       if (item.isChecked != null) {
-        final checkboxText = item.isChecked! ? '[x] ' : '[ ] ';
-        spans.add(TextSpan(text: checkboxText, style: checkboxStyle));
+        if (item.isChecked!) {
+          // Checked: [x] with filled background
+          final checkedStyle = _checkboxCheckedStyle(context);
+          spans.add(TextSpan(text: '[x]', style: checkedStyle));
+          spans.add(TextSpan(text: ' ', style: base));
+        } else {
+          // Unchecked: [ ] with border-like appearance
+          final uncheckedStyle = _checkboxUncheckedStyle(context);
+          spans.add(TextSpan(text: '[ ]', style: uncheckedStyle));
+          spans.add(TextSpan(text: ' ', style: base));
+        }
       }
 
       // Add the item content with inline styling
