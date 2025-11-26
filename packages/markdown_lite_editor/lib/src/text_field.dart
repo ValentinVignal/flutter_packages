@@ -33,6 +33,12 @@ class _MarkdownLiteEditorState extends State<MarkdownLiteEditor> {
           expands: true,
           selectionHeightStyle: BoxHeightStyle.max,
           clipBehavior: Clip.none,
+          contextMenuBuilder: (context, editableTextState) {
+            return AdaptiveTextSelectionToolbar.buttonItems(
+              anchors: editableTextState.contextMenuAnchors,
+              buttonItems: editableTextState.contextMenuButtonItems,
+            );
+          },
         ),
       ),
     );

@@ -1,9 +1,26 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown_lite/markdown_lite.dart' as md;
+import 'package:url_launcher/url_launcher.dart';
 
 class MarkdownTextEditingController extends TextEditingController {
   MarkdownTextEditingController({super.text});
+
+  final _gestureRecognizers = <TapGestureRecognizer>[];
+
+  void _disposeRecognizers() {
+    for (final recognizer in _gestureRecognizers) {
+      recognizer.dispose();
+    }
+    _gestureRecognizers.clear();
+  }
+
+  @override
+  void dispose() {
+    _disposeRecognizers();
+    super.dispose();
+  }
 
   TextStyle _baseStyle(BuildContext context, TextStyle? style) {
     // Fallback to DefaultTextStyle if incoming style is null.
@@ -235,11 +252,22 @@ class MarkdownTextEditingController extends TextEditingController {
       case md.LinkNode(:final children, :final url, :final isAutoLink):
         final spans = <InlineSpan>[];
         final linkTextStyle = _linkStyle(context, base);
+        final recognizer = TapGestureRecognizer()
+          ..onTap = () async {
+            await launchUrl(Uri.parse(node.text));
+          };
+        _gestureRecognizers.add(recognizer);
 
         if (isAutoLink) {
           // Auto-link: just show the text as-is with link styling
           if (children.isEmpty) {
-            spans.add(TextSpan(text: node.text, style: linkTextStyle));
+            spans.add(
+              TextSpan(
+                text: node.text,
+                style: linkTextStyle,
+                recognizer: recognizer,
+              ),
+            );
           } else {
             for (final child in children) {
               spans.addAll(_visitNodeWithStyle(context, linkTextStyle, child));
@@ -267,7 +295,9 @@ class MarkdownTextEditingController extends TextEditingController {
           spans.add(TextSpan(text: '(', style: linkSyntaxStyle));
 
           // URL
-          spans.add(TextSpan(text: url, style: urlStyle));
+          spans.add(
+            TextSpan(text: url, style: urlStyle, recognizer: recognizer),
+          );
 
           // )
           spans.add(TextSpan(text: ')', style: linkSyntaxStyle));
@@ -519,6 +549,7 @@ class MarkdownTextEditingController extends TextEditingController {
     TextStyle? style,
     required bool withComposing,
   }) {
+    _disposeRecognizers();
     final base = _baseStyle(context, style);
 
     // Parse markdown into AST using markdown_lite.
