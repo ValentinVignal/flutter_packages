@@ -134,6 +134,47 @@ class MarkdownTextEditingController extends TextEditingController {
     );
   }
 
+  // Small thumbnail/icon for a website, using a public favicon service.
+  // This avoids heavy OpenGraph parsing while giving a quick visual cue.
+  WidgetSpan _linkThumbnailSpan({
+    required String url,
+    String? leading,
+    String? trailing,
+    TextStyle? linkSyntaxStyle,
+    TextStyle? linkTextStyle,
+  }) {
+    // Use Google's favicon service which accepts full URLs.
+    final faviconUrl =
+        'https://www.google.com/s2/favicons?sz=64&domain_url=$url';
+    final double size = (linkTextStyle?.fontSize ?? 16);
+
+    return WidgetSpan(
+      alignment: PlaceholderAlignment.baseline,
+      baseline: TextBaseline.alphabetic,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+
+        children: [
+          if (leading != null) Text(leading, style: linkSyntaxStyle),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Image.network(
+              faviconUrl,
+              width: size * 0.8,
+              height: size * 0.8,
+              errorBuilder: (context, error, stackTrace) {
+                // On error, render a generic link icon to keep layout stable.
+                return Icon(Icons.link, size: size);
+              },
+            ),
+          ),
+          if (trailing != null) Text(trailing, style: linkSyntaxStyle),
+        ],
+      ),
+    );
+  }
+
   TextStyle _blockquoteStyle(BuildContext context, TextStyle base) {
     final theme = Theme.of(context);
     return base.merge(
@@ -320,10 +361,55 @@ class MarkdownTextEditingController extends TextEditingController {
         if (isAutoLink) {
           // Auto-link: just show the text as-is with link styling
           if (children.isEmpty) {
-            spans.add(TextSpan(text: node.text, style: linkTextStyle));
+            spans.add(
+              _linkThumbnailSpan(
+                trailing: node.text.substring(0, 1),
+                url: url,
+                linkSyntaxStyle: linkTextStyle,
+                linkTextStyle: linkTextStyle,
+              ),
+            );
+            spans.add(
+              TextSpan(text: node.text.substring(1), style: linkTextStyle),
+            );
           } else {
-            for (final child in children) {
-              spans.addAll(_visitNodeWithStyle(context, linkTextStyle, child));
+            // When children are present, combine the preview with the first
+            // rendered character to keep InlineSpan length aligned with text.
+            final firstChild = children.first;
+            if (firstChild is md.TextNode && firstChild.text.isNotEmpty) {
+              final firstChar = firstChild.text[0];
+              spans.add(
+                _linkThumbnailSpan(
+                  trailing: firstChar,
+                  url: url,
+                  linkSyntaxStyle: linkTextStyle,
+                  linkTextStyle: linkTextStyle,
+                ),
+              );
+
+              // Emit the remainder of the first text child.
+              if (firstChild.text.length > 1) {
+                spans.add(
+                  TextSpan(
+                    text: firstChild.text.substring(1),
+                    style: linkTextStyle,
+                  ),
+                );
+              }
+
+              // Emit the rest of children.
+              for (final child in children.skip(1)) {
+                spans.addAll(
+                  _visitNodeWithStyle(context, linkTextStyle, child),
+                );
+              }
+            } else {
+              // Fallback: no simple first character to merge, render children normally.
+              for (final child in children) {
+                spans.addAll(
+                  _visitNodeWithStyle(context, linkTextStyle, child),
+                );
+              }
             }
           }
         } else {
@@ -332,7 +418,14 @@ class MarkdownTextEditingController extends TextEditingController {
           final urlStyle = _linkUrlStyle(context);
 
           // [
-          spans.add(TextSpan(text: '[', style: linkSyntaxStyle));
+          spans.add(
+            _linkThumbnailSpan(
+              leading: '[',
+              url: url,
+              linkSyntaxStyle: linkSyntaxStyle,
+              linkTextStyle: linkTextStyle,
+            ),
+          );
 
           // link text
           if (children.isEmpty) {
