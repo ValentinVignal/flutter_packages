@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'text_editing_controller.dart';
 
@@ -24,19 +25,47 @@ class _MarkdownLiteEditorState extends State<MarkdownLiteEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = widget.controller ?? _controller;
+
     return ClipRect(
       child: Padding(
         padding: EdgeInsets.only(top: 8),
         child: TextField(
-          controller: widget.controller ?? _controller,
+          controller: controller,
           maxLines: null,
           expands: true,
           selectionHeightStyle: BoxHeightStyle.max,
           clipBehavior: Clip.none,
           contextMenuBuilder: (context, editableTextState) {
+            final buttonItems = <ContextMenuButtonItem>[
+              ...editableTextState.contextMenuButtonItems,
+            ];
+
+            // Check if cursor is on a link
+            final selection =
+                editableTextState.currentTextEditingValue.selection;
+            final cursorPosition = selection.baseOffset;
+            final linkUrl = controller.getLinkAtPosition(cursorPosition);
+
+            if (linkUrl != null) {
+              // Add "Open Link" button
+              buttonItems.add(
+                ContextMenuButtonItem(
+                  label: 'Open Link',
+                  onPressed: () async {
+                    ContextMenuController.removeAny();
+                    final uri = Uri.tryParse(linkUrl);
+                    if (uri != null) {
+                      await launchUrl(uri);
+                    }
+                  },
+                ),
+              );
+            }
+
             return AdaptiveTextSelectionToolbar.buttonItems(
               anchors: editableTextState.contextMenuAnchors,
-              buttonItems: editableTextState.contextMenuButtonItems,
+              buttonItems: buttonItems,
             );
           },
         ),

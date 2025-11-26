@@ -1,25 +1,89 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown_lite/markdown_lite.dart' as md;
-import 'package:url_launcher/url_launcher.dart';
 
 class MarkdownTextEditingController extends TextEditingController {
   MarkdownTextEditingController({super.text});
 
-  final _gestureRecognizers = <TapGestureRecognizer>[];
+  /// Find the link URL at the given text position, if any.
+  String? getLinkAtPosition(int offset) {
+    if (offset < 0 || offset > text.length) return null;
 
-  void _disposeRecognizers() {
-    for (final recognizer in _gestureRecognizers) {
-      recognizer.dispose();
-    }
-    _gestureRecognizers.clear();
+    final nodes = md.parse(text);
+    return _findLinkInNodes(nodes, offset);
   }
 
-  @override
-  void dispose() {
-    _disposeRecognizers();
-    super.dispose();
+  String? _findLinkInNodes(List<md.AstNode> nodes, int targetOffset) {
+    var currentOffset = 0;
+
+    for (var i = 0; i < nodes.length; i++) {
+      final node = nodes[i];
+
+      // Add newline between nodes (matching _buildDocumentSpans)
+      if (i > 0 && node is! md.BlankLineNode) {
+        currentOffset += 1; // newline character
+      }
+
+      final link = _findLinkInNode(node, targetOffset, currentOffset);
+      if (link != null) return link;
+
+      currentOffset += node.rawText.length;
+    }
+
+    return null;
+  }
+
+  String? _findLinkInNode(md.AstNode node, int targetOffset, int nodeStart) {
+    final nodeEnd = nodeStart + node.rawText.length;
+
+    // Check if target is within this node's range
+    if (targetOffset < nodeStart || targetOffset > nodeEnd) {
+      return null;
+    }
+
+    // Check if this node itself is a link
+    if (node case md.LinkNode(:final url)) {
+      return url;
+    }
+
+    // Recursively check children
+    if (node
+        case md.HeadingNode(:final children) ||
+            md.ParagraphNode(:final children) ||
+            md.BoldNode(:final children) ||
+            md.ItalicNode(:final children) ||
+            md.StrikethroughNode(:final children) ||
+            md.LinkNode(:final children)) {
+      var childOffset = nodeStart;
+      for (final child in children) {
+        final link = _findLinkInNode(child, targetOffset, childOffset);
+        if (link != null) return link;
+        childOffset += child.rawText.length;
+      }
+    }
+
+    // Check list items
+    if (node
+        case md.UnorderedListNode(:final items) ||
+            md.OrderedListNode(:final items)) {
+      var itemOffset = nodeStart;
+      for (final item in items) {
+        final link = _findLinkInNode(item, targetOffset, itemOffset);
+        if (link != null) return link;
+        itemOffset += item.rawText.length + 1; // +1 for newline
+      }
+    }
+
+    if (node case md.ListItemNode(:final children)) {
+      var childOffset = nodeStart;
+      for (final child in children) {
+        final link = _findLinkInNode(child, targetOffset, childOffset);
+        if (link != null) return link;
+        childOffset += child.rawText.length;
+      }
+    }
+
+    return null;
   }
 
   TextStyle _baseStyle(BuildContext context, TextStyle? style) {
@@ -252,22 +316,11 @@ class MarkdownTextEditingController extends TextEditingController {
       case md.LinkNode(:final children, :final url, :final isAutoLink):
         final spans = <InlineSpan>[];
         final linkTextStyle = _linkStyle(context, base);
-        final recognizer = TapGestureRecognizer()
-          ..onTap = () async {
-            await launchUrl(Uri.parse(node.text));
-          };
-        _gestureRecognizers.add(recognizer);
 
         if (isAutoLink) {
           // Auto-link: just show the text as-is with link styling
           if (children.isEmpty) {
-            spans.add(
-              TextSpan(
-                text: node.text,
-                style: linkTextStyle,
-                recognizer: recognizer,
-              ),
-            );
+            spans.add(TextSpan(text: node.text, style: linkTextStyle));
           } else {
             for (final child in children) {
               spans.addAll(_visitNodeWithStyle(context, linkTextStyle, child));
@@ -295,9 +348,7 @@ class MarkdownTextEditingController extends TextEditingController {
           spans.add(TextSpan(text: '(', style: linkSyntaxStyle));
 
           // URL
-          spans.add(
-            TextSpan(text: url, style: urlStyle, recognizer: recognizer),
-          );
+          spans.add(TextSpan(text: url, style: urlStyle));
 
           // )
           spans.add(TextSpan(text: ')', style: linkSyntaxStyle));
@@ -549,7 +600,6 @@ class MarkdownTextEditingController extends TextEditingController {
     TextStyle? style,
     required bool withComposing,
   }) {
-    _disposeRecognizers();
     final base = _baseStyle(context, style);
 
     // Parse markdown into AST using markdown_lite.
