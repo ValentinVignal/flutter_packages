@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'text_editing_controller.dart';
@@ -49,9 +50,10 @@ class _MarkdownLiteEditorState extends State<MarkdownLiteEditor> {
 
             if (linkUrl != null) {
               // Add "Open Link" button
-              buttonItems.add(
+              buttonItems.addAll([
                 ContextMenuButtonItem(
                   label: 'Open Link',
+                  type: ContextMenuButtonType.searchWeb,
                   onPressed: () async {
                     ContextMenuController.removeAny();
                     final uri = Uri.tryParse(linkUrl);
@@ -60,7 +62,15 @@ class _MarkdownLiteEditorState extends State<MarkdownLiteEditor> {
                     }
                   },
                 ),
-              );
+                ContextMenuButtonItem(
+                  label: 'Copy Link Address',
+                  type: ContextMenuButtonType.copy,
+                  onPressed: () async {
+                    ContextMenuController.removeAny();
+                    await Clipboard.setData(ClipboardData(text: linkUrl));
+                  },
+                ),
+              ]);
             }
 
             return AdaptiveTextSelectionToolbar.buttonItems(
