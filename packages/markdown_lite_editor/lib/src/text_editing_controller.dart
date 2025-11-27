@@ -161,8 +161,8 @@ class MarkdownTextEditingController extends TextEditingController {
             padding: const EdgeInsets.symmetric(horizontal: 4),
             child: Image.network(
               faviconUrl,
-              width: size * 0.8,
-              height: size * 0.8,
+              width: size * 0.9,
+              height: size * 0.9,
               errorBuilder: (context, error, stackTrace) {
                 // On error, render a generic link icon to keep layout stable.
                 return Icon(Icons.link, size: size);
