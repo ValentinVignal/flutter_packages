@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^6.3.2
+  http: ^1.6.0
   markdown_lite: ^0.0.0
   url_launcher: ^6.3.2
 

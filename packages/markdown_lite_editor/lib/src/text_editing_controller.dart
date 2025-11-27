@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:markdown_lite/markdown_lite.dart' as md;
+import 'package:markdown_lite_editor/src/link_preview.dart';
 
 class MarkdownTextEditingController extends TextEditingController {
   MarkdownTextEditingController({super.text});
@@ -134,8 +135,7 @@ class MarkdownTextEditingController extends TextEditingController {
     );
   }
 
-  // Small thumbnail/icon for a website, using a public favicon service.
-  // This avoids heavy OpenGraph parsing while giving a quick visual cue.
+  // Small thumbnail/icon for a website with title, using a public favicon service.
   WidgetSpan _linkThumbnailSpan({
     required String url,
     String? leading,
@@ -144,31 +144,17 @@ class MarkdownTextEditingController extends TextEditingController {
     TextStyle? linkTextStyle,
   }) {
     // Use Google's favicon service which accepts full URLs.
-    final faviconUrl =
-        'https://www.google.com/s2/favicons?sz=64&domain_url=$url';
-    final double size = (linkTextStyle?.fontSize ?? 16);
 
     return WidgetSpan(
-      alignment: PlaceholderAlignment.baseline,
+      alignment: PlaceholderAlignment.middle,
       baseline: TextBaseline.alphabetic,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
-
         children: [
           if (leading != null) Text(leading, style: linkSyntaxStyle),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: Image.network(
-              faviconUrl,
-              width: size * 0.9,
-              height: size * 0.9,
-              errorBuilder: (context, error, stackTrace) {
-                // On error, render a generic link icon to keep layout stable.
-                return Icon(Icons.link, size: size);
-              },
-            ),
-          ),
+          LinkPreview(url: Uri.parse(url), textStyle: linkTextStyle),
+          // Display website title
           if (trailing != null) Text(trailing, style: linkSyntaxStyle),
         ],
       ),
