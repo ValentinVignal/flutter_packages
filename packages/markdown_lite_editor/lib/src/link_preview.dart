@@ -187,14 +187,13 @@ class _LinkPreviewState extends State<LinkPreview> {
                     ),
                     Builder(
                       builder: (context) {
-                        if (snapshot.hasData && snapshot.data != null) {
+                        if (snapshot.data?.shortTitle?.isNotEmpty ?? false) {
                           return Padding(
                             padding: const EdgeInsets.only(left: 2),
                             child: ConstrainedBox(
                               constraints: BoxConstraints(maxWidth: size * 6),
                               child: Text(
-                                snapshot.data!.shortTitle ??
-                                    snapshot.data!.host,
+                                snapshot.data!.shortTitle!,
                                 style: (widget.textStyle ?? const TextStyle())
                                     .copyWith(
                                       fontSize: size * 0.7,
