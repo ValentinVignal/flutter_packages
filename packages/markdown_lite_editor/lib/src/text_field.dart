@@ -42,12 +42,15 @@ class _MarkdownLiteEditorState extends State<MarkdownLiteEditor> {
               ...editableTextState.contextMenuButtonItems,
             ];
 
-            // Check if cursor is on a link or code
+            // Check if cursor is on a link, code, or blockquote
             final selection =
                 editableTextState.currentTextEditingValue.selection;
             final cursorPosition = selection.baseOffset;
             final linkUrl = controller.getLinkAtPosition(cursorPosition);
             final codeContent = controller.getCodeAtPosition(cursorPosition);
+            final blockquoteContent = controller.getBlockquoteAtPosition(
+              cursorPosition,
+            );
 
             if (linkUrl != null) {
               // Add "Open Link" button
@@ -83,6 +86,22 @@ class _MarkdownLiteEditorState extends State<MarkdownLiteEditor> {
                   onPressed: () async {
                     ContextMenuController.removeAny();
                     await Clipboard.setData(ClipboardData(text: codeContent));
+                  },
+                ),
+              );
+            }
+
+            if (blockquoteContent != null) {
+              // Add "Copy Quote" button
+              buttonItems.add(
+                ContextMenuButtonItem(
+                  label: 'Copy Quote',
+                  type: ContextMenuButtonType.copy,
+                  onPressed: () async {
+                    ContextMenuController.removeAny();
+                    await Clipboard.setData(
+                      ClipboardData(text: blockquoteContent),
+                    );
                   },
                 ),
               );

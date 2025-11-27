@@ -23,6 +23,69 @@ class MarkdownTextEditingController extends TextEditingController {
     return _findCodeInNodes(nodes, offset);
   }
 
+  /// Find the blockquote content at the given text position, if any.
+  /// Returns the blockquote text without the > prefix.
+  String? getBlockquoteAtPosition(int offset) {
+    if (offset < 0 || offset > text.length) return null;
+
+    final nodes = md.parse(text);
+    return _findBlockquoteInNodes(nodes, offset);
+  }
+
+  String? _findBlockquoteInNodes(List<md.AstNode> nodes, int targetOffset) {
+    var currentOffset = 0;
+
+    for (var i = 0; i < nodes.length; i++) {
+      final node = nodes[i];
+
+      // Add newline between nodes (matching _buildDocumentSpans)
+      if (i > 0 && node is! md.BlankLineNode) {
+        currentOffset += 1; // newline character
+      }
+
+      final blockquote = _findBlockquoteInNode(
+        node,
+        targetOffset,
+        currentOffset,
+      );
+      if (blockquote != null) return blockquote;
+
+      currentOffset += node.rawText.length;
+    }
+
+    return null;
+  }
+
+  String? _findBlockquoteInNode(
+    md.AstNode node,
+    int targetOffset,
+    int nodeStart,
+  ) {
+    final nodeEnd = nodeStart + node.rawText.length;
+
+    // Check if target is within this node's range
+    if (targetOffset < nodeStart || targetOffset > nodeEnd) {
+      return null;
+    }
+
+    // Check if this node itself is a blockquote
+    if (node case md.BlockquoteNode(:final rawText)) {
+      // Extract content without the > prefix
+      return rawText
+          .split('\n')
+          .map((line) {
+            final trimmed = line.trimLeft();
+            if (trimmed.startsWith('>')) {
+              return trimmed.substring(1).trimLeft();
+            }
+            return trimmed;
+          })
+          .join('\n');
+    }
+
+    return null;
+  }
+
   String? _findCodeInNodes(List<md.AstNode> nodes, int targetOffset) {
     var currentOffset = 0;
 
