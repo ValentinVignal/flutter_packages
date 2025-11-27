@@ -14,6 +14,91 @@ class MarkdownTextEditingController extends TextEditingController {
     return _findLinkInNodes(nodes, offset);
   }
 
+  /// Find the code content at the given text position, if any.
+  /// Returns the code content for inline code or code blocks.
+  String? getCodeAtPosition(int offset) {
+    if (offset < 0 || offset > text.length) return null;
+
+    final nodes = md.parse(text);
+    return _findCodeInNodes(nodes, offset);
+  }
+
+  String? _findCodeInNodes(List<md.AstNode> nodes, int targetOffset) {
+    var currentOffset = 0;
+
+    for (var i = 0; i < nodes.length; i++) {
+      final node = nodes[i];
+
+      // Add newline between nodes (matching _buildDocumentSpans)
+      if (i > 0 && node is! md.BlankLineNode) {
+        currentOffset += 1; // newline character
+      }
+
+      final code = _findCodeInNode(node, targetOffset, currentOffset);
+      if (code != null) return code;
+
+      currentOffset += node.rawText.length;
+    }
+
+    return null;
+  }
+
+  String? _findCodeInNode(md.AstNode node, int targetOffset, int nodeStart) {
+    final nodeEnd = nodeStart + node.rawText.length;
+
+    // Check if target is within this node's range
+    if (targetOffset < nodeStart || targetOffset > nodeEnd) {
+      return null;
+    }
+
+    // Check if this node itself is inline code or code block
+    if (node case md.InlineCodeNode()) {
+      return node.text;
+    }
+    if (node case md.CodeBlockNode()) {
+      return node.text;
+    }
+
+    // Recursively check children
+    if (node
+        case md.HeadingNode(:final children) ||
+            md.ParagraphNode(:final children) ||
+            md.BoldNode(:final children) ||
+            md.ItalicNode(:final children) ||
+            md.StrikethroughNode(:final children) ||
+            md.LinkNode(:final children)) {
+      var childOffset = nodeStart;
+      for (final child in children) {
+        final code = _findCodeInNode(child, targetOffset, childOffset);
+        if (code != null) return code;
+        childOffset += child.rawText.length;
+      }
+    }
+
+    // Check list items
+    if (node
+        case md.UnorderedListNode(:final items) ||
+            md.OrderedListNode(:final items)) {
+      var itemOffset = nodeStart;
+      for (final item in items) {
+        final code = _findCodeInNode(item, targetOffset, itemOffset);
+        if (code != null) return code;
+        itemOffset += item.rawText.length + 1; // +1 for newline
+      }
+    }
+
+    if (node case md.ListItemNode(:final children)) {
+      var childOffset = nodeStart;
+      for (final child in children) {
+        final code = _findCodeInNode(child, targetOffset, childOffset);
+        if (code != null) return code;
+        childOffset += child.rawText.length;
+      }
+    }
+
+    return null;
+  }
+
   String? _findLinkInNodes(List<md.AstNode> nodes, int targetOffset) {
     var currentOffset = 0;
 

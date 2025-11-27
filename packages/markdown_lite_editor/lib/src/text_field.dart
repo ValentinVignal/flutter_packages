@@ -42,11 +42,12 @@ class _MarkdownLiteEditorState extends State<MarkdownLiteEditor> {
               ...editableTextState.contextMenuButtonItems,
             ];
 
-            // Check if cursor is on a link
+            // Check if cursor is on a link or code
             final selection =
                 editableTextState.currentTextEditingValue.selection;
             final cursorPosition = selection.baseOffset;
             final linkUrl = controller.getLinkAtPosition(cursorPosition);
+            final codeContent = controller.getCodeAtPosition(cursorPosition);
 
             if (linkUrl != null) {
               // Add "Open Link" button
@@ -71,6 +72,20 @@ class _MarkdownLiteEditorState extends State<MarkdownLiteEditor> {
                   },
                 ),
               ]);
+            }
+
+            if (codeContent != null) {
+              // Add "Copy Code" button
+              buttonItems.add(
+                ContextMenuButtonItem(
+                  label: 'Copy Code',
+                  type: ContextMenuButtonType.copy,
+                  onPressed: () async {
+                    ContextMenuController.removeAny();
+                    await Clipboard.setData(ClipboardData(text: codeContent));
+                  },
+                ),
+              );
             }
 
             return AdaptiveTextSelectionToolbar.buttonItems(
