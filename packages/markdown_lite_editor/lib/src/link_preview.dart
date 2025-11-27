@@ -15,11 +15,17 @@ class _Titles {
 
 @internal
 class LinkPreview extends StatefulWidget {
-  const LinkPreview({super.key, required this.url, this.textStyle});
+  const LinkPreview({
+    super.key,
+    required this.url,
+    this.textStyle,
+    this.faviconTitleStyle,
+  });
 
   final Uri url;
 
   final TextStyle? textStyle;
+  final TextStyle? faviconTitleStyle;
 
   @override
   State<LinkPreview> createState() => _LinkPreviewState();
@@ -147,75 +153,80 @@ class _LinkPreviewState extends State<LinkPreview> {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 2),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () {
-          launchUrl(widget.url);
-        },
-        onSecondaryTap: _copyToClipboard,
-        onLongPress: _copyToClipboard,
-        child: FutureBuilder<_Titles?>(
-          future: _titlesFuture,
-          builder: (context, snapshot) {
-            final tooltipMessages = <String>[
-              ?snapshot.data?.shortTitle,
-              ?snapshot.data?.longTitle,
-            ];
-
-            final String tooltipText;
-            if (tooltipMessages.isEmpty) {
-              tooltipText = snapshot.data?.host ?? '';
-            } else {
-              tooltipText = tooltipMessages.whereType<String>().join(': ');
-            }
-            return Tooltip(
-              message: tooltipText,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 2),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.network(
-                      faviconUrl,
-                      width: size * 0.9,
-                      height: size * 0.9,
-                      errorBuilder: (context, error, stackTrace) {
-                        // On error, render a generic link icon to keep layout stable.
-                        return Icon(Icons.link, size: size);
-                      },
-                    ),
-                    Builder(
-                      builder: (context) {
-                        if (snapshot.data?.shortTitle?.isNotEmpty ?? false) {
-                          return Padding(
-                            padding: const EdgeInsets.only(left: 2),
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(maxWidth: size * 6),
-                              child: Text(
-                                snapshot.data!.shortTitle!,
-                                style: (widget.textStyle ?? const TextStyle())
-                                    .copyWith(
-                                      fontSize: size * 0.7,
-                                      fontWeight: FontWeight.w300,
-                                      letterSpacing: 0,
-                                      wordSpacing: 0,
-                                    ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            ),
-                          );
-                        }
-                        // While loading or if no title, show nothing extra
-                        return const SizedBox.shrink();
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            );
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(8),
+          onTap: () {
+            launchUrl(widget.url);
           },
+          onSecondaryTap: _copyToClipboard,
+          onLongPress: _copyToClipboard,
+          child: FutureBuilder<_Titles?>(
+            future: _titlesFuture,
+            builder: (context, snapshot) {
+              final tooltipMessages = <String>[
+                ?snapshot.data?.shortTitle,
+                ?snapshot.data?.longTitle,
+              ];
+
+              final String tooltipText;
+              if (tooltipMessages.isEmpty) {
+                tooltipText = snapshot.data?.host ?? '';
+              } else {
+                tooltipText = tooltipMessages.whereType<String>().join(': ');
+              }
+              return Tooltip(
+                message: tooltipText,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 2),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Image.network(
+                        faviconUrl,
+                        width: size * 0.9,
+                        height: size * 0.9,
+                        errorBuilder: (context, error, stackTrace) {
+                          // On error, render a generic link icon to keep layout stable.
+                          return Icon(Icons.link, size: size);
+                        },
+                      ),
+                      Builder(
+                        builder: (context) {
+                          if (snapshot.data?.shortTitle?.isNotEmpty ?? false) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 2),
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(maxWidth: size * 6),
+                                child: Text(
+                                  snapshot.data!.shortTitle!,
+                                  style:
+                                      widget.faviconTitleStyle ??
+                                      (widget.textStyle ?? const TextStyle())
+                                          .copyWith(
+                                            fontSize: size * 0.7,
+                                            fontWeight: FontWeight.w300,
+                                            letterSpacing: 0,
+                                            wordSpacing: 0,
+                                          ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                            );
+                          }
+                          // While loading or if no title, show nothing extra
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

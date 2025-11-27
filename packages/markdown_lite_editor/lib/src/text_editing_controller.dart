@@ -283,6 +283,29 @@ class MarkdownTextEditingController extends TextEditingController {
     );
   }
 
+  TextStyle _linkFaviconTitleStyle(BuildContext context) {
+    final theme = Theme.of(context);
+    // Blend primary with a hint of tertiary for favicon titles
+    final titleColor = Color.lerp(
+      theme.colorScheme.primary,
+      theme.colorScheme.tertiary,
+      0.2,
+    );
+    return TextStyle(
+      color: titleColor?.withValues(alpha: 0.7),
+      fontSize: 11,
+      fontWeight: FontWeight.w500,
+    );
+  }
+
+  TextStyle _autoLinkStyle(BuildContext context) {
+    // Match URL style for autolinks with underline
+    return _linkUrlStyle(context).copyWith(
+      decoration: TextDecoration.underline,
+      fontSize: null, // Use base font size
+    );
+  }
+
   // Small thumbnail/icon for a website with title, using a public favicon service.
   WidgetSpan _linkThumbnailSpan({
     required String url,
@@ -290,18 +313,23 @@ class MarkdownTextEditingController extends TextEditingController {
     String? trailing,
     TextStyle? linkSyntaxStyle,
     TextStyle? linkTextStyle,
+    TextStyle? faviconTextStyle,
   }) {
     // Use Google's favicon service which accepts full URLs.
 
     return WidgetSpan(
-      alignment: PlaceholderAlignment.middle,
+      alignment: PlaceholderAlignment.baseline,
       baseline: TextBaseline.alphabetic,
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (leading != null) Text(leading, style: linkSyntaxStyle),
-          LinkPreview(url: Uri.parse(url), textStyle: linkTextStyle),
+          LinkPreview(
+            url: Uri.parse(url),
+            textStyle: linkTextStyle,
+            faviconTitleStyle: faviconTextStyle,
+          ),
           // Display website title
           if (trailing != null) Text(trailing, style: linkSyntaxStyle),
         ],
@@ -333,33 +361,52 @@ class MarkdownTextEditingController extends TextEditingController {
   TextStyle _headingSyntaxStyle(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
-      color: theme.colorScheme.primary.withValues(alpha: 0.6),
+      color: theme.colorScheme.primary.withValues(alpha: 0.7),
       fontWeight: FontWeight.bold,
     );
   }
 
-  TextStyle _linkSyntaxStyle(BuildContext context) {
+  TextStyle _linkBracketStyle(BuildContext context) {
     final theme = Theme.of(context);
-    return TextStyle(color: theme.colorScheme.primary.withValues(alpha: 0.5));
+    // Use secondary (purple) for brackets
+    return TextStyle(
+      color: theme.colorScheme.secondary.withValues(alpha: 0.5),
+      fontWeight: FontWeight.w600,
+    );
+  }
+
+  TextStyle _linkParenthesisStyle(BuildContext context) {
+    final theme = Theme.of(context);
+    // Use tertiary (orange) for parentheses
+    return TextStyle(
+      color: theme.colorScheme.tertiary.withValues(alpha: 0.6),
+      fontWeight: FontWeight.w600,
+    );
   }
 
   TextStyle _linkUrlStyle(BuildContext context) {
     final theme = Theme.of(context);
-    return TextStyle(color: theme.colorScheme.primary.withValues(alpha: 0.7));
+    // Use tertiaryContainer (blue) for URLs
+    return TextStyle(
+      color: theme.colorScheme.tertiaryContainer.withValues(alpha: 0.8),
+      fontSize: 13,
+      fontWeight: FontWeight.w400,
+    );
   }
 
   TextStyle _codeBlockLanguageStyle(BuildContext context) {
     final theme = Theme.of(context);
     return GoogleFonts.inconsolata(
-      color: theme.colorScheme.tertiary,
+      color: theme.colorScheme.tertiaryContainer,
       fontSize: 12,
+      fontWeight: FontWeight.w600,
     );
   }
 
   TextStyle _listMarkerStyle(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
-      color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+      color: theme.colorScheme.tertiary.withValues(alpha: 0.8),
       fontWeight: FontWeight.bold,
     );
   }
@@ -389,7 +436,8 @@ class MarkdownTextEditingController extends TextEditingController {
   TextStyle _blockquoteSyntaxStyle(BuildContext context) {
     final theme = Theme.of(context);
     return TextStyle(
-      color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+      color: theme.colorScheme.secondary.withValues(alpha: 0.5),
+      fontWeight: FontWeight.w600,
     );
   }
 
@@ -423,7 +471,10 @@ class MarkdownTextEditingController extends TextEditingController {
       case md.BoldNode(:final children, :final delimiter):
         final spans = <InlineSpan>[];
         final boldStyle = _bold(base);
-        final syntaxStyle = _syntaxStyle(context);
+        final syntaxStyle = TextStyle(
+          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6),
+          fontSize: 14,
+        );
 
         // Opening delimiter
         spans.add(TextSpan(text: delimiter, style: syntaxStyle));
@@ -445,7 +496,10 @@ class MarkdownTextEditingController extends TextEditingController {
       case md.ItalicNode(:final children, :final delimiter):
         final spans = <InlineSpan>[];
         final italicStyle = _italic(base);
-        final syntaxStyle = _syntaxStyle(context);
+        final syntaxStyle = TextStyle(
+          color: Theme.of(context).colorScheme.tertiary.withValues(alpha: 0.6),
+          fontSize: 14,
+        );
 
         spans.add(TextSpan(text: delimiter, style: syntaxStyle));
         if (children.isEmpty) {
@@ -462,7 +516,10 @@ class MarkdownTextEditingController extends TextEditingController {
       case md.StrikethroughNode(:final children, :final delimiter):
         final spans = <InlineSpan>[];
         final strikeStyle = _strike(base);
-        final syntaxStyle = _syntaxStyle(context);
+        final syntaxStyle = TextStyle(
+          color: Theme.of(context).colorScheme.error.withValues(alpha: 0.5),
+          fontSize: 14,
+        );
 
         spans.add(TextSpan(text: delimiter, style: syntaxStyle));
         if (children.isEmpty) {
@@ -478,7 +535,12 @@ class MarkdownTextEditingController extends TextEditingController {
       // Inline code: show ` with syntax style
       case md.InlineCodeNode(:final delimiter):
         final spans = <InlineSpan>[];
-        final syntaxStyle = _syntaxStyle(context);
+        final syntaxStyle = TextStyle(
+          color: Theme.of(
+            context,
+          ).colorScheme.tertiaryContainer.withValues(alpha: 0.7),
+          fontSize: 14,
+        );
         final codeStyle = _inlineCode(context, base);
 
         spans.add(TextSpan(text: delimiter, style: syntaxStyle));
@@ -491,6 +553,7 @@ class MarkdownTextEditingController extends TextEditingController {
       case md.LinkNode(:final children, :final url, :final isAutoLink):
         final spans = <InlineSpan>[];
         final linkTextStyle = _linkStyle(context, base);
+        final autoLinkTextStyle = _autoLinkStyle(context);
 
         if (isAutoLink) {
           // Auto-link: just show the text as-is with link styling
@@ -499,12 +562,13 @@ class MarkdownTextEditingController extends TextEditingController {
               _linkThumbnailSpan(
                 trailing: node.text.substring(0, 1),
                 url: url,
-                linkSyntaxStyle: linkTextStyle,
-                linkTextStyle: linkTextStyle,
+                linkSyntaxStyle: autoLinkTextStyle,
+                linkTextStyle: autoLinkTextStyle,
+                faviconTextStyle: _linkFaviconTitleStyle(context),
               ),
             );
             spans.add(
-              TextSpan(text: node.text.substring(1), style: linkTextStyle),
+              TextSpan(text: node.text.substring(1), style: autoLinkTextStyle),
             );
           } else {
             // When children are present, combine the preview with the first
@@ -516,8 +580,9 @@ class MarkdownTextEditingController extends TextEditingController {
                 _linkThumbnailSpan(
                   trailing: firstChar,
                   url: url,
-                  linkSyntaxStyle: linkTextStyle,
-                  linkTextStyle: linkTextStyle,
+                  linkSyntaxStyle: autoLinkTextStyle,
+                  linkTextStyle: autoLinkTextStyle,
+                  faviconTextStyle: _linkFaviconTitleStyle(context),
                 ),
               );
 
@@ -526,7 +591,7 @@ class MarkdownTextEditingController extends TextEditingController {
                 spans.add(
                   TextSpan(
                     text: firstChild.text.substring(1),
-                    style: linkTextStyle,
+                    style: autoLinkTextStyle,
                   ),
                 );
               }
@@ -534,21 +599,22 @@ class MarkdownTextEditingController extends TextEditingController {
               // Emit the rest of children.
               for (final child in children.skip(1)) {
                 spans.addAll(
-                  _visitNodeWithStyle(context, linkTextStyle, child),
+                  _visitNodeWithStyle(context, autoLinkTextStyle, child),
                 );
               }
             } else {
               // Fallback: no simple first character to merge, render children normally.
               for (final child in children) {
                 spans.addAll(
-                  _visitNodeWithStyle(context, linkTextStyle, child),
+                  _visitNodeWithStyle(context, autoLinkTextStyle, child),
                 );
               }
             }
           }
         } else {
           // Markdown link: show [text](url) with syntax characters
-          final linkSyntaxStyle = _linkSyntaxStyle(context);
+          final bracketStyle = _linkBracketStyle(context);
+          final parenStyle = _linkParenthesisStyle(context);
           final urlStyle = _linkUrlStyle(context);
 
           // [
@@ -556,8 +622,9 @@ class MarkdownTextEditingController extends TextEditingController {
             _linkThumbnailSpan(
               leading: '[',
               url: url,
-              linkSyntaxStyle: linkSyntaxStyle,
+              linkSyntaxStyle: bracketStyle,
               linkTextStyle: linkTextStyle,
+              faviconTextStyle: _linkFaviconTitleStyle(context),
             ),
           );
 
@@ -571,14 +638,14 @@ class MarkdownTextEditingController extends TextEditingController {
           }
 
           // ](
-          spans.add(TextSpan(text: ']', style: linkSyntaxStyle));
-          spans.add(TextSpan(text: '(', style: linkSyntaxStyle));
+          spans.add(TextSpan(text: ']', style: bracketStyle));
+          spans.add(TextSpan(text: '(', style: parenStyle));
 
           // URL
           spans.add(TextSpan(text: url, style: urlStyle));
 
           // )
-          spans.add(TextSpan(text: ')', style: linkSyntaxStyle));
+          spans.add(TextSpan(text: ')', style: parenStyle));
         }
 
         return spans;
