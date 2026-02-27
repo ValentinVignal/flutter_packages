@@ -1,3 +1,7 @@
+## NEXT
+
+- Upgrade analyzer to `^8.0.0`.
+
 ## 0.2.1
 
 - Add example.
