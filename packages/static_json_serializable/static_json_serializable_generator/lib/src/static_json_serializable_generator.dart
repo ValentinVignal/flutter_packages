@@ -23,7 +23,7 @@ class StaticJsonSerializableGenerator
       );
     }
 
-    final name = element.name;
+    final name = element.name!;
 
     final staticFields = element.fields
         .where((field) => field.isStatic && (field.isConst || field.isFinal));
