@@ -1,3 +1,7 @@
+## NEXT
+
+- Update to riverpod annotation 4.0.0.
+
 ## 1.0.1
 
 - Add example.
