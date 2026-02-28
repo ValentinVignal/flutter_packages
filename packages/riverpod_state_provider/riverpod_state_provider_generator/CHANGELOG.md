@@ -1,4 +1,4 @@
-## NEXT
+## 2.0.0
 
 - Upgrade to riverpod_generator 4.0.0.
 
