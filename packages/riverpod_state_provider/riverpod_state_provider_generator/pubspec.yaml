@@ -1,6 +1,6 @@
 name: riverpod_state_provider_generator
 description: A code generator package for Riverpod's StateProvider.
-version: 1.0.2
+version: 2.0.0
 homepage: https://github.com/ValentinVignal/flutter_packages/tree/main/packages/riverpod_state_provider/riverpod_state_provider_generator
 repository: https://github.com/ValentinVignal/flutter_packages
 issue_tracker: https://github.com/ValentinVignal/flutter_packages/issues
@@ -9,16 +9,16 @@ environment:
   sdk: ^3.3.0
 
 dependencies:
-  analyzer: ^7.0.0
-  build: ^2.4.1
+  analyzer: ^9.0.0
+  build: ^4.0.0
   build_config: ^1.1.1
   meta: ^1.11.0
-  riverpod_state_provider_annotation: ^1.0.0
-  source_gen: ^2.0.0
+  riverpod_state_provider_annotation: ^2.0.0
+  source_gen: ^4.0.0
 
 dev_dependencies:
   build_runner: ^2.4.9
   lints: ^4.0.0
-  riverpod: ^2.6.1
-  riverpod_generator: ^2.6.5
+  riverpod: ^3.0.0
+  riverpod_generator: ^4.0.0
   test: ^1.24.0

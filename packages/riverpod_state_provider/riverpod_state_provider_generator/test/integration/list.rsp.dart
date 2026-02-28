@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -12,15 +13,10 @@ part of 'list.dart';
 @StateProviderFor(myList)
 @riverpod
 class MyListState extends _$MyListState {
-  MyListState({this.overrideInitialState});
-
-  final ValueOverride<List<int>>? overrideInitialState;
+  MyListState();
 
   @override
   List<int> build() {
-    if (overrideInitialState != null) {
-      return overrideInitialState!.value;
-    }
     return myList();
   }
 
@@ -46,15 +42,4 @@ class MyListState extends _$MyListState {
   /// ref.read(provider.notifier).update((state) => state + 1);
   /// ```
   List<int> update(List<int> Function(List<int> state) cb) => state = cb(state);
-}
-
-extension MyListRiverpodStateProviderExtension
-    on AutoDisposeNotifierProvider<MyListState, List<int>> {
-  Override overrideWithValue(List<int> value) {
-    return overrideWith(() {
-      return MyListState(
-        overrideInitialState: ValueOverride<List<int>>(value),
-      );
-    });
-  }
 }

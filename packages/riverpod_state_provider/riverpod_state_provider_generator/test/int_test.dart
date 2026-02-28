@@ -1,11 +1,11 @@
+import 'package:riverpod/riverpod.dart';
 import 'package:test/test.dart';
 
 import 'integration/int.dart';
-import 'utils.dart';
 
 void main() {
   test('Creates an equivalent of the StateProvider for an integer', () {
-    final container = createContainer();
+    final container = ProviderContainer.test();
 
     var value = container.read(myIntegerStateProvider);
     expect(value, 0);
@@ -21,8 +21,11 @@ void main() {
     expect(value, 2);
   });
 
-  test('The generated provider can be overridden', () {
-    final container = createContainer(overrides: [
+  test('The generated provider can be overridden',
+      skip:
+          true, // Riverpod bug: https://github.com/rrousselGit/riverpod/issues/4699
+      () {
+    final container = ProviderContainer.test(overrides: [
       myIntegerStateProvider.overrideWithValue(42),
     ]);
 

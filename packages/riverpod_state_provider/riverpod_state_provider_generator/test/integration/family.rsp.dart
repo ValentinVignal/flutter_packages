@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -13,9 +14,7 @@ part of 'family.dart';
 @riverpod
 class MyFamilyPositionalParametersState
     extends _$MyFamilyPositionalParametersState {
-  MyFamilyPositionalParametersState({this.overrideInitialState});
-
-  final ValueOverride<int>? overrideInitialState;
+  MyFamilyPositionalParametersState();
 
   @override
   int build(
@@ -25,9 +24,6 @@ class MyFamilyPositionalParametersState
     double param4 = 0.0,
     List<int>? param5,
   ]) {
-    if (overrideInitialState != null) {
-      return overrideInitialState!.value;
-    }
     return myFamilyPositionalParameters(
       ref,
       param1,
@@ -62,23 +58,10 @@ class MyFamilyPositionalParametersState
   int update(int Function(int state) cb) => state = cb(state);
 }
 
-extension MyFamilyPositionalParametersRiverpodStateProviderExtension
-    on MyFamilyPositionalParametersStateProvider {
-  Override overrideWithValue(int value) {
-    return overrideWith(() {
-      return MyFamilyPositionalParametersState(
-        overrideInitialState: ValueOverride<int>(value),
-      );
-    });
-  }
-}
-
 @StateProviderFor(myFamilyMixedParameters)
 @riverpod
 class MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
-  MyFamilyMixedParametersState({this.overrideInitialState});
-
-  final ValueOverride<List<bool>>? overrideInitialState;
+  MyFamilyMixedParametersState();
 
   @override
   List<bool> build(
@@ -88,9 +71,6 @@ class MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
     double param4 = 0.0,
     List<int>? param5,
   }) {
-    if (overrideInitialState != null) {
-      return overrideInitialState!.value;
-    }
     return myFamilyMixedParameters(
       ref,
       param1,
@@ -124,15 +104,4 @@ class MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
   /// ```
   List<bool> update(List<bool> Function(List<bool> state) cb) =>
       state = cb(state);
-}
-
-extension MyFamilyMixedParametersRiverpodStateProviderExtension
-    on MyFamilyMixedParametersStateProvider {
-  Override overrideWithValue(List<bool> value) {
-    return overrideWith(() {
-      return MyFamilyMixedParametersState(
-        overrideInitialState: ValueOverride<List<bool>>(value),
-      );
-    });
-  }
 }

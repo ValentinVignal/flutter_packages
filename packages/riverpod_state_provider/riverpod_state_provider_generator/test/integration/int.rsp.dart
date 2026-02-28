@@ -1,3 +1,4 @@
+// dart format width=80
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
@@ -12,15 +13,10 @@ part of 'int.dart';
 @StateProviderFor(myInteger)
 @riverpod
 class MyIntegerState extends _$MyIntegerState {
-  MyIntegerState({this.overrideInitialState});
-
-  final ValueOverride<int>? overrideInitialState;
+  MyIntegerState();
 
   @override
   int build() {
-    if (overrideInitialState != null) {
-      return overrideInitialState!.value;
-    }
     return myInteger();
   }
 
@@ -46,15 +42,4 @@ class MyIntegerState extends _$MyIntegerState {
   /// ref.read(provider.notifier).update((state) => state + 1);
   /// ```
   int update(int Function(int state) cb) => state = cb(state);
-}
-
-extension MyIntegerRiverpodStateProviderExtension
-    on AutoDisposeNotifierProvider<MyIntegerState, int> {
-  Override overrideWithValue(int value) {
-    return overrideWith(() {
-      return MyIntegerState(
-        overrideInitialState: ValueOverride<int>(value),
-      );
-    });
-  }
 }

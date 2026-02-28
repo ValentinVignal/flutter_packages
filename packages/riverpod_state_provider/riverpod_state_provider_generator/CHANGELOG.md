@@ -1,3 +1,7 @@
+## 2.0.0
+
+- Upgrade to riverpod_generator 4.0.0.
+
 ## 1.0.2
 
 - Add example.
