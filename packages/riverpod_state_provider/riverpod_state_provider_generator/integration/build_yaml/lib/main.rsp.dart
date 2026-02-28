@@ -13,15 +13,10 @@ part of 'main.dart';
 @StateProviderFor(myInteger)
 @riverpod
 class MyIntegerState extends _$MyIntegerState {
-  MyIntegerState({this.overrideInitialState});
-
-  final ValueOverride<int>? overrideInitialState;
+  MyIntegerState();
 
   @override
   int build() {
-    if (overrideInitialState != null) {
-      return overrideInitialState!.value;
-    }
     return myInteger();
   }
 
@@ -49,31 +44,15 @@ class MyIntegerState extends _$MyIntegerState {
   int update(int Function(int state) cb) => state = cb(state);
 }
 
-extension MyIntegerRiverpodStateProviderExtension
-    on AutoDisposeNotifierProvider<MyIntegerState, int> {
-  Override overrideWithValue(int value) {
-    return overrideWith(() {
-      return MyIntegerState(
-        overrideInitialState: ValueOverride<int>(value),
-      );
-    });
-  }
-}
-
 @StateProviderFor(myIntegerKeepAlive)
 @Riverpod(
   keepAlive: true,
 )
 class MyIntegerKeepAliveState extends _$MyIntegerKeepAliveState {
-  MyIntegerKeepAliveState({this.overrideInitialState});
-
-  final ValueOverride<int>? overrideInitialState;
+  MyIntegerKeepAliveState();
 
   @override
   int build() {
-    if (overrideInitialState != null) {
-      return overrideInitialState!.value;
-    }
     return myIntegerKeepAlive();
   }
 
@@ -101,29 +80,13 @@ class MyIntegerKeepAliveState extends _$MyIntegerKeepAliveState {
   int update(int Function(int state) cb) => state = cb(state);
 }
 
-extension MyIntegerKeepAliveRiverpodStateProviderExtension
-    on NotifierProvider<MyIntegerKeepAliveState, int> {
-  Override overrideWithValue(int value) {
-    return overrideWith(() {
-      return MyIntegerKeepAliveState(
-        overrideInitialState: ValueOverride<int>(value),
-      );
-    });
-  }
-}
-
 @StateProviderFor(myList)
 @riverpod
 class MyListState extends _$MyListState {
-  MyListState({this.overrideInitialState});
-
-  final ValueOverride<List<int>>? overrideInitialState;
+  MyListState();
 
   @override
   List<int> build() {
-    if (overrideInitialState != null) {
-      return overrideInitialState!.value;
-    }
     return myList();
   }
 
@@ -151,31 +114,15 @@ class MyListState extends _$MyListState {
   List<int> update(List<int> Function(List<int> state) cb) => state = cb(state);
 }
 
-extension MyListRiverpodStateProviderExtension
-    on AutoDisposeNotifierProvider<MyListState, List<int>> {
-  Override overrideWithValue(List<int> value) {
-    return overrideWith(() {
-      return MyListState(
-        overrideInitialState: ValueOverride<List<int>>(value),
-      );
-    });
-  }
-}
-
 @StateProviderFor(myListKeepAlive)
 @Riverpod(
   keepAlive: true,
 )
 class MyListKeepAliveState extends _$MyListKeepAliveState {
-  MyListKeepAliveState({this.overrideInitialState});
-
-  final ValueOverride<List<int>>? overrideInitialState;
+  MyListKeepAliveState();
 
   @override
   List<int> build() {
-    if (overrideInitialState != null) {
-      return overrideInitialState!.value;
-    }
     return myListKeepAlive();
   }
 
@@ -203,24 +150,11 @@ class MyListKeepAliveState extends _$MyListKeepAliveState {
   List<int> update(List<int> Function(List<int> state) cb) => state = cb(state);
 }
 
-extension MyListKeepAliveRiverpodStateProviderExtension
-    on NotifierProvider<MyListKeepAliveState, List<int>> {
-  Override overrideWithValue(List<int> value) {
-    return overrideWith(() {
-      return MyListKeepAliveState(
-        overrideInitialState: ValueOverride<List<int>>(value),
-      );
-    });
-  }
-}
-
 @StateProviderFor(myFamilyPositionalParameters)
 @riverpod
 class MyFamilyPositionalParametersState
     extends _$MyFamilyPositionalParametersState {
-  MyFamilyPositionalParametersState({this.overrideInitialState});
-
-  final ValueOverride<int>? overrideInitialState;
+  MyFamilyPositionalParametersState();
 
   @override
   int build(
@@ -230,9 +164,6 @@ class MyFamilyPositionalParametersState
     double param4 = 0.0,
     List<int>? param5,
   ]) {
-    if (overrideInitialState != null) {
-      return overrideInitialState!.value;
-    }
     return myFamilyPositionalParameters(
       ref,
       param1,
@@ -267,23 +198,10 @@ class MyFamilyPositionalParametersState
   int update(int Function(int state) cb) => state = cb(state);
 }
 
-extension MyFamilyPositionalParametersRiverpodStateProviderExtension
-    on MyFamilyPositionalParametersStateProvider {
-  Override overrideWithValue(int value) {
-    return overrideWith(() {
-      return MyFamilyPositionalParametersState(
-        overrideInitialState: ValueOverride<int>(value),
-      );
-    });
-  }
-}
-
 @StateProviderFor(myFamilyMixedParameters)
 @riverpod
 class MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
-  MyFamilyMixedParametersState({this.overrideInitialState});
-
-  final ValueOverride<List<bool>>? overrideInitialState;
+  MyFamilyMixedParametersState();
 
   @override
   List<bool> build(
@@ -293,9 +211,6 @@ class MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
     double param4 = 0.0,
     List<int>? param5,
   }) {
-    if (overrideInitialState != null) {
-      return overrideInitialState!.value;
-    }
     return myFamilyMixedParameters(
       ref,
       param1,
@@ -329,15 +244,4 @@ class MyFamilyMixedParametersState extends _$MyFamilyMixedParametersState {
   /// ```
   List<bool> update(List<bool> Function(List<bool> state) cb) =>
       state = cb(state);
-}
-
-extension MyFamilyMixedParametersRiverpodStateProviderExtension
-    on MyFamilyMixedParametersStateProvider {
-  Override overrideWithValue(List<bool> value) {
-    return overrideWith(() {
-      return MyFamilyMixedParametersState(
-        overrideInitialState: ValueOverride<List<bool>>(value),
-      );
-    });
-  }
 }

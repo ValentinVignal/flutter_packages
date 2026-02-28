@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 import 'package:riverpod_state_provider_annotation/riverpod_state_provider_annotation.dart';
 import 'package:source_gen/source_gen.dart';
 
-const _typeChecker = TypeChecker.fromRuntime(RiverpodStateProvider);
+const _typeChecker = TypeChecker.typeNamed(RiverpodStateProvider);
 
 /// The generator that generates the code for the annotated elements.
 @immutable
@@ -20,7 +20,9 @@ class RiverpodStateProviderGenerator
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    if (element is! FunctionElement) {
+    if (element is! TopLevelFunctionElement
+        //  || element is! LocalFunctionElement
+        ) {
       throw InvalidGenerationSourceError(
         'The element annotated with @RiverpodStateProvider is not a function',
         element: element,
@@ -44,23 +46,24 @@ class RiverpodStateProviderGenerator
     return typeSource;
   }
 
-  String _buildParametersDefinition(List<ParameterElement> parameters) {
+  String _buildParametersDefinition(List<FormalParameterFragment> parameters) {
     final parametersToDefine = parameters.skip(1);
     final requiredPositionals = parametersToDefine
-        .where((element) => element.isRequiredPositional)
+        .where((element) => element.element.isRequiredPositional)
         .toList();
     final optionalPositionals = parametersToDefine
-        .where((element) => element.isOptionalPositional)
+        .where((element) => element.element.isOptionalPositional)
         .toList();
     final named =
-        parametersToDefine.where((element) => element.isNamed).toList();
+        parametersToDefine.where((element) => element.element.isNamed).toList();
 
     final buffer = StringBuffer();
-    String encodeParameter(ParameterElement e) {
-      final leading = e.isRequiredNamed ? 'required ' : '';
-      final trailing =
-          e.defaultValueCode != null ? '= ${e.defaultValueCode}' : '';
-      return '$leading${e.type} ${e.name}$trailing';
+    String encodeParameter(FormalParameterFragment e) {
+      final leading = e.element.isRequiredNamed ? 'required ' : '';
+      final trailing = e.element.defaultValueCode != null
+          ? '= ${e.element.defaultValueCode}'
+          : '';
+      return '$leading${e.element.type} ${e.name}$trailing';
     }
 
     buffer.writeAll(
@@ -82,32 +85,18 @@ class RiverpodStateProviderGenerator
     return buffer.toString();
   }
 
-  String _buildParametersInvocation(List<ParameterElement> parameters) {
+  String _buildParametersInvocation(List<FormalParameterFragment> parameters) {
     final buffer = StringBuffer();
 
     buffer.writeAll(
       parameters.mapIndexed((i, e) {
         if (i == 0) return 'ref';
-        if (e.isNamed) return '${e.name}: ${e.name}';
+        if (e.element.isNamed) return '${e.name}: ${e.name}';
         return e.name;
       }).expand((e) => [e, ',']),
     );
 
     return buffer.toString();
-  }
-
-  String _getExtensionType({
-    required String stateClassName,
-    required String type,
-    required bool isFamily,
-    required bool isKeepAlive,
-  }) {
-    if (!isFamily) {
-      final prefix = isKeepAlive ? '' : 'AutoDispose';
-      return '${prefix}NotifierProvider<$stateClassName, $type>';
-    } else {
-      return '${stateClassName}Provider';
-    }
   }
 
   String _getDecorator(ConstantReader annotation) {
@@ -130,12 +119,13 @@ class RiverpodStateProviderGenerator
             // ignore: deprecated_member_use
             return type.getDisplayString(withNullability: true);
           } else {
-            final function = dependency.toFunctionValue()! as FunctionElement;
+            final function =
+                dependency.toFunctionValue()! as TopLevelFunctionElement;
             final annotation = _typeChecker.firstAnnotationOfExact(function);
             if (annotation == null) {
               return function.name;
             }
-            return _getStateClassNameFromFunctionName(function.name);
+            return _getStateClassNameFromFunctionName(function.name!);
           }
         }).join(', '));
         builder.write('],');
@@ -154,22 +144,20 @@ class RiverpodStateProviderGenerator
 
   Future<String> _generateProvider(
     ConstantReader annotation,
-    FunctionElement element,
+    TopLevelFunctionElement element,
   ) async {
-    final isKeepAlive = annotation.peek('keepAlive')?.boolValue ?? false;
-
     final library = await element.session
         ?.getResolvedLibraryByElement(element.library) as ResolvedLibraryResult;
-    final functionDeclaration =
-        library.getElementDeclaration(element)?.node as FunctionDeclaration;
 
-    final parameters = element.parameters;
-    final isFamily = parameters.length > 1;
+    final functionDeclaration = library
+        .getFragmentDeclaration(element.firstFragment)
+        ?.node as FunctionDeclaration;
+
+    final parameters = element.firstFragment.formalParameters;
 
     final type = _getType(library, functionDeclaration.returnType);
 
-    final name = element.name;
-    final pascalName = name.camelToPascal();
+    final name = element.name!;
     final stateClassName = _getStateClassNameFromFunctionName(name);
 
     final buffer = StringBuffer();
@@ -177,15 +165,10 @@ class RiverpodStateProviderGenerator
 @StateProviderFor($name)
 ${_getDecorator(annotation)}
 class $stateClassName extends _\$$stateClassName {
-  $stateClassName({this.overrideInitialState});
-
-  final ValueOverride<$type>? overrideInitialState;
+  $stateClassName();
 
   @override
   $type build(${_buildParametersDefinition(parameters)}) {
-    if (overrideInitialState != null) {
-      return overrideInitialState!.value;
-    }
     return $name(${_buildParametersInvocation(parameters)});
   }
 
@@ -211,17 +194,6 @@ class $stateClassName extends _\$$stateClassName {
   /// ref.read(provider.notifier).update((state) => state + 1);
   /// ```
   $type update($type Function($type state) cb) => state = cb(state);
-}
-
-extension ${pascalName}RiverpodStateProviderExtension
-    on ${_getExtensionType(isFamily: isFamily, stateClassName: stateClassName, type: type, isKeepAlive: isKeepAlive)} {
-  Override overrideWithValue($type value) {
-    return overrideWith(() {
-      return $stateClassName(
-        overrideInitialState: ValueOverride<$type>(value),
-      );
-    });
-  }
 }
 ''');
 

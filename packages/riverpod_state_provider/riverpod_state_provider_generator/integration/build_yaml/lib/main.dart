@@ -1,4 +1,3 @@
-import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_state_provider_annotation/riverpod_state_provider_annotation.dart';
 
 part 'main.g.dart';

@@ -1,12 +1,12 @@
+import 'package:riverpod_state_provider_annotation/riverpod_state_provider_annotation.dart';
 import 'package:test/test.dart';
 
 import 'integration/family.dart';
-import 'utils.dart';
 
 void main() {
   group('Positional parameters', () {
     test('Can read and update the provider', () {
-      final container = createContainer();
+      final container = ProviderContainer.test();
 
       var value = container.read(myFamilyPositionalParametersStateProvider(
         'a',
@@ -55,7 +55,7 @@ void main() {
     });
 
     test('The providers are independent', () {
-      final container = createContainer();
+      final container = ProviderContainer.test();
 
       var value0 = container.read(myFamilyPositionalParametersStateProvider(
         'a',
@@ -146,8 +146,11 @@ void main() {
       expect(value1, 4);
     });
 
-    test('The generated provider can be overridden', () {
-      final container = createContainer(overrides: [
+    test('The generated provider can be overridden',
+        skip:
+            true, // Riverpod bug: https://github.com/rrousselGit/riverpod/issues/4699
+        () {
+      final container = ProviderContainer.test(overrides: [
         myFamilyPositionalParametersStateProvider(
           'a',
           2,
@@ -205,7 +208,7 @@ void main() {
   });
   group('Mixed parameters', () {
     test('Can read and update the provider', () {
-      final container = createContainer();
+      final container = ProviderContainer.test();
 
       var value = container.read(myFamilyMixedParametersStateProvider(
         'a',
@@ -254,7 +257,7 @@ void main() {
     });
 
     test('The providers are independent', () {
-      final container = createContainer();
+      final container = ProviderContainer.test();
 
       var value0 = container.read(myFamilyMixedParametersStateProvider(
         'a',
@@ -345,8 +348,11 @@ void main() {
       expect(value1, const [true, true]);
     });
 
-    test('The generated provider can be overridden', () {
-      final container = createContainer(overrides: [
+    test('The generated provider can be overridden',
+        skip:
+            true, // Riverpod bug: https://github.com/rrousselGit/riverpod/issues/4699
+        () {
+      final container = ProviderContainer.test(overrides: [
         myFamilyMixedParametersStateProvider(
           'a',
           2,
