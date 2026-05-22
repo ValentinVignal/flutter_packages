@@ -3,3 +3,5 @@ coverage/
 
 **/pubspec_overrides.yaml
 
+**/.DS_Store
+
