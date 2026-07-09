@@ -1,4 +1,4 @@
-## NEXT
+## 0.3.1
 
 - Upgrade to analyzer `^9.0.0`.
 
