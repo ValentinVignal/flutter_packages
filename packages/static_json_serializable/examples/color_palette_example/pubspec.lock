@@ -485,7 +485,7 @@ packages:
       path: "../../static_json_serializable_generator"
       relative: true
     source: path
-    version: "0.3.2"
+    version: "0.3.3"
   stream_channel:
     dependency: transitive
     description:
